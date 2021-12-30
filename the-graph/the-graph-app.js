@@ -6,6 +6,7 @@ const Hammer = require('hammerjs');
 const hammerhacks = require('./hammer.js');
 const { ModalBG } = require('./the-graph-modalbg');
 const geometryutils = require('./geometryutils');
+const { is } = require('css-select');
 
 // Trivial polyfill for Polymer/webcomponents/shadowDOM element unwrapping
 const unwrap = (window.unwrap) ? window.unwrap : (e) => e;
@@ -343,6 +344,11 @@ module.exports.register = function (context) {
       const width = tooltip.length * 6;
       if (x + width > this.props.width) {
         x = event.detail.x - width - 10;
+      }
+
+      // Don't set state if co-ordinates are invalid
+      if(isNaN(x)) {
+        return;
       }
 
       this.setState({
