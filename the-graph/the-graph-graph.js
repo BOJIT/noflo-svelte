@@ -251,6 +251,9 @@ module.exports.register = function (context) {
       return this.props.library[componentName];
     },
     portInfo: {},
+    getPortInfo() {
+      return this.portInfo;
+    },
     getPorts(graph, processName, componentName) {
       const node = graph.getNode(processName);
 
