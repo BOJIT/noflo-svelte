@@ -1,0 +1,2 @@
+Move svelte component over to this repository
+Package CSS directly from style in svelte component - allow overrides

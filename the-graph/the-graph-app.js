@@ -6,7 +6,6 @@ const Hammer = require('hammerjs');
 const hammerhacks = require('./hammer.js');
 const { ModalBG } = require('./the-graph-modalbg');
 const geometryutils = require('./geometryutils');
-const { is } = require('css-select');
 
 // Trivial polyfill for Polymer/webcomponents/shadowDOM element unwrapping
 const unwrap = (window.unwrap) ? window.unwrap : (e) => e;

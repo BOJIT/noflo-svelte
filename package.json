@@ -5,43 +5,24 @@
   "author": "Forrest Oliphant, the Grid, BOJIT",
   "license": "MIT",
   "main": "index.js",
-  "bin": {
-    "the-graph-render": "./bin/the-graph-render"
-  },
   "dependencies": {
     "@pleasetrythisathome/react.animate": "0.0.4",
-    "create-react-class": "^15.6.2",
+    "create-react-class": "^15.7.0",
     "ease-component": "^1.0.0",
     "fbp-graph": "^0.7.0",
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "klayjs-noflo": "^0.3.1",
-    "tv4": "^1.3.0",
-    "yargs": "^16.1.1"
+    "tv4": "^1.3.0"
   },
   "devDependencies": {
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",
     "css-loader": "^5.0.1",
-    "enzyme": "^3.2.0",
-    "enzyme-adapter-react-15": "^1.0.5",
-    "eslint": "^7.13.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.21.5",
     "events": "^3.2.0",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.0.0",
-    "http-server": "^0.12.3",
-    "jest": "^21.2.1",
-    "jest-enzyme": "^4.0.1",
-    "jsjob": "^0.10.13",
-    "mocha": "^8.2.1",
-    "noflo-canvas": "0.4.2",
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2",
-    "react-test-renderer": "^15.6.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "style-loader": "^2.0.0",
     "stylus": "~0.54.5",
     "stylus-loader": "^5.0.0",
@@ -49,36 +30,22 @@
     "webpack-cli": "^4.2.0"
   },
   "scripts": {
-    "lint": "eslint --fix index.js render.jsjob.js the-graph-thumb the-graph-nav the-graph-editor",
     "fontawesome": "node scripts/build-font-awesome-javascript.js",
     "stylus": "stylus -c -o dist -m themes/*.styl",
     "prebuild": "npm run fontawesome",
     "build": "webpack",
     "postbuild": "npm run stylus",
-    "pretest": "npm run lint && npm run build",
-    "test": "jest",
     "start": "http-server dist/ -p 3000 -s -c-1"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/flowhub/the-graph.git"
+    "url": "git://github.com/BOJIT/the-graph.git"
   },
   "keywords": [
     "graph"
   ],
   "peerDependencies": {
-    "react": "<16.0.0",
-    "react-dom": "<16.0.0"
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/dist/",
-      "<rootDir>/jest-setup.js"
-    ],
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
-    "setupTestFrameworkScriptFile": "jest-enzyme"
+    "react": "<=17.0.2",
+    "react-dom": "<=17.0.2"
   }
 }

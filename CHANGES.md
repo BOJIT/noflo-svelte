@@ -1,3 +1,7 @@
+## 1.0.0
+
+Fork from main project. This version plans to be a cut down, opinionated Svelte component that 'just works'.
+
 ## 0.14.0 (git master)
 
 Changes:
