@@ -26,7 +26,7 @@ const factories = {
 };
 
 // Port view
-const Tooltip = React.createFactory(createReactClass({
+const Tooltip = React.createElement.bind(null, createReactClass({
   displayName: 'TheGraphTooltip',
   render() {
     const rectOptions = merge(config.rect, { width: this.props.label.length * 6 });

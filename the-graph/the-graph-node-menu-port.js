@@ -25,7 +25,7 @@ module.exports.register = function (context) {
     createNodeMenuPortText: TheGraph.factories.createText,
   };
 
-  TheGraph.NodeMenuPort = React.createFactory(createReactClass({
+  TheGraph.NodeMenuPort = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphNodeMenuPort',
     componentDidMount() {
       ReactDOM.findDOMNode(this).addEventListener('tap', this.edgeStart);

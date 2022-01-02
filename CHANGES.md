@@ -1,3 +1,11 @@
+## 1.0.2
+
+Changes:
+
+* Remove deprecated `React.createFactory` calls.
+
+* Use unsafe legacy hooks: https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html
+
 ## 1.0.0
 
 Fork from main project. This version plans to be a cut down, opinionated Svelte component that 'just works'.

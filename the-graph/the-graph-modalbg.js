@@ -18,7 +18,7 @@ const factories = {
   createModalBackgroundRect: baseFactories.createRect,
 };
 
-const ModalBG = React.createFactory(createReactClass({
+const ModalBG = React.createElement.bind(null, createReactClass({
   displayName: 'TheGraphModalBG',
   componentDidMount() {
     const domNode = ReactDOM.findDOMNode(this);

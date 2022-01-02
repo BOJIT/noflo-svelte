@@ -13,6 +13,7 @@
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "klayjs-noflo": "^0.3.1",
+    "klayjs-noflo-npm": "^0.3.1",
     "tv4": "^1.3.0"
   },
   "devDependencies": {

@@ -83,7 +83,7 @@ module.exports.register = function (context) {
 
   // Graph view
 
-  TheGraph.Graph = React.createFactory(createReactClass({
+  TheGraph.Graph = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphGraph',
     mixins: [],
     getDefaultProps() {
@@ -119,7 +119,7 @@ module.exports.register = function (context) {
     componentWillUnmount() {
       this.mounted = false;
     },
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
       this.subscribeGraph(this.props.graph, nextProps.graph);
       this.markDirty();
     },

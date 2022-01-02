@@ -30,7 +30,7 @@ module.exports.register = function (context) {
 
   // Group view
 
-  TheGraph.Group = React.createFactory(createReactClass({
+  TheGraph.Group = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphGroup',
     getInitialState() {
       return {

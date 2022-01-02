@@ -130,7 +130,7 @@ module.exports.register = function (context) {
     mixins.push(React.Animate);
   }
 
-  TheGraph.App = React.createFactory(createReactClass({
+  TheGraph.App = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphApp',
     mixins,
     getDefaultProps() {

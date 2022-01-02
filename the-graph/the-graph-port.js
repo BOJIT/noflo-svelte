@@ -37,7 +37,7 @@ module.exports.register = function (context) {
 
   // Port view
 
-  TheGraph.Port = React.createFactory(createReactClass({
+  TheGraph.Port = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphPort',
     mixins: [
       TooltipMixin,

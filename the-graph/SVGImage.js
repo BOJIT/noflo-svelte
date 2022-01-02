@@ -1,7 +1,7 @@
 const React = require('react');
 const createReactClass = require('create-react-class');
 
-const SVGImage = React.createFactory(createReactClass({
+const SVGImage = React.createElement.bind(null, createReactClass({
   displayName: 'TheGraphSVGImage',
   render() {
     let html = '<image ';

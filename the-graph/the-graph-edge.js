@@ -72,12 +72,12 @@ module.exports.register = function (context) {
 
   // Edge view
 
-  TheGraph.Edge = React.createFactory(createReactClass({
+  TheGraph.Edge = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphEdge',
     mixins: [
       TooltipMixin,
     ],
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
     },
     componentDidMount() {
       const domNode = ReactDOM.findDOMNode(this);

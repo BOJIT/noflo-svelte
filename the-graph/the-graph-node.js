@@ -84,7 +84,7 @@ module.exports.register = function (context) {
   }
 
   // Node view
-  TheGraph.Node = React.createFactory(createReactClass({
+  TheGraph.Node = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphNode',
     mixins: [
       TooltipMixin,

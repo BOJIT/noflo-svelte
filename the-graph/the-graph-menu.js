@@ -126,7 +126,7 @@ function createMenuSlice(options) {
   return factories.createMenuGroup.call(this, containerOptions);
 }
 
-const Menu = React.createFactory(createReactClass({
+const Menu = React.createElement.bind(null, createReactClass({
   displayName: 'TheGraphMenu',
   radius: config.radius,
   getInitialState() {

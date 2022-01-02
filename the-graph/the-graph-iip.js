@@ -35,7 +35,7 @@ module.exports.register = function (context) {
 
   // Edge view
 
-  TheGraph.IIP = React.createFactory(createReactClass({
+  TheGraph.IIP = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphIIP',
     shouldComponentUpdate(nextProps, nextState) {
       // Only rerender if changed

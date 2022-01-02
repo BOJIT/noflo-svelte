@@ -32,7 +32,7 @@ module.exports.register = function (context) {
     return TheGraph.Menu(options);
   }
 
-  TheGraph.NodeMenu = React.createFactory(createReactClass({
+  TheGraph.NodeMenu = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphNodeMenu',
     radius: 72,
     stopPropagation(event) {

@@ -30,7 +30,7 @@ module.exports.register = function (context) {
     return TheGraph.NodeMenuPort(options);
   }
 
-  TheGraph.NodeMenuPorts = React.createFactory(createReactClass({
+  TheGraph.NodeMenuPorts = React.createElement.bind(null, createReactClass({
     displayName: 'TheGraphNodeMenuPorts',
     render() {
       const portViews = [];

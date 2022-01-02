@@ -1,7 +1,7 @@
 const React = require('react');
 const createReactClass = require('create-react-class');
 
-const TextBG = React.createFactory(createReactClass({
+const TextBG = React.createElement.bind(null, createReactClass({
   displayName: 'TheGraphTextBG',
   render() {
     let { text } = this.props;
