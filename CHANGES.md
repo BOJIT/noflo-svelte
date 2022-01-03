@@ -1,14 +1,14 @@
-## 1.0.2
+## 1.0.0
+
+Fork from main project. This version plans to be a cut down, opinionated Svelte component that 'just works'.
 
 Changes:
+
+* Add `TheGraph.svelte` main entry point.
 
 * Remove deprecated `React.createFactory` calls.
 
 * Use unsafe legacy hooks: https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html
-
-## 1.0.0
-
-Fork from main project. This version plans to be a cut down, opinionated Svelte component that 'just works'.
 
 ## 0.14.0 (git master)
 

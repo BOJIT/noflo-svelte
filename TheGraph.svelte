@@ -6,7 +6,7 @@
 
 	/* NoFlo Imports */
 	import ReactDOM from 'react-dom';
-	import TheGraph from 'the-graph';
+	import TheGraph from './';
 	import { Graph, graph as graph_api } from 'fbp-graph';
 
 	/* Internal State */
