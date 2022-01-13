@@ -1,5 +1,5 @@
 {
-  "name": "the-graph",
+  "name": "noflo-svelte",
   "version": "1.0.0",
   "description": "flow-based programming graph editing",
   "author": "Forrest Oliphant, the Grid, BOJIT",
@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/BOJIT/the-graph.git"
+    "url": "git://github.com/BOJIT/noflo-svelte.git"
   },
   "keywords": [
     "graph"
