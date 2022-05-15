@@ -1,340 +1,351 @@
 <script>
-	/* Svelte Core */
-	import { afterUpdate, onDestroy } from 'svelte';
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+    /* Svelte Core */
+    import { afterUpdate, onDestroy } from 'svelte';
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
 
-	/* NoFlo Imports */
-	import ReactDOM from 'react-dom';
-	import TheGraph from './';
-	import { Graph, graph as graph_api } from 'fbp-graph';
+    /* NoFlo Imports */
+    import { Graph } from 'fbp-graph';
 
-	/* Internal State */
-	let container;
-	let app;
-	let history = []; let revision = 0;
+    // if(typeof window !== 'undefined') {
+    //     const ReactDOM = import('react-dom');
+    //     const TheGraph = import('./graph-engine');
+    //     // import { Graph, graph as graph_api } from 'fbp-graph';
+    //     // const fbp = import('fbp-graph');
+    // }
 
-	/* Auto Layout Engine */
-	import KlayNoflo from 'klayjs-noflo-npm/klay-noflo.js';
 
-	/* Initialise worker if URL provided */
-	let worker = null;
-	function klayjsInit(url) {
-		if((url !== "") && (worker === null)) {
-			worker = new Worker(url);
-			worker.addEventListener('message', function (e) {
-				klayjsCallback(e.data);
-			}, false);
-		}
-	}
+    /* Internal State */
+    let container;
+    let app;
+    let history = []; let revision = 0;
 
-	function klayjsCallback(kGraph) {
-		// Back up old history
-		let old_history = history.slice();
+    /* Auto Layout Engine */
+    import KlayNoflo from 'klayjs-noflo-npm/klay-noflo.js';
 
-		const props = { snap: 10 };
-		const children = kGraph.children.slice();
+    /* Initialise worker if URL provided */
+    let worker = null;
+    function klayjsInit(url) {
+        if((url !== "") && (worker === null)) {
+            worker = new Worker(url);
+            worker.addEventListener('message', function (e) {
+                klayjsCallback(e.data);
+            }, false);
+        }
+    }
 
-		let i;
-		let len;
-		for (i = 0, len = children.length; i < len; i++) {
-			const klayNode = children[i];
-			const fbpNode = graph.getNode(klayNode.id);
+    function klayjsCallback(kGraph) {
+        // Back up old history
+        let old_history = history.slice();
 
-			// Encode nodes inside groups
-			if (klayNode.children) {
-				const klayChildren = klayNode.children;
-				var idx;
-				for (idx in klayChildren) {
-				const klayChild = klayChildren[idx];
-				if (klayChild.id) {
-					graph.setNodeMetadata(klayChild.id, {
-					x: Math.round((klayNode.x + klayChild.x) / props.snap) * props.snap,
-					y: Math.round((klayNode.y + klayChild.y) / props.snap) * props.snap,
-					});
-				}
-				}
-			}
+        const props = { snap: 10 };
+        const children = kGraph.children.slice();
 
-			// Encode nodes outside groups
-			if (fbpNode) {
-				graph.setNodeMetadata(klayNode.id, {
-				x: Math.round(klayNode.x / props.snap) * props.snap,
-				y: Math.round(klayNode.y / props.snap) * props.snap,
-				});
-			} else {
-				// Find inport or outport
-				const idSplit = klayNode.id.split(':::');
-				const expDirection = idSplit[0];
-				const expKey = idSplit[1];
-				if (expDirection === 'inport' && graph.inports[expKey]) {
-					graph.setInportMetadata(expKey, {
-						x: Math.round(klayNode.x / props.snap) * props.snap,
-						y: Math.round(klayNode.y / props.snap) * props.snap,
-					});
-				} else if (expDirection === 'outport' && graph.outports[expKey]) {
-					graph.setOutportMetadata(expKey, {
-						x: Math.round(klayNode.x / props.snap) * props.snap,
-						y: Math.round(klayNode.y / props.snap) * props.snap,
-					});
-				}
-			}
-		}
+        let i;
+        let len;
+        for (i = 0, len = children.length; i < len; i++) {
+            const klayNode = children[i];
+            const fbpNode = graph.getNode(klayNode.id);
 
-		// Load single-change history tree
-		let last_change = history.pop();
-		history = old_history.slice();
+            // Encode nodes inside groups
+            if (klayNode.children) {
+                const klayChildren = klayNode.children;
+                var idx;
+                for (idx in klayChildren) {
+                const klayChild = klayChildren[idx];
+                if (klayChild.id) {
+                    graph.setNodeMetadata(klayChild.id, {
+                    x: Math.round((klayNode.x + klayChild.x) / props.snap) * props.snap,
+                    y: Math.round((klayNode.y + klayChild.y) / props.snap) * props.snap,
+                    });
+                }
+                }
+            }
 
-		history.push(last_change);
-		if(history.length > 10) {
-			history.shift();
-		}
-		revision = history.length - 1;
+            // Encode nodes outside groups
+            if (fbpNode) {
+                graph.setNodeMetadata(klayNode.id, {
+                x: Math.round(klayNode.x / props.snap) * props.snap,
+                y: Math.round(klayNode.y / props.snap) * props.snap,
+                });
+            } else {
+                // Find inport or outport
+                const idSplit = klayNode.id.split(':::');
+                const expDirection = idSplit[0];
+                const expKey = idSplit[1];
+                if (expDirection === 'inport' && graph.inports[expKey]) {
+                    graph.setInportMetadata(expKey, {
+                        x: Math.round(klayNode.x / props.snap) * props.snap,
+                        y: Math.round(klayNode.y / props.snap) * props.snap,
+                    });
+                } else if (expDirection === 'outport' && graph.outports[expKey]) {
+                    graph.setOutportMetadata(expKey, {
+                        x: Math.round(klayNode.x / props.snap) * props.snap,
+                        y: Math.round(klayNode.y / props.snap) * props.snap,
+                    });
+                }
+            }
+        }
 
-		app.triggerFit();
-	}
+        // Load single-change history tree
+        let last_change = history.pop();
+        history = old_history.slice();
 
-	/* Public Interface */
-	export let graph = new Graph();
-	export let library;
-	export let theme = "dark";
-	export let workerURL = "";
+        history.push(last_change);
+        if(history.length > 10) {
+            history.shift();
+        }
+        revision = history.length - 1;
 
-	export let state = {
-		selected: "",
-		canUndo: false,
-		canRedo: false
-	}
+        app.triggerFit();
+    }
 
-	/* Initialise new graph with no history */
-	initGraph();
-	clearHistory();
+    /* Public Interface */
+    export let graph = new Graph();
+    export let library;
+    export let theme = "dark";
+    export let workerURL = "";
 
-	/*------------------------------------------------------------------------*/
+    export let state = {
+        selected: "",
+        canUndo: false,
+        canRedo: false
+    }
 
-	/* Handle component selection */
-	function nodeSelectedCallback(key) {
-		if(key === undefined) {
-			app.refs.graph.setSelectedNodes({});
-			state.selected = "";
-		} else {
-			let sel = {};
-			sel[key] = true;
-			app.refs.graph.setSelectedNodes(sel);
-			state.selected = key;
-		}
-	}
+    /* Initialise new graph with no history */
+    initGraph();
+    clearHistory();
 
-	/* Handle edge selection */
-	function edgeSelectedCallback(key) {
-		// TODO
-	}
+    /*------------------------------------------------------------------------*/
 
-	/* Handle graph change */
-	function initGraph() {
-		/* Ensure graph is only initialised once */
-		if(("hasBeenInitialised" in graph) && (graph.hasBeenInitialised == true)) {
-			return;
-		}
-		graph.hasBeenInitialised = true;
+    /* Handle component selection */
+    function nodeSelectedCallback(key) {
+        if(key === undefined) {
+            app.refs.graph.setSelectedNodes({});
+            state.selected = "";
+        } else {
+            let sel = {};
+            sel[key] = true;
+            app.refs.graph.setSelectedNodes(sel);
+            state.selected = key;
+        }
+    }
 
-		graph.on('startTransaction', () => {
-			/* Ensure initial state is in history */
-			if(history.length === 0) {
-				history.push(graph.toJSON());
-				revision = history.length - 1;
-			}
-		});
+    /* Handle edge selection */
+    function edgeSelectedCallback(key) {
+        // TODO
+    }
 
-		graph.on('endTransaction', () => {
-			/* handle version history */
-			history.length = revision + 1;
-			history.push(graph.toJSON());
-			if(history.length > 10) {
-				history.shift();
-			}
-			revision = history.length - 1;
-			state.canUndo = true;
-			state.canRedo = false;
+    /* Handle graph change */
+    function initGraph() {
+        /* Ensure graph is only initialised once */
+        if(("hasBeenInitialised" in graph) && (graph.hasBeenInitialised == true)) {
+            return;
+        }
+        graph.hasBeenInitialised = true;
 
-			/* Re-render and dispatch change notification */
-			render(false)
-			dispatch('graphChange');
-		});
-	}
+        graph.on('startTransaction', () => {
+            /* Ensure initial state is in history */
+            if(history.length === 0) {
+                history.push(graph.toJSON());
+                revision = history.length - 1;
+            }
+        });
 
-	/*------------------------------------------------------------------------*/
+        graph.on('endTransaction', () => {
+            /* handle version history */
+            history.length = revision + 1;
+            history.push(graph.toJSON());
+            if(history.length > 10) {
+                history.shift();
+            }
+            revision = history.length - 1;
+            state.canUndo = true;
+            state.canRedo = false;
 
-	/* Re-render TheGraph component */
-	function render(redraw) {
-		const props = {
-			readonly: false,
-			height: window.innerHeight,
-			width: window.innerWidth,
-			graph,
-			library,
-			enableHotKeys: false,
-			onNodeSelection: nodeSelectedCallback,
-			onEdgeSelection: ((key, item, toggle) => {}),
-		};
+            /* Re-render and dispatch change notification */
+            render(false)
+            dispatch('graphChange');
+        });
+    }
 
-		/* If redraw is set to true, clear out and re-render the editor */
-		if(redraw === true) {
-			if(container != null) {
-				ReactDOM.unmountComponentAtNode(container);
-			}
-		}
+    /*------------------------------------------------------------------------*/
 
-		app = ReactDOM.render(TheGraph.App(props), container);
-	}
+    /* Re-render TheGraph component */
+    function render(redraw) {
+        const props = {
+            readonly: false,
+            height: window.innerHeight,
+            width: window.innerWidth,
+            graph,
+            library,
+            enableHotKeys: false,
+            onNodeSelection: nodeSelectedCallback,
+            onEdgeSelection: ((key, item, toggle) => {}),
+        };
 
-	/*------------------------------------------------------------------------*/
+        /* If redraw is set to true, clear out and re-render the editor */
+        if(redraw === true) {
+            if(container != null) {
+                if(typeof window !== 'undefined')
+                    ReactDOM.unmountComponentAtNode(container);
+            }
+        }
 
-	/* Trigger React update on Svelte change */
-	afterUpdate(() => {
-		klayjsInit(workerURL);
-		initGraph();
-		render(false);
-	});
+        if(typeof window !== 'undefined')
+            app = ReactDOM.render(TheGraph.App(props), container);
+    }
 
-	/* Extra render hooks */
-	window.addEventListener('resize', () => render(true));
+    /*------------------------------------------------------------------------*/
 
-	/* Unmount Graph Component */
-	onDestroy(() => {
-		ReactDOM.unmountComponentAtNode(container);
-	});
+    /* Trigger React update on Svelte change */
+    afterUpdate(() => {
+        klayjsInit(workerURL);
+        initGraph();
+        render(false);
+    });
 
-	/*------------------------------------------------------------------------*/
+    /* Extra render hooks */
+    if(typeof window !== 'undefined') {
+        window.addEventListener('resize', () => render(true));
+    }
 
-	/* Add component to graph and UI */
-	function addComponent(name) {
-		/* Generate random ID then check that it is unique for the graph */
-		let id = Math.round(Math.random() * 100000).toString(36);
-		while(graph.nodes.some((node) => node.id === id)) {
-			id = Math.round(Math.random() * 100000).toString(36);
-		}
+    /* Unmount Graph Component */
+    onDestroy(() => {
+        if(typeof window !== 'undefined')
+            ReactDOM.unmountComponentAtNode(container);
+    });
 
-		const component = library[name];
+    /*------------------------------------------------------------------------*/
 
-		/* Place in stack if place is taken */
-		let increment = 0;
-		while(graph.nodes.some((node) => node.metadata.x ===
-										(window.innerWidth/2 + increment))) {
-			increment += 20;
-		}
+    /* Add component to graph and UI */
+    function addComponent(name) {
+        /* Generate random ID then check that it is unique for the graph */
+        let id = Math.round(Math.random() * 100000).toString(36);
+        while(graph.nodes.some((node) => node.id === id)) {
+            id = Math.round(Math.random() * 100000).toString(36);
+        }
 
-		const metadata = {
-			label: component.name,
-			x: window.innerWidth/2 + increment,
-			y: window.innerHeight/2 + increment,
-		};
+        const component = library[name];
 
-		graph.addNode(id, component.name, metadata);
+        /* Place in stack if place is taken */
+        let increment = 0;
+        while(graph.nodes.some((node) => node.metadata.x ===
+                                        (window.innerWidth/2 + increment))) {
+            increment += 20;
+        }
 
-		/* Reset any component selections */
-		app.unselectAll();
-	};
+        const metadata = {
+            label: component.name,
+            x: window.innerWidth/2 + increment,
+            y: window.innerHeight/2 + increment,
+        };
 
-	/* Remove component from graph and UI */
-	function removeComponent(id) {
-		/* Reset any component selections */
-		app.unselectAll();
+        graph.addNode(id, component.name, metadata);
 
-		graph.removeNode(id);
-	}
+        /* Reset any component selections */
+        app.unselectAll();
+    };
 
-	/* Recentre graph view */
-	function recentreGraph() {
-		app.triggerFit();
-	}
+    /* Remove component from graph and UI */
+    function removeComponent(id) {
+        /* Reset any component selections */
+        app.unselectAll();
 
-	/* Automatically lay out graph */
-	function autolayoutGraph() {
-		if(workerURL === "") {
-			return;
-		}
-		let portInfo = app.refs.graph.getPortInfo();
+        graph.removeNode(id);
+    }
 
-		var options = {
-			"intCoordinates": true,
-			"algorithm": "de.cau.cs.kieler.klay.layered",
-			"layoutHierarchy": true,
-			"spacing": 20,
-			"borderSpacing": 20,
-			"edgeSpacingFactor": 0.2,
-			"inLayerSpacingFactor": 2.0,
-			"nodePlace": "BRANDES_KOEPF",
-			"nodeLayering": "NETWORK_SIMPLEX",
-			"edgeRouting": "POLYLINE",
-			"crossMin": "LAYER_SWEEP",
-			"direction": "RIGHT"
-		};
+    /* Recentre graph view */
+    function recentreGraph() {
+        app.triggerFit();
+    }
 
-		let kGraph = KlayNoflo.nofloToKieler(graph, portInfo, 'RIGHT');
+    /* Automatically lay out graph */
+    function autolayoutGraph() {
+        if(workerURL === "") {
+            return;
+        }
+        let portInfo = app.refs.graph.getPortInfo();
 
-		worker.postMessage({
-			"graph": kGraph,
-			"options": options
-		});
-	}
+        var options = {
+            "intCoordinates": true,
+            "algorithm": "de.cau.cs.kieler.klay.layered",
+            "layoutHierarchy": true,
+            "spacing": 20,
+            "borderSpacing": 20,
+            "edgeSpacingFactor": 0.2,
+            "inLayerSpacingFactor": 2.0,
+            "nodePlace": "BRANDES_KOEPF",
+            "nodeLayering": "NETWORK_SIMPLEX",
+            "edgeRouting": "POLYLINE",
+            "crossMin": "LAYER_SWEEP",
+            "direction": "RIGHT"
+        };
 
-	/* Clear whole graph */
-	function clearGraph() {
-		graph = new Graph();
-		initGraph();
-	}
+        let kGraph = KlayNoflo.nofloToKieler(graph, portInfo, 'RIGHT');
 
-	/* Undo last graph change */
-	function undo() {
-		if(state.canUndo) {
-			revision -= 1;
-			graph_api.loadJSON(history[revision]).then((g) => {
-				graph = g;
-				initGraph();
-			});
-			if(revision == 0) {
-				state.canUndo = false;
-			}
-			state.canRedo = true;
-		}
-	}
+        worker.postMessage({
+            "graph": kGraph,
+            "options": options
+        });
+    }
 
-	/* Redo last node change */
-	function redo() {
-		if(state.canRedo) {
-			revision += 1;
-			graph_api.loadJSON(history[revision]).then((g) => {
-				graph = g;
-				initGraph();
-			});
-			if(revision == history.length - 1) {
-				state.canRedo = false;
-			}
-			state.canUndo = true;
-		}
-	}
+    /* Clear whole graph */
+    function clearGraph() {
+        graph = new Graph();
+        initGraph();
+    }
 
-	/* Clear history - advisable if loading completely new graph */
-	function clearHistory() {
-		history = [];
-		revision = 0;
-		state.canUndo = false;
-		state.canRedo = false;
-	}
+    /* Undo last graph change */
+    function undo() {
+        if(state.canUndo) {
+            revision -= 1;
+            fbp.graph.loadJSON(history[revision]).then((g) => {
+                graph = g;
+                initGraph();
+            });
+            if(revision == 0) {
+                state.canUndo = false;
+            }
+            state.canRedo = true;
+        }
+    }
 
-	/* Expose function API */
-	export const API = {
-		addComponent,
-		removeComponent,
-		recentreGraph,
-		autolayoutGraph,
-		clearGraph,
-		undo,
-		redo,
-		clearHistory
-	}
+    /* Redo last node change */
+    function redo() {
+        if(state.canRedo) {
+            revision += 1;
+            fbp.graph.loadJSON(history[revision]).then((g) => {
+                graph = g;
+                initGraph();
+            });
+            if(revision == history.length - 1) {
+                state.canRedo = false;
+            }
+            state.canUndo = true;
+        }
+    }
+
+    /* Clear history - advisable if loading completely new graph */
+    function clearHistory() {
+        history = [];
+        revision = 0;
+        state.canUndo = false;
+        state.canRedo = false;
+    }
+
+    /* Expose function API */
+    export const API = {
+        addComponent,
+        removeComponent,
+        recentreGraph,
+        autolayoutGraph,
+        clearGraph,
+        undo,
+        redo,
+        clearHistory
+    }
 </script>
 
 <div bind:this={container} class:the-graph-dark="{theme === "dark"}"
-							class:the-graph-light="{theme === "light"}" />
+                            class:the-graph-light="{theme === "light"}" />
