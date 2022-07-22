@@ -1,0 +1,42 @@
+{
+    "template": {
+        "scope": "svelte",
+        "prefix": "template",
+        "body": [
+            "<!--",
+            " * @file ${TM_FILENAME}",
+            " * @author ${1:James Bennion-Pedley}",
+            " * @brief ${2:Brief summary here}",
+            " * @date ${CURRENT_DATE}/${CURRENT_MONTH}/${CURRENT_YEAR}",
+            " * ",
+            " * @copyright Copyright (c) ${CURRENT_YEAR}",
+            " * ",
+            "-->",
+            "",
+            "<script lang='ts'>",
+            "    ",
+            "</script>",
+            "",
+            "",
+            "<div>",
+            "    ",
+            "</div>",
+            "",
+            "",
+            "<style>",
+            "    ",
+            "</style>",
+            ""
+        ],
+        "description": "Basic Svelte Component Boilerplate"
+    },
+    "separator": {
+        "scope": "svelte",
+        "prefix": "separator",
+        "body": [
+            "/*----------------------------------------------------------------------------*/",
+            ""
+        ],
+        "description": "Generate separator for Svelte file"
+    },
+}

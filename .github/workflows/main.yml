@@ -1,0 +1,122 @@
+on: [push]
+
+jobs:
+  npm-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy components to NPM
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.0'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          path: main
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          cd main
+          npm install
+          cd ../
+
+      - name: Package Svelte components
+        run: |
+          cd main
+          npm run package
+          cd ../
+
+      - name: NPM Publish
+        if: startsWith(github.event.ref, 'refs/tags')
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./main/package/package.json
+          access: public
+
+  build-demo-pages:
+    runs-on: ubuntu-latest
+    name: Build web assets and deploy to GitHub pages
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.0'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          path: main
+          fetch-depth: 0
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Install dependencies
+        run: |
+          cd main
+          npm install
+          cd ../
+
+      - name: Build SvelteKit app
+        if: startsWith(github.event.ref, 'refs/tags')
+        run: |
+          cd main
+          npm run build
+          cd ../
+
+      - name: Clean gh-pages area
+        if: startsWith(github.event.ref, 'refs/tags')
+        run: |
+          rm -rf gh-pages/*
+          touch ./gh-pages/.nojekyll
+          echo 'svelte.bojit.org' >gh-pages/CNAME
+
+
+      - name: Copy dist files across
+        if: startsWith(github.event.ref, 'refs/tags')
+        run: cp -r main/build/. gh-pages/
+
+      - name: Deploy to GitHub pages branch
+        if: startsWith(github.event.ref, 'refs/tags')
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          HASH=$(git -C main rev-parse --short HEAD)
+          echo "source commit hash: ${HASH}"
+          if [[ `git -C gh-pages status --porcelain` ]]; then
+            git -C gh-pages add -A
+            git -C gh-pages commit -m "Deploy gh-pages: ${HASH}"
+            git -C gh-pages push
+          else
+            echo "No files have changed!"
+          fi

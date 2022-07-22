@@ -1,46 +1,38 @@
-The Graph Editor [![MIT license](http://img.shields.io/badge/License-MIT-brightgreen.svg)](#license)
-================
+# create-svelte
 
-This fork of `the-graph` is a single packaged Svelte component that wraps the
-graph editor in a 'just-works' manner.
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-## Using
+## Creating a project
 
-Install via NPM
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-npm install github:BOJIT/noflo-svelte
+# create a new project in the current directory
+npm init svelte
+
+# create a new project in my-app
+npm init svelte my-app
 ```
-
-Include in a svelte component
-
-```js
-import TheGraph from 'noflo-svelte/TheGraph.svelte';
-```
-
-## License
-
-[The MIT License](./LICENSE-MIT.txt)
-
-## Support
-Please refer to <https://noflojs.org/support/>.
 
 ## Developing
 
-Clone the repo
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-    git clone https://github.com/flowhub/the-graph.git # or your own fork on Github
-    cd the-graph
+```bash
+npm run dev
 
-Install dependencies and build
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-    npm install
-    npm run build
+## Building
 
-Run the demo server
+To create a production version of your app:
 
-    npm start
+```bash
+npm run build
+```
 
-or <http://localhost:3000/examples/demo-full.html> for interactive demo.
+You can preview the production build with `npm run preview`.
 
-Send pull requests on Github!
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
