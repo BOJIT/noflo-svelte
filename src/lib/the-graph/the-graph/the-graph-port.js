@@ -2,7 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const createReactClass = require('create-react-class');
 const TooltipMixin = require('./mixins').Tooltip;
-const arcs = require('./arcs.js');
+const arcs = require('../utils/arcs.js');
 
 module.exports.register = function (context) {
   const { TheGraph } = context;

@@ -1,5 +1,5 @@
 // This file is generated via `npm run fontawesome`
-module.exports = {
+export default {
   '500px': '',
   'address-book': '',
   'address-book-o': '',

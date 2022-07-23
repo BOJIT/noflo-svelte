@@ -2,7 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const createReactClass = require('create-react-class');
 
-const arcs = require('./arcs');
+const arcs = require('../utils/arcs');
 const merge = require('./merge');
 const FONT_AWESOME = require('./font-awesome-unicode-map.js');
 const baseFactories = require('./factories');

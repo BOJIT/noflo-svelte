@@ -1,3 +1,14 @@
+<!--
+ * @file Noflo.svelte
+ * @author James Bennion-Pedley
+ * @brief Main entry point for Noflo graph UI
+ * @date 23/07/2022
+ *
+ * @copyright Copyright (c) 2022
+ *
+-->
+
+
 <script lang="ts">
     /* Svelte Core */
     import { afterUpdate, onDestroy, onMount } from 'svelte';
@@ -9,20 +20,16 @@
     import type { ComponentLibrary } from '$lib/types/ComponentTypes';
     import type { Graph } from '$lib/fbp-graph/Graph';
 
+    /* Core */
+    import TheGraph from '$lib/the-graph';
+
+    /* Third-Party */
+    import FbpGraph from '$lib/fbp-graph';
+    import ReactDOM from 'react-dom';
+
     /* Utils */
     import History from '$lib/utils/history';
     import generateIconLibrary from '$lib/utils/generateIconLibrary';
-
-    /* NoFlo Imports */
-    import FbpGraph from '$lib/fbp-graph';
-
-
-    // if(typeof window !== 'undefined') {
-    //     const ReactDOM = import('react-dom');
-    //     const TheGraph = import('./graph-engine');
-    //     // import { Graph, graph as graph_api } from 'fbp-graph';
-    //     // const fbp = import('fbp-graph');
-    // }
 
     let app: any;
 
@@ -64,14 +71,9 @@
         // TODO
     }
 
-    /* Handle graph change */
-    function initGraph() {
-        /* Ensure graph is only initialised once */
-        if(("hasBeenInitialised" in graph) && (graph.hasBeenInitialised == true)) {
-            return;
-        }
-        graph.hasBeenInitialised = true;
+    /*------------------------------ React State -----------------------------*/
 
+    function addGraphHooks() {
         graph.on('startTransaction', () => {
             /* Ensure initial state is in history */
             if(history === null) { history = new History(graph, 10) }
@@ -85,9 +87,6 @@
         });
     }
 
-    /*------------------------------------------------------------------------*/
-
-    /* Re-render TheGraph component */
     function render(redraw: boolean) {
         const props = {
             readonly: false,
@@ -108,28 +107,26 @@
             }
         }
 
-        if(typeof window !== 'undefined')
-            app = ReactDOM.render(TheGraph.App(props), container);
+        // if(typeof window !== 'undefined')
+        //     app = ReactDOM.render(TheGraph.App(props), container);
     }
 
     /*-------------------------------- Lifecycle -----------------------------*/
 
-    /* Trigger React update on Svelte change */
-    afterUpdate(() => {
-        // klayjsInit(workerURL);
-        initGraph();
-        render(false);
-    });
-
-    /* Mount Graph Component */
     onMount(() => {
         /* Initialise new graph with no history */
-        initGraph();
+        addGraphHooks();
+
+        render(true);
 
         window.addEventListener('resize', () => render(true));
     })
 
-    /* Unmount Graph Component */
+    afterUpdate(() => {
+        // klayjsInit(workerURL);
+        render(false);
+    });
+
     onDestroy(() => {
         if(typeof window !== 'undefined')
             ReactDOM.unmountComponentAtNode(container);
@@ -184,10 +181,10 @@
         },
         clearGraph: () => {
             graph = new FbpGraph.Graph();
-            initGraph();
+            addGraphHooks();
         },
         clearHistory: () => {
-            history = null;
+            history = new History(graph, 10);
         },
         undo: async () => {
             if(history?.canUndo) {

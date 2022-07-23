@@ -1,9 +1,21 @@
+/**
+ * @file history.ts
+ * @author James Bennion-Pedley
+ * @brief History module for enabling simple undo/redo of graphs
+ * @date 23/07/2022
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+/*--------------------------------- Imports ----------------------------------*/
+
 import FbpGraph from '$lib/fbp-graph';
 
 import type { Graph } from '$lib/fbp-graph/Graph';
 import type { GraphJson } from 'fbp-graph/lib/Types';
 
-/*----------------------------------------------------------------------------*/
+/*------------------------------ Primary Class -------------------------------*/
 
 class History {
     Length: number = 0;
