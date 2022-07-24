@@ -99,7 +99,7 @@ jobs:
         run: |
           rm -rf gh-pages/*
           touch ./gh-pages/.nojekyll
-          echo 'svelte.bojit.org' >gh-pages/CNAME
+          echo 'noflo-svelte.bojit.org' >gh-pages/CNAME
 
 
       - name: Copy dist files across

@@ -42,6 +42,12 @@
     <button on:click={() => {
         API.clearGraph();
     }}>Clear</button>
+    <button on:click={() => {
+        API.undo();
+    }}>Undo</button>
+    <button on:click={() => {
+        API.redo();
+    }}>Redo</button>
 </div>
 
 
