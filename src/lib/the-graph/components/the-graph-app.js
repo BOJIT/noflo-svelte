@@ -509,8 +509,8 @@ function register(context) {
             this.mouseY = Math.floor(this.props.height / 2);
 
             // FIXME: instead access the shiftKey of event instead of keeping metaKey
-            document.addEventListener('keydown', this.keyDown);
-            document.addEventListener('keyup', this.keyUp);
+            document.addEventListener('keydown', this.keyDown.bind(this));
+            document.addEventListener('keyup', this.keyUp.bind(this));
 
             // Canvas background
             let bgCanvas = unwrap(ReactDOM.findDOMNode(this.refs.canvas));

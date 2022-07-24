@@ -183,16 +183,16 @@ class TheGraphMenu extends React.Component {
 
     componentDidMount() {
         if (this.state.n4tappable) {
-            this.refs.n4.addEventListener('tap', this.onTapN4);
+            this.refs.n4.addEventListener('tap', this.onTapN4.bind(this));
         }
         if (this.state.s4tappable) {
-            this.refs.s4.addEventListener('tap', this.onTapS4);
+            this.refs.s4.addEventListener('tap', this.onTapS4.bind(this));
         }
         if (this.state.e4tappable) {
-            this.refs.e4.addEventListener('tap', this.onTapE4);
+            this.refs.e4.addEventListener('tap', this.onTapE4.bind(this));
         }
         if (this.state.w4tappable) {
-            this.refs.w4.addEventListener('tap', this.onTapW4);
+            this.refs.w4.addEventListener('tap', this.onTapW4.bind(this));
         }
 
         // Prevent context menu

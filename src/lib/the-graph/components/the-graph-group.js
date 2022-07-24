@@ -58,13 +58,13 @@ function register(context) {
     componentDidMount() {
       // Move group
       const dragNode = ReactDOM.findDOMNode(this.refs.events);
-      dragNode.addEventListener('panstart', this.onTrackStart);
+      dragNode.addEventListener('panstart', this.onTrackStart.bind(this));
 
       // Context menu
       const domNode = ReactDOM.findDOMNode(this);
       if (this.props.showContext) {
-        domNode.addEventListener('contextmenu', this.showContext);
-        domNode.addEventListener('press', this.showContext);
+        domNode.addEventListener('contextmenu', this.showContext.bind(this));
+        domNode.addEventListener('press', this.showContext.bind(this));
       }
     }
 
@@ -115,8 +115,8 @@ function register(context) {
       this.setState({ lastTrackX: 0, lastTrackY: 0 });
 
       const dragNode = ReactDOM.findDOMNode(this.refs.events);
-      dragNode.addEventListener('panmove', this.onTrack);
-      dragNode.addEventListener('panend', this.onTrackEnd);
+      dragNode.addEventListener('panmove', this.onTrack.bind(this));
+      dragNode.addEventListener('panend', this.onTrackEnd.bind(this));
 
       this.props.graph.startTransaction('movegroup');
     }
@@ -147,8 +147,8 @@ function register(context) {
       this.props.triggerMoveGroup(this.props.item.nodes);
 
       const dragNode = ReactDOM.findDOMNode(this.refs.events);
-      dragNode.addEventListener('panmove', this.onTrack);
-      dragNode.addEventListener('panend', this.onTrackEnd);
+      dragNode.addEventListener('panmove', this.onTrack.bind(this));
+      dragNode.addEventListener('panend', this.onTrackEnd.bind(this));
 
       this.setState({ lastTrackX: null, lastTrackY: null });
       this.props.graph.endTransaction('movegroup');

@@ -263,7 +263,9 @@ function register(context) {
         if (this.props.export) {
           this.props.graph.endTransaction('moveexport');
         } else {
-          this.props.graph.endTransaction('movenode');
+          if (this.props.graph.transaction.id) {
+              this.props.graph.endTransaction('movenode');
+          }
         }
     };
 

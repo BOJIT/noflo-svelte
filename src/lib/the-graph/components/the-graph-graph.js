@@ -130,6 +130,7 @@ function register(context) {
     componentDidMount() {
         this.mounted = true;
         this.subscribeGraph(null, this.props.graph);
+        // NOTE bind(this) causes crash?
         ReactDOM.findDOMNode(this).addEventListener('the-graph-node-remove', this.removeNode);
     }
 

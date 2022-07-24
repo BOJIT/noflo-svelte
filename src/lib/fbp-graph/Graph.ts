@@ -91,6 +91,7 @@ class Graph extends EventEmitter {
     }
 
     this.transaction.id = id;
+
     this.transaction.depth = 1;
     this.emit('startTransaction', id, metadata);
     return this;

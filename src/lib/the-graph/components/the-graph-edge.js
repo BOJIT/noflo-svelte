@@ -101,12 +101,12 @@ function register(context) {
       // Select
       if (this.props.onEdgeSelection) {
         // Needs to be click (not tap) to get event.shiftKey
-        domNode.addEventListener('tap', this.onEdgeSelection);
+        domNode.addEventListener('tap', this.onEdgeSelection.bind(this));
       }
       // Open menu
       if (this.props.showContext) {
-        domNode.addEventListener('contextmenu', this.showContext);
-        domNode.addEventListener('press', this.showContext);
+        domNode.addEventListener('contextmenu', this.showContext.bind(this));
+        domNode.addEventListener('press', this.showContext.bind(this));
       }
     }
 

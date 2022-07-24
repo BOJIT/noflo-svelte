@@ -42,7 +42,7 @@ function register(context) {
     displayName = 'TheGraphNodeMenuPort';
 
     componentDidMount() {
-        ReactDOM.findDOMNode(this).addEventListener('tap', this.edgeStart);
+        ReactDOM.findDOMNode(this).addEventListener('tap', this.edgeStart.bind(this));
     }
 
     edgeStart(event) {

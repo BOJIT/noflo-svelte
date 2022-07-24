@@ -61,16 +61,16 @@ function register(context) {
         const domNode = ReactDOM.findDOMNode(this);
 
         // Preview edge start
-        domNode.addEventListener('tap', this.edgeStart);
-        domNode.addEventListener('panstart', this.edgeStart);
+        domNode.addEventListener('tap', this.edgeStart.bind(this));
+        domNode.addEventListener('panstart', this.edgeStart.bind(this));
         // Make edge
-        domNode.addEventListener('panend', this.triggerDropOnTarget);
-        domNode.addEventListener('the-graph-edge-drop', this.edgeStart);
+        domNode.addEventListener('panend', this.triggerDropOnTarget.bind(this));
+        domNode.addEventListener('the-graph-edge-drop', this.edgeStart.bind(this));
 
         // Show context menu
         if (this.props.showContext) {
-          domNode.addEventListener('contextmenu', this.showContext);
-          domNode.addEventListener('press', this.showContext);
+          domNode.addEventListener('contextmenu', this.showContext.bind(this));
+          domNode.addEventListener('press', this.showContext.bind(this));
         }
     }
 
