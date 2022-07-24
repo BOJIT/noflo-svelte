@@ -18,12 +18,7 @@ import geometryutils from '../utils/geometryutils';
 import TheGraphModalBG from './the-graph-modalbg';
 const ModalBG = TheGraphModalBG.ModalBG;
 
-let Hammer = null;  // TODO check SSR implications
-let HammerHacks = null;
-if(typeof window !== 'undefined') {
-    Hammer = await import('hammerjs');
-    HammerHacks = await import('../utils/hammer');
-}
+import { Hammer, HammerHacks } from '../utils/hammerHacks';
 
 /*------------------------------ Implementation ------------------------------*/
 
