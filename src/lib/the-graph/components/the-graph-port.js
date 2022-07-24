@@ -170,8 +170,9 @@ function register(context) {
           bubbles: true,
         });
         event.relatedTarget.dispatchEvent(dropEvent);
-      },
-      render() {
+    }
+
+    render() {
         let style;
         if (this.props.label.length > 7) {
           const fontSize = 6 * (30 / (4 * this.props.label.length));

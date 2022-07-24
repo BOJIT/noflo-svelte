@@ -12,17 +12,26 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Hammer from 'hammerjs';
 
-// import HammerHacks from '../utils/hammer';
 import geometryutils from '../utils/geometryutils';
 
-import { ModalBG } from './the-graph-modalbg';
+import TheGraphModalBG from './the-graph-modalbg';
+const ModalBG = TheGraphModalBG.ModalBG;
+
+let Hammer = null;  // TODO check SSR implications
+let HammerHacks = null;
+if(typeof window !== 'undefined') {
+    Hammer = await import('hammerjs');
+    HammerHacks = await import('../utils/hammer');
+}
 
 /*------------------------------ Implementation ------------------------------*/
 
 // Trivial polyfill for Polymer/webcomponents/shadowDOM element unwrapping
-const unwrap = (window.unwrap) ? window.unwrap : (e) => e;
+let unwrap = null;  // TODO check SSR implications
+if(typeof window !== 'undefined') {
+    unwrap = (window.unwrap) ? window.unwrap : (e) => e;
+}
 
 const hotKeys = {
     // Escape
@@ -148,26 +157,9 @@ function register(context) {
         displayName = 'TheGraphApp';
         mixins = mixins;
 
-        getDefaultProps() {
-            return {
-                width: null,
-                height: null,
-                readonly: false,
-                nodeIcons: {},
-                minZoom: 0.15,
-                maxZoom: 15.0,
-                offsetX: 0.0,
-                offsetY: 0.0,
-                menus: null,
-                enableHotKeys: false,
-                getMenuDef: null,
-                onPanScale: null,
-                onNodeSelection: null,
-                onEdgeSelection: null,
-            };
-        }
+        constructor(props) {
+            super(props);
 
-        getInitialState() {
             // Autofit
             const fit = geometryutils.findFit(
                 this.props.graph,
@@ -176,7 +168,7 @@ function register(context) {
                 TheGraph.config.nodeSize,
             );
 
-            return {
+            this.state = {
                 x: fit.x,
                 y: fit.y,
                 scale: fit.scale,
@@ -191,6 +183,23 @@ function register(context) {
                 tooltipY: 0,
                 tooltipVisible: false,
             };
+        }
+
+        static defaultProps = {
+            width: null,
+            height: null,
+            readonly: false,
+            nodeIcons: {},
+            minZoom: 0.15,
+            maxZoom: 15.0,
+            offsetX: 0.0,
+            offsetY: 0.0,
+            menus: null,
+            enableHotKeys: false,
+            getMenuDef: null,
+            onPanScale: null,
+            onNodeSelection: null,
+            onEdgeSelection: null,
         }
 
         zoomFactor = 0;
@@ -209,7 +218,7 @@ function register(context) {
             this.zoomFactor += event.deltaY ? event.deltaY : 0 - event.wheelDeltaY;
             this.zoomX = event.clientX;
             this.zoomY = event.clientY;
-            requestAnimationFrame(this.scheduleWheelZoom);
+            window?.requestAnimationFrame(this.scheduleWheelZoom.bind(this));
         }
 
         scheduleWheelZoom() {
@@ -458,7 +467,7 @@ function register(context) {
             // The events are injected into the DOM to follow regular propagation rules
             const hammertime = new Hammer.Manager(domNode, {
                 domEvents: true,
-                inputClass: hammerhacks.Input,
+                inputClass: HammerHacks.Input,
                 recognizers: [
                 [Hammer.Tap, { }],
                 [Hammer.Press, { time: 500 }],
@@ -480,10 +489,10 @@ function register(context) {
             // Wheel to zoom
             if ('onwheel' in domNode) {
                 // Chrome and Firefox
-                domNode.addEventListener('wheel', this.onWheel);
+                domNode.addEventListener('wheel', this.onWheel.bind(this));
             } else if ('onmousewheel' in domNode) {
                 // Safari
-                domNode.addEventListener('mousewheel', this.onWheel);
+                domNode.addEventListener('mousewheel', this.onWheel.bind(this));
             }
 
             // Tooltip listener
@@ -504,7 +513,7 @@ function register(context) {
             document.addEventListener('keyup', this.keyUp);
 
             // Canvas background
-            bgCanvas = unwrap(ReactDOM.findDOMNode(this.refs.canvas));
+            let bgCanvas = unwrap(ReactDOM.findDOMNode(this.refs.canvas));
             this.bgContext = unwrap(bgCanvas.getContext('2d'));
             this.componentDidUpdate();
 

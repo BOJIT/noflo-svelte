@@ -10,7 +10,7 @@
 
 /*--------------------------------- Imports ----------------------------------*/
 
-import Hammer from 'hammerjs';
+// import Hammer from 'hammerjs';
 // Contains code from hammmer.js
 // https://github.com/hammerjs/hammer.js
 // The MIT License (MIT)

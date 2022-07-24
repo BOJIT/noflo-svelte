@@ -402,7 +402,8 @@ function register(context) {
           || nextProps.highlightPort !== this.props.highlightPort
           || nextProps.ports.dirty === true
         );
-      },
+      };
+
       render() {
         if (this.props.ports.dirty) {
           // This tag is set when an edge or iip changes port colors

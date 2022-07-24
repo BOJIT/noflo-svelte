@@ -107,8 +107,8 @@
             }
         }
 
-        // if(typeof window !== 'undefined')
-        //     app = ReactDOM.render(TheGraph.App(props), container);
+        if(typeof window !== 'undefined')
+            app = ReactDOM.render(TheGraph.App(props), container);
     }
 
     /*-------------------------------- Lifecycle -----------------------------*/

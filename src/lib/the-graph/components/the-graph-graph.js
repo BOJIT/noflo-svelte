@@ -14,6 +14,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import geometryutils from '../utils/geometryutils';
+import mixins from '../utils/mixins';
 
 /*------------------------------ Implementation ------------------------------*/
 
@@ -99,19 +100,10 @@ function register(context) {
     displayName = 'TheGraphGraph';
     mixins = mixins;
 
-    getDefaultProps() {
-        return {
-          library: {},
-          graph: null,
-          app: null,
-          offsetX: 0,
-          offsetY: 0,
-          nodeIcons: {}, // allows overriding icon of a node
-        };
-    }
+    constructor(props) {
+        super(props);
 
-    getInitialState() {
-        return {
+        this.state = {
             displaySelectionGroup: true,
             edgePreview: null,
             edgePreviewX: 0,
@@ -123,7 +115,16 @@ function register(context) {
             animatedEdges: [],
             offsetX: this.props.offsetX,
             offsetY: this.props.offsetY,
-        };
+        }
+    }
+
+    static defaultProps = {
+        library: {},
+        graph: null,
+        app: null,
+        offsetX: 0,
+        offsetY: 0,
+        nodeIcons: {}, // allows overriding icon of a node
     }
 
     componentDidMount() {
@@ -469,7 +470,7 @@ function register(context) {
         if (event && event.libraryDirty) {
             this.libraryDirty = true;
         }
-        window.requestAnimationFrame(this.triggerRender);
+        window?.requestAnimationFrame(this.triggerRender.bind(this));
     }
 
     triggerRender(time) {
