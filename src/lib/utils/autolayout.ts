@@ -32,7 +32,7 @@
 
 
     /* Auto Layout Engine */
-    import KlayNoflo from '$lib/workers/klay-noflo.js';
+    // import KlayNoflo from '$lib/workers/klay-noflo.js';
 
     /* Initialise worker if URL provided */
     // let worker = null;

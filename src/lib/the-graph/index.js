@@ -1,7 +1,20 @@
-// Top level imports
+/**
+ * @file index.js
+ * @author James Bennion-Pedley
+ * @brief New ES6 entry point for TheGraph
+ * @date 24/07/2022
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+
+/*---------------------------------- Imports ---------------------------------*/
+
 import Ease from 'ease-component';
 
-/*----------------------------------------------------------------------------*/
+/*------------------------------ Implementation ------------------------------*/
+
 const TheGraph = {};
 
 // Pull in Ease from NPM, react.animate needs it as a global
@@ -47,11 +60,42 @@ if (typeof window !== 'undefined') {
 // HACK, goes away when everything is CommonJS compatible
 const g = { TheGraph };
 
-TheGraph.factories = import('./the-graph/factories.js');
-TheGraph.merge = import('./the-graph/merge.js');
+/*----------------------------------- Utils ----------------------------------*/
 
-import('./the-graph/the-graph-app.js').register(g);
-import('./the-graph/the-graph-graph.js').register(g);
+import factories from './utils/factories';
+TheGraph.factories = factories;
+
+import merge from './utils/merge';
+TheGraph.merge = merge;
+
+import FONT_AWESOME from './utils/font-awesome-unicode-map';
+TheGraph.FONT_AWESOME = FONT_AWESOME;
+
+import geometryutils from './utils/geometryutils';
+TheGraph.findMinMax = geometryutils.findMinMax;
+TheGraph.findNodeFit = geometryutils.findNodeFit;
+TheGraph.findFit = geometryutils.findFit;
+
+import mixins from './utils/mixins';
+TheGraph.mixins = mixins;
+
+import arcs from './utils/arcs';
+TheGraph.arcs = arcs;
+
+import TextBG from './utils/TextBG';
+TheGraph.TextBG = TextBG;
+
+import SVGImage from './utils/SVGImage';
+TheGraph.SVGImage = SVGImage;
+
+import library from './utils/library';
+TheGraph.library = library;
+
+/*------------------------------------ UI ------------------------------------*/
+
+import app from './components/the-graph-app'; app.register(g);
+import graph from './components/the-graph-graph'; graph.register(g);
+
 import('./the-graph/the-graph-node.js').register(g);
 import('./the-graph/the-graph-node-menu.js').register(g);
 import('./the-graph/the-graph-node-menu-port.js').register(g);
@@ -61,7 +105,8 @@ import('./the-graph/the-graph-edge.js').register(g);
 import('./the-graph/the-graph-iip.js').register(g);
 import('./the-graph/the-graph-group.js').register(g);
 
-TheGraph.menu = import('./the-graph/the-graph-menu.js');
+import menu from './components/the-graph-menu';
+TheGraph.menu = menu;
 // compat
 TheGraph.Menu = TheGraph.menu.Menu;
 TheGraph.factories.menu = TheGraph.menu.factories;
@@ -69,43 +114,26 @@ TheGraph.config.menu = TheGraph.menu.config;
 TheGraph.config.menu.iconRect.rx = TheGraph.config.nodeRadius;
 TheGraph.config.menu.iconRect.ry = TheGraph.config.nodeRadius;
 
-TheGraph.modalbg = import('./the-graph/the-graph-modalbg.js');
+import modalbg from './components/the-graph-modalbg';
+TheGraph.modalbg = modalbg;
 // compat
 TheGraph.ModalBG = TheGraph.modalbg.ModalBG;
 TheGraph.config.ModalBG = TheGraph.config.factories;
 TheGraph.factories.ModalBG = TheGraph.modalbg.factories;
 
-TheGraph.FONT_AWESOME = import('./the-graph/font-awesome-unicode-map.js');
-
-const geometryutils = import('./the-graph/geometryutils');
-// compat
-TheGraph.findMinMax = geometryutils.findMinMax;
-TheGraph.findNodeFit = geometryutils.findNodeFit;
-TheGraph.findFit = geometryutils.findFit;
-
-TheGraph.tooltip = import('./the-graph/the-graph-tooltip.js');
+import tooltip from './components/the-graph-tooltip';
+TheGraph.tooltip = tooltip;
 // compat
 TheGraph.Tooltip = TheGraph.tooltip.Tooltip;
 TheGraph.config.tooltip = TheGraph.tooltip.config;
 TheGraph.factories.tooltip = TheGraph.tooltip.factories;
 
-TheGraph.mixins = import('./the-graph/mixins.js');
-TheGraph.arcs = import('./utils/arcs.js');
+/*---------------------------------- Render ----------------------------------*/
 
-TheGraph.TextBG = import('./the-graph/TextBG.js');
-TheGraph.SVGImage = import('./the-graph/SVGImage.js');
-
-TheGraph.thumb = import('./the-graph-thumb/the-graph-thumb.js.js.js');
-
-TheGraph.nav = import('./the-graph-nav/the-graph-nav.js.js.js');
-
-TheGraph.autolayout = import('./the-graph/the-graph-autolayout.js');
-TheGraph.library = import('./the-graph/the-graph-library.js');
-
-TheGraph.clipboard = import('./the-graph-editor/clipboard.js.js.js');
-
-TheGraph.render = import('./the-graph/render.js');
-
+import render from './utils/render';
+TheGraph.render = render;
 TheGraph.render.register(g);
+
+/*----------------------------------------------------------------------------*/
 
 export default TheGraph;

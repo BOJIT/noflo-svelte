@@ -15,7 +15,8 @@ import React from 'react';
 /*------------------------------ Primary Class -------------------------------*/
 
 class TheGraphTextBG extends React.Component {
-    displayName: 'TheGraphTextBG',
+    displayName = 'TheGraphTextBG';
+
     render() {
         let { text } = this.props;
         if (!text) {
@@ -56,7 +57,7 @@ class TheGraphTextBG extends React.Component {
                 children: text,
             }),
         );
-    },
+    }
 }
 
 /*----------------------------------------------------------------------------*/

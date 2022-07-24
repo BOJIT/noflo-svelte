@@ -57,5 +57,5 @@ const Tooltip = {
 };
 
 export default {
-  Tooltip,
+    Tooltip,
 };

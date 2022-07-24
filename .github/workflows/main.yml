@@ -21,22 +21,22 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: Checkout main branch
+      - name: Checkout master branch
         uses: actions/checkout@v2
         with:
-          ref: main
-          path: main
+          ref: master
+          path: master
           fetch-depth: 0
 
       - name: Install dependencies
         run: |
-          cd main
+          cd master
           npm install
           cd ../
 
       - name: Package Svelte components
         run: |
-          cd main
+          cd master
           npm run package
           cd ../
 
@@ -45,7 +45,7 @@ jobs:
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ./main/package/package.json
+          package: ./master/package/package.json
           access: public
 
   build-demo-pages:
@@ -68,11 +68,11 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: Checkout main branch
+      - name: Checkout master branch
         uses: actions/checkout@v2
         with:
-          ref: main
-          path: main
+          ref: master
+          path: master
           fetch-depth: 0
 
       - name: Checkout gh-pages branch
@@ -83,14 +83,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd main
+          cd master
           npm install
           cd ../
 
       - name: Build SvelteKit app
         if: startsWith(github.event.ref, 'refs/tags')
         run: |
-          cd main
+          cd master
           npm run build
           cd ../
 
@@ -104,14 +104,14 @@ jobs:
 
       - name: Copy dist files across
         if: startsWith(github.event.ref, 'refs/tags')
-        run: cp -r main/build/. gh-pages/
+        run: cp -r master/build/. gh-pages/
 
       - name: Deploy to GitHub pages branch
         if: startsWith(github.event.ref, 'refs/tags')
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          HASH=$(git -C main rev-parse --short HEAD)
+          HASH=$(git -C master rev-parse --short HEAD)
           echo "source commit hash: ${HASH}"
           if [[ `git -C gh-pages status --porcelain` ]]; then
             git -C gh-pages add -A

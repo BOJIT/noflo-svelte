@@ -15,7 +15,8 @@ import React from 'react';
 /*------------------------------ Primary Class -------------------------------*/
 
 class TheGraphSVGImage extends React.Component {
-    displayName: 'TheGraphSVGImage',
+    displayName = 'TheGraphSVGImage';
+
     render() {
         let html = '<image ';
         html = `${html}xlink:href="${this.props.src}"`;
@@ -29,7 +30,7 @@ class TheGraphSVGImage extends React.Component {
             className: this.props.className,
             dangerouslySetInnerHTML: { __html: html },
         });
-    },
+    }
 }
 
 /*----------------------------------------------------------------------------*/
