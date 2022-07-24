@@ -1,48 +1,61 @@
-const ReactDOM = require('react-dom');
-// React mixins
+/**
+ * @file mixins.js
+ * @author James Bennion-Pedley
+ * @brief ES6 port of react mixins
+ * @date 24/07/2022
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+/*--------------------------------- Imports ----------------------------------*/
+
+import ReactDOM from 'react-dom';
+
+/*------------------------------ Implementation ------------------------------*/
 
 // Show fake tooltip
 // Class must have getTooltipTrigger (dom node) and shouldShowTooltip (boolean)
 const Tooltip = {
-  showTooltip(event) {
-    if (!this.shouldShowTooltip()) { return; }
+    showTooltip(event) {
+        if (!this.shouldShowTooltip()) { return; }
 
-    const tooltipEvent = new CustomEvent('the-graph-tooltip', {
-      detail: {
-        tooltip: this.props.label,
-        x: event.clientX,
-        y: event.clientY,
-      },
-      bubbles: true,
-    });
-    ReactDOM.findDOMNode(this).dispatchEvent(tooltipEvent);
-  },
-  hideTooltip() {
-    if (!this.shouldShowTooltip()) { return; }
+        const tooltipEvent = new CustomEvent('the-graph-tooltip', {
+            detail: {
+                tooltip: this.props.label,
+                x: event.clientX,
+                y: event.clientY,
+            },
+            bubbles: true,
+        });
+        ReactDOM.findDOMNode(this).dispatchEvent(tooltipEvent);
+    },
+    hideTooltip() {
+        if (!this.shouldShowTooltip()) { return; }
 
-    const tooltipEvent = new CustomEvent('the-graph-tooltip-hide', {
-      bubbles: true,
-    });
-    if (this.mounted) {
-      ReactDOM.findDOMNode(this).dispatchEvent(tooltipEvent);
-    }
-  },
-  componentDidMount() {
-    this.mounted = true;
-    if (navigator && navigator.userAgent.indexOf('Firefox') !== -1) {
-      // HACK Ff does native tooltips on svg elements
-      return;
-    }
-    const tooltipper = this.getTooltipTrigger();
-    tooltipper.addEventListener('tap', this.showTooltip);
-    tooltipper.addEventListener('mouseenter', this.showTooltip);
-    tooltipper.addEventListener('mouseleave', this.hideTooltip);
-  },
-  componentWillUnmount() {
-    this.mounted = false;
-  },
+        const tooltipEvent = new CustomEvent('the-graph-tooltip-hide', {
+            bubbles: true,
+        });
+        if (this.mounted) {
+            ReactDOM.findDOMNode(this).dispatchEvent(tooltipEvent);
+        }
+    },
+    componentDidMount() {
+        this.mounted = true;
+        if (navigator && navigator.userAgent.indexOf('Firefox') !== -1) {
+            // HACK Ff does native tooltips on svg elements
+            return;
+        }
+        const tooltipper = this.getTooltipTrigger();
+        tooltipper.addEventListener('tap', this.showTooltip);
+        tooltipper.addEventListener('mouseenter', this.showTooltip);
+        tooltipper.addEventListener('mouseleave', this.hideTooltip);
+    },
+    componentWillUnmount() {
+        this.mounted = false;
+    },
 };
 
-module.exports = {
+export default {
   Tooltip,
 };

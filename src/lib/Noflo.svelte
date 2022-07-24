@@ -68,7 +68,7 @@
 
     /* Handle edge selection */
     function edgeSelectedCallback(key: string) {
-        // TODO
+        // TODO implement edge selection
     }
 
     /*------------------------------ React State -----------------------------*/
