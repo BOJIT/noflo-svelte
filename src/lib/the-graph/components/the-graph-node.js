@@ -124,29 +124,31 @@ function register(context) {
       TooltipMixin,
     ];
 
-    getInitialState() {
-        return {
-          moving: false,
-          lastTrackX: null,
-          lastTrackY: null,
-        };
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            moving: false,
+            lastTrackX: null,
+            lastTrackY: null,
+        }
+    }
 
     componentDidMount() {
         const domNode = ReactDOM.findDOMNode(this);
 
         // Dragging
-        domNode.addEventListener('panstart', this.onTrackStart);
+        domNode.addEventListener('panstart', this.onTrackStart.bind(this));
 
         // Tap to select
         if (this.props.onNodeSelection) {
-          domNode.addEventListener('tap', this.onNodeSelection);
+          domNode.addEventListener('tap', this.onNodeSelection.bind(this));
         }
 
         // Context menu
         if (this.props.showContext) {
-          domNode.addEventListener('contextmenu', this.showContext);
-          domNode.addEventListener('press', this.showContext);
+          domNode.addEventListener('contextmenu', this.showContext.bind(this));
+          domNode.addEventListener('press', this.showContext.bind(this));
         }
     };
 
@@ -169,9 +171,9 @@ function register(context) {
         if (this.props.app.pinching) { return; }
 
         const domNode = ReactDOM.findDOMNode(this);
-        domNode.addEventListener('panmove', this.onTrack);
-        domNode.addEventListener('panend', this.onTrackEnd);
-        domNode.addEventListener('pancancel', this.onTrackEnd);
+        domNode.addEventListener('panmove', this.onTrack.bind(this));
+        domNode.addEventListener('panend', this.onTrackEnd.bind(this));
+        domNode.addEventListener('pancancel', this.onTrackEnd.bind(this));
 
         // Moving a node should only be a single transaction
         if (this.props.export) {
@@ -229,9 +231,9 @@ function register(context) {
         this.setState({ lastTrackX: null, lastTrackY: null });
 
         const domNode = ReactDOM.findDOMNode(this);
-        domNode.removeEventListener('panmove', this.onTrack);
-        domNode.removeEventListener('panend', this.onTrackEnd);
-        domNode.removeEventListener('pancanel', this.onTrackEnd);
+        domNode.removeEventListener('panmove', this.onTrack.bind(this));
+        domNode.removeEventListener('panend', this.onTrackEnd.bind(this));
+        domNode.removeEventListener('pancanel', this.onTrackEnd.bind(this));
 
         // Snap to grid
         const snapToGrid = true;

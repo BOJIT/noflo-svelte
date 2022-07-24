@@ -16,9 +16,14 @@
     const dispatch = createEventDispatcher();
 
     /* Types */
-    import type { IconLibrary } from './types/IconTypes';
+    import type { IconLibrary } from '$lib/types/IconTypes';
     import type { ComponentLibrary } from '$lib/types/ComponentTypes';
     import type { Graph } from '$lib/fbp-graph/Graph';
+
+    /* Stylesheets */
+    import "$lib/themes/the-graph-fontawesome.css";
+    import "$lib/themes/the-graph-dark.css";
+    import "$lib/themes/the-graph-light.css";
 
     /* Core */
     import TheGraph from '$lib/the-graph';
@@ -204,3 +209,4 @@
 
 <div bind:this={container} class:the-graph-dark="{theme === "dark"}"
                            class:the-graph-light="{theme === "light"}" />
+

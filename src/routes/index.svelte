@@ -12,8 +12,43 @@
 <script lang='ts'>
     import Noflo from "$lib/Noflo.svelte";
     import Library from "$lib/test/components";
+
+    let API: any;
 </script>
 
+<div class="editor">
+    <Noflo library={Library} bind:API/>
+</div>
 
-<Noflo library={Library}/>
+<div class=overlay>
+    <button on:click={() => {
+        API.addComponent('filter');
+    }}>ADD</button>
+</div>
 
+
+<style>
+    :global(body) {
+        margin: 0px;
+        background-color: black;
+    }
+
+    .editor {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .overlay {
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        padding: 1rem;
+    }
+
+    .overlay button {
+        font-size: 1.5rem;
+    }
+</style>

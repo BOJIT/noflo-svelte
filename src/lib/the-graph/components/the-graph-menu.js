@@ -145,14 +145,16 @@ class TheGraphMenu extends React.Component {
     displayName = 'TheGraphMenu';
     radius = config.radius;
 
-    getInitialState() {
-        // Use these in CSS for cursor and hover, and to attach listeners
-        return {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            // Use these in CSS for cursor and hover, and to attach listeners
             n4tappable: (this.props.menu.n4 && this.props.menu.n4.action),
             s4tappable: (this.props.menu.s4 && this.props.menu.s4.action),
             e4tappable: (this.props.menu.e4 && this.props.menu.e4.action),
             w4tappable: (this.props.menu.w4 && this.props.menu.w4.action),
-        };
+        }
     }
 
     onTapN4() {

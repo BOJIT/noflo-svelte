@@ -144,28 +144,28 @@ function register(context) {
 
     subscribeGraph(previous, next) {
         if (previous) {
-            previous.removeListener('addEdge', this.resetPortRoute);
-            previous.removeListener('changeEdge', this.resetPortRoute);
-            previous.removeListener('removeEdge', this.resetPortRoute);
-            previous.removeListener('removeInitial', this.resetPortRoute);
+            previous.removeListener('addEdge', this.resetPortRoute.bind(this));
+            previous.removeListener('changeEdge', this.resetPortRoute.bind(this));
+            previous.removeListener('removeEdge', this.resetPortRoute.bind(this));
+            previous.removeListener('removeInitial', this.resetPortRoute.bind(this));
 
-            previous.removeListener('changeNode', this.markDirty);
-            previous.removeListener('changeInport', this.markDirty);
-            previous.removeListener('changeOutport', this.markDirty);
-            previous.removeListener('endTransaction', this.markDirty);
+            previous.removeListener('changeNode', this.markDirty.bind(this));
+            previous.removeListener('changeInport', this.markDirty.bind(this));
+            previous.removeListener('changeOutport', this.markDirty.bind(this));
+            previous.removeListener('endTransaction', this.markDirty.bind(this));
         }
         if (next) {
             // To change port colors
-            next.on('addEdge', this.resetPortRoute);
-            next.on('changeEdge', this.resetPortRoute);
-            next.on('removeEdge', this.resetPortRoute);
-            next.on('removeInitial', this.resetPortRoute);
+            next.on('addEdge', this.resetPortRoute.bind(this));
+            next.on('changeEdge', this.resetPortRoute.bind(this));
+            next.on('removeEdge', this.resetPortRoute.bind(this));
+            next.on('removeInitial', this.resetPortRoute.bind(this));
 
             // Listen to fbp-graph graph object's events
-            next.on('changeNode', this.markDirty);
-            next.on('changeInport', this.markDirty);
-            next.on('changeOutport', this.markDirty);
-            next.on('endTransaction', this.markDirty);
+            next.on('changeNode', this.markDirty.bind(this));
+            next.on('changeInport', this.markDirty.bind(this));
+            next.on('changeOutport', this.markDirty.bind(this));
+            next.on('endTransaction', this.markDirty.bind(this));
         }
     }
 
@@ -202,19 +202,19 @@ function register(context) {
         edge.type = event.detail.port.type;
 
         const appDomNode = ReactDOM.findDOMNode(this.props.app);
-        appDomNode.addEventListener('mousemove', this.renderPreviewEdge);
-        appDomNode.addEventListener('panmove', this.renderPreviewEdge);
+        appDomNode.addEventListener('mousemove', this.renderPreviewEdge.bind(this));
+        appDomNode.addEventListener('panmove', this.renderPreviewEdge.bind(this));
         // TODO tap to add new node here
-        appDomNode.addEventListener('tap', this.cancelPreviewEdge);
+        appDomNode.addEventListener('tap', this.cancelPreviewEdge.bind(this));
 
         this.setState({ edgePreview: edge });
     }
 
     cancelPreviewEdge(event) {
         const appDomNode = ReactDOM.findDOMNode(this.props.app);
-        appDomNode.removeEventListener('mousemove', this.renderPreviewEdge);
-        appDomNode.removeEventListener('panmove', this.renderPreviewEdge);
-        appDomNode.removeEventListener('tap', this.cancelPreviewEdge);
+        appDomNode.removeEventListener('mousemove', this.renderPreviewEdge.bind(this));
+        appDomNode.removeEventListener('panmove', this.renderPreviewEdge.bind(this));
+        appDomNode.removeEventListener('tap', this.cancelPreviewEdge.bind(this));
         if (this.state.edgePreview) {
             this.setState({ edgePreview: null });
             this.markDirty();

@@ -317,8 +317,8 @@ function register(context) {
 
         onTrackStart() {
             const domNode = ReactDOM.findDOMNode(this);
-            domNode.addEventListener('panmove', this.onTrack);
-            domNode.addEventListener('panend', this.onTrackEnd);
+            domNode.addEventListener('panmove', this.onTrack.bind(this));
+            domNode.addEventListener('panend', this.onTrackEnd.bind(this));
 
             this.setState({ trackStartX: this.state.x, trackStartY: this.state.y });
         }
@@ -337,8 +337,8 @@ function register(context) {
             event.stopPropagation();
 
             const domNode = ReactDOM.findDOMNode(this);
-            domNode.removeEventListener('panmove', this.onTrack);
-            domNode.removeEventListener('panend', this.onTrackEnd);
+            domNode.removeEventListener('panmove', this.onTrack.bind(this));
+            domNode.removeEventListener('panend', this.onTrackEnd.bind(this));
 
             this.setState({ trackStartX: null, trackStartY: null });
         }
@@ -460,7 +460,7 @@ function register(context) {
 
             // Unselect edges and nodes
             if (this.props.onNodeSelection) {
-                domNode.addEventListener('tap', this.unselectAll);
+                domNode.addEventListener('tap', this.unselectAll.bind(this));
             }
 
             // Setup Hammer.js events for this and all children
@@ -477,7 +477,7 @@ function register(context) {
             });
 
             // Gesture event for pan
-            domNode.addEventListener('panstart', this.onTrackStart);
+            domNode.addEventListener('panstart', this.onTrackStart.bind(this));
 
             const isTouchDevice = 'ontouchstart' in document.documentElement;
             if (isTouchDevice && hammertime) {
@@ -496,13 +496,13 @@ function register(context) {
             }
 
             // Tooltip listener
-            domNode.addEventListener('the-graph-tooltip', this.changeTooltip);
-            domNode.addEventListener('the-graph-tooltip-hide', this.hideTooltip);
+            domNode.addEventListener('the-graph-tooltip', this.changeTooltip.bind(this));
+            domNode.addEventListener('the-graph-tooltip-hide', this.hideTooltip.bind(this));
 
             // Edge preview
-            domNode.addEventListener('the-graph-edge-start', this.edgeStart);
+            domNode.addEventListener('the-graph-edge-start', this.edgeStart.bind(this));
 
-            domNode.addEventListener('contextmenu', this.onShowContext);
+            domNode.addEventListener('contextmenu', this.onShowContext.bind(this));
 
             // Start zoom from middle if zoom before mouse move
             this.mouseX = Math.floor(this.props.width / 2);

@@ -45,12 +45,14 @@ function register(context) {
   class TheGraphGroup extends React.Component {
     displayName = 'TheGraphGroup';
 
-    getInitialState() {
-      return {
-        moving: false,
-        lastTrackX: null,
-        lastTrackY: null,
-      };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            moving: false,
+            lastTrackX: null,
+            lastTrackY: null,
+        }
     }
 
     componentDidMount() {
