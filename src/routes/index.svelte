@@ -14,16 +14,34 @@
     import Library from "$lib/test/components";
 
     let API: any;
+    let state: any;
 </script>
 
+
 <div class="editor">
-    <Noflo library={Library} bind:API/>
+    <Noflo library={Library} bind:API bind:state/>
 </div>
 
 <div class=overlay>
     <button on:click={() => {
-        API.addComponent('filter');
-    }}>ADD</button>
+        API.addNode('filter');
+    }}>Add Filter</button>
+    <button on:click={() => {
+        API.addNode('console log');
+    }}>Add Log</button>
+    <button on:click={() => {
+        if(state.selection.type === 'node') {
+            API.removeNode(state.selection.target);
+        } else if(state.selection.type === 'edge') {
+            API.removeEdge(state.selection.target);
+        }
+    }}>Remove Selected</button>
+    <button on:click={() => {
+        API.recentreGraph();
+    }}>Recentre</button>
+    <button on:click={() => {
+        API.clearGraph();
+    }}>Clear</button>
 </div>
 
 

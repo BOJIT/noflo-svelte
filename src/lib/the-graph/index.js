@@ -93,6 +93,7 @@ TheGraph.library = library;
 
 /*------------------------------------ UI ------------------------------------*/
 
+TheGraph.App = null;
 import app from './components/the-graph-app'; app.register(g);
 import graph from './components/the-graph-graph'; graph.register(g);
 import node from './components/the-graph-node'; node.register(g);

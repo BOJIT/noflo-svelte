@@ -20,6 +20,17 @@
     import type { ComponentLibrary } from '$lib/types/ComponentTypes';
     import type { Graph } from '$lib/fbp-graph/Graph';
 
+    type SelectionData = {
+        type: 'edge' | 'node' | null,
+        target: string,
+    }
+
+    type State = {
+        selection: SelectionData,
+        canUndo: boolean,
+        canRedo: boolean,
+    }
+
     /* Stylesheets */
     import "$lib/themes/the-graph-fontawesome.css";
     import "$lib/themes/the-graph-dark.css";
@@ -36,9 +47,9 @@
     import History from '$lib/utils/history';
     import generateIconLibrary from '$lib/utils/generateIconLibrary';
 
-    let app: any;
 
     /* Internal State */
+    let app: any;
     let container: HTMLElement;
     let iconLibrary: IconLibrary;
     let history: History | null = null;
@@ -50,30 +61,47 @@
 
     $: iconLibrary = generateIconLibrary(library);
 
-    export let state = {
-        selected: "",
+    export let state: State = {
+        selection: {
+            type: null,
+            target: '',
+        },
         canUndo: false,
-        canRedo: false
+        canRedo: false,
     }
 
-    /*------------------------------------------------------------------------*/
+    /*------------------------------- Callbacks ------------------------------*/
 
     /* Handle component selection */
-    function nodeSelectedCallback(key: string) {
-        if(key === undefined) {
+    function nodeSelectedCallback(id: string) {
+        if(id === undefined) {
             app.refs.graph.setSelectedNodes({});
-            state.selected = "";
+            state.selection.type = null;
+            state.selection.target = '';
         } else {
             let sel: any = {};
-            sel[key] = true;
+            sel[id] = true;
+            app.refs.graph.setSelectedEdges([]);
             app.refs.graph.setSelectedNodes(sel);
-            state.selected = key;
+            state.selection.type = 'node';
+            state.selection.target = id;
         }
     }
 
     /* Handle edge selection */
-    function edgeSelectedCallback(key: string) {
-        // TODO implement edge selection
+    function edgeSelectedCallback(id: any, edge:any) {
+        if(id === undefined) {
+            app.refs.graph.setSelectedEdges([]);
+            state.selection.type = null;
+            state.selection.target = '';
+        } else {
+            let sel: any[] = [];
+            sel[0] = edge;
+            app.refs.graph.setSelectedNodes({});
+            app.refs.graph.setSelectedEdges(sel);
+            state.selection.type = 'edge';
+            state.selection.target = edge;
+        }
     }
 
     /*------------------------------ React State -----------------------------*/
@@ -86,7 +114,6 @@
 
         graph.on('endTransaction', () => {
             history?.save(graph);
-
             render(false)
             dispatch('graphChange');
         });
@@ -101,7 +128,7 @@
             library: iconLibrary,
             enableHotKeys: false,
             onNodeSelection: nodeSelectedCallback,
-            onEdgeSelection: (() => {}),
+            onEdgeSelection: edgeSelectedCallback,
         };
 
         /* If redraw is set to true, clear out and re-render the editor */
@@ -140,18 +167,16 @@
     /*-------------------------------- Helpers -------------------------------*/
 
     /* Add component to graph and UI */
-    function addComponent(key: string) {
+    function addNode(key: string) {
         /* Generate random ID then check that it is unique for the graph */
         let id = Math.round(Math.random() * 100000).toString(36);
         while(graph.nodes.some((node) => node.id === id)) {
             id = Math.round(Math.random() * 100000).toString(36);
         }
 
-        const component = library[key];
-
         /* Place in stack if place is taken */
         let increment = 0;
-        while(graph.nodes.some((node) => node.metadata.x ===
+        while(graph.nodes.some((node) => node.metadata?.x ===
                                         (window.innerWidth/2 + increment))) {
             increment += 20;
         }
@@ -168,18 +193,18 @@
         app.unselectAll();
     };
 
-    /* Remove component from graph and UI */
-    function removeComponent(id: string) {
-        /* Reset any component selections */
-        app.unselectAll();
-
-        graph.removeNode(id);
-    }
-
     /* Expose function API */
     export const API = {
-        addComponent,
-        removeComponent,
+        addNode,
+        removeNode: (id: string) => {
+            app.unselectAll();
+            graph.removeNode(id);
+        },
+        removeEdge: (edge: any) => {
+            app.unselectAll();
+            graph.removeEdge(edge.from.node, edge.from.port,
+                             edge.to.node,   edge.to.port);
+        },
         // autolayoutGraph,
         recentreGraph: () => {
             app.triggerFit();
