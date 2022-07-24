@@ -95,15 +95,14 @@ TheGraph.library = library;
 
 import app from './components/the-graph-app'; app.register(g);
 import graph from './components/the-graph-graph'; graph.register(g);
-
-import('./the-graph/the-graph-node.js').register(g);
-import('./the-graph/the-graph-node-menu.js').register(g);
-import('./the-graph/the-graph-node-menu-port.js').register(g);
-import('./the-graph/the-graph-node-menu-ports.js').register(g);
-import('./the-graph/the-graph-port.js').register(g);
-import('./the-graph/the-graph-edge.js').register(g);
-import('./the-graph/the-graph-iip.js').register(g);
-import('./the-graph/the-graph-group.js').register(g);
+import node from './components/the-graph-node'; node.register(g);
+import nodeMenu from './components/the-graph-node-menu'; nodeMenu.register(g);
+import nodeMenuPort from './components/the-graph-node-menu-port'; nodeMenuPort.register(g);
+import nodeMenuPorts from './components/the-graph-node-menu-ports'; nodeMenuPorts.register(g);
+import port from './components/the-graph-port'; port.register(g);
+import edge from './components/the-graph-edge'; edge.register(g);
+import iip from './components/the-graph-iip'; iip.register(g);
+import group from './components/the-graph-group'; group.register(g);
 
 import menu from './components/the-graph-menu';
 TheGraph.menu = menu;

@@ -1,9 +1,24 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const createReactClass = require('create-react-class');
-const TooltipMixin = require('./mixins').Tooltip;
+/**
+ * @file the-graph-edge.js
+ * @author James Bennion-Pedley
+ * @brief ES6 port of the-graph-edge component
+ * @date 24/07/2022
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 
-module.exports.register = function (context) {
+/*---------------------------------- Imports ---------------------------------*/
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import mixins from '../utils/mixins';
+const TooltipMixin = mixins.Tooltip;
+
+/*------------------------------ Implementation ------------------------------*/
+
+function register(context) {
   const { TheGraph } = context;
 
   TheGraph.config.edge = {
@@ -71,14 +86,15 @@ module.exports.register = function (context) {
   };
 
   // Edge view
-
-  TheGraph.Edge = React.createElement.bind(null, createReactClass({
-    displayName: 'TheGraphEdge',
-    mixins: [
+  class TheGraphEdge extends React.Component {
+    displayName = 'TheGraphEdge';
+    mixins = [
       TooltipMixin,
-    ],
+    ];
+
     UNSAFE_componentWillMount() {
-    },
+    }
+
     componentDidMount() {
       const domNode = ReactDOM.findDOMNode(this);
 
@@ -92,14 +108,16 @@ module.exports.register = function (context) {
         domNode.addEventListener('contextmenu', this.showContext);
         domNode.addEventListener('press', this.showContext);
       }
-    },
+    }
+
     onEdgeSelection(event) {
       // Don't click app
       event.stopPropagation();
 
       const toggle = (TheGraph.metaKeyPressed || event.pointerType === 'touch');
       this.props.onEdgeSelection(this.props.edgeID, this.props.edge, toggle);
-    },
+    }
+
     showContext(event) {
       // Don't show native context menu
       event.preventDefault();
@@ -129,7 +147,8 @@ module.exports.register = function (context) {
         itemKey: (this.props.export ? this.props.exportKey : null),
         item: (this.props.export ? this.props.export : this.props.edge),
       });
-    },
+    }
+
     getContext(menu, options, hide) {
       return TheGraph.Menu({
         menu,
@@ -138,7 +157,8 @@ module.exports.register = function (context) {
         label: this.props.label,
         iconColor: this.props.route,
       });
-    },
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
       // Only rerender if changed
       return (
@@ -150,13 +170,16 @@ module.exports.register = function (context) {
         || nextProps.animated !== this.props.animated
         || nextProps.route !== this.props.route
       );
-    },
+    }
+
     getTooltipTrigger() {
       return ReactDOM.findDOMNode(this.refs.touch);
-    },
+    }
+
     shouldShowTooltip() {
       return true;
-    },
+    }
+
     render() {
       const sourceX = this.props.sX;
       const sourceY = this.props.sY;
@@ -276,6 +299,14 @@ module.exports.register = function (context) {
 
       return TheGraph.factories.edge.createEdgeGroup(containerOptions,
         [backgroundPath, arrowBg, foregroundPath, touchPath, arrow]);
-    },
-  }));
+    }
+  }
+
+  TheGraph.Edge = React.createElement.bind(null, TheGraphEdge);
 };
+
+/*----------------------------------------------------------------------------*/
+
+export default {
+    register
+}

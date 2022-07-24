@@ -1,8 +1,21 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const createReactClass = require('create-react-class');
+/**
+ * @file the-graph-group.js
+ * @author James Bennion-Pedley
+ * @brief ES6 port of the-graph-group component
+ * @date 24/07/2022
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 
-module.exports.register = function (context) {
+/*---------------------------------- Imports ---------------------------------*/
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+/*------------------------------ Implementation ------------------------------*/
+
+function register(context) {
   const { TheGraph } = context;
 
   TheGraph.config.group = {
@@ -29,16 +42,17 @@ module.exports.register = function (context) {
   };
 
   // Group view
+  class TheGraphGroup extends React.Component {
+    displayName = 'TheGraphGroup';
 
-  TheGraph.Group = React.createElement.bind(null, createReactClass({
-    displayName: 'TheGraphGroup',
     getInitialState() {
       return {
         moving: false,
         lastTrackX: null,
         lastTrackY: null,
       };
-    },
+    }
+
     componentDidMount() {
       // Move group
       const dragNode = ReactDOM.findDOMNode(this.refs.events);
@@ -50,7 +64,8 @@ module.exports.register = function (context) {
         domNode.addEventListener('contextmenu', this.showContext);
         domNode.addEventListener('press', this.showContext);
       }
-    },
+    }
+
     showContext(event) {
       // Don't show native context menu
       event.preventDefault();
@@ -80,7 +95,8 @@ module.exports.register = function (context) {
         itemKey: this.props.label,
         item: this.props.item,
       });
-    },
+    }
+
     getContext(menu, options, hide) {
       return TheGraph.Menu({
         menu,
@@ -88,7 +104,8 @@ module.exports.register = function (context) {
         label: this.props.label,
         triggerHideContext: hide,
       });
-    },
+    }
+
     onTrackStart(event) {
       // Don't pan graph
       event.stopPropagation();
@@ -100,7 +117,8 @@ module.exports.register = function (context) {
       dragNode.addEventListener('panend', this.onTrackEnd);
 
       this.props.graph.startTransaction('movegroup');
-    },
+    }
+
     onTrack(event) {
       // Don't pan graph
       event.stopPropagation();
@@ -116,7 +134,8 @@ module.exports.register = function (context) {
 
       this.setState({ lastTrackX: x, lastTrackY: y });
       this.props.triggerMoveGroup(this.props.item.nodes, deltaX, deltaY);
-    },
+    }
+
     onTrackEnd(event) {
       this.setState({ moving: false });
       // Don't pan graph
@@ -131,7 +150,8 @@ module.exports.register = function (context) {
 
       this.setState({ lastTrackX: null, lastTrackY: null });
       this.props.graph.endTransaction('movegroup');
-    },
+    }
+
     render() {
       const x = this.props.minX - TheGraph.config.nodeWidth / 2;
       const y = this.props.minY - TheGraph.config.nodeHeight / 2;
@@ -199,6 +219,14 @@ module.exports.register = function (context) {
 
       const containerOptions = TheGraph.merge(TheGraph.config.group.container, {});
       return TheGraph.factories.group.createGroupGroup.call(this, containerOptions, groupContents);
-    },
-  }));
+    }
+  }
+
+  TheGraph.Group = React.createElement.bind(null, TheGraphGroup);
 };
+
+/*----------------------------------------------------------------------------*/
+
+export default {
+    register
+}
