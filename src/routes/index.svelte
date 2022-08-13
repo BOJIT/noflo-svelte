@@ -9,6 +9,11 @@
 -->
 
 
+<script context="module">
+    export const prerender = false;
+</script>
+
+
 <script lang='ts'>
     import Noflo from "$lib/Noflo.svelte";
     import Library from "$lib/test/components";
@@ -21,6 +26,7 @@
 <div class="editor">
     <Noflo library={Library} bind:API bind:state/>
 </div>
+
 
 <div class=overlay>
     <button on:click={() => {
