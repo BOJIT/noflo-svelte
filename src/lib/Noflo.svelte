@@ -4,8 +4,6 @@
  * @brief Main entry point for Noflo graph UI
  * @date 23/07/2022
  *
- * @note it is recommended to disable prerendering for pages using this component
- *
  * @copyright Copyright (c) 2022
  *
 -->
@@ -116,7 +114,7 @@
 
         graph.on('endTransaction', () => {
             history?.save(graph);
-            render(false)
+            // render(false)
             dispatch('graphChange');
         });
     }

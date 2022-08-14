@@ -7,7 +7,7 @@
 // definition changes.
 /* eslint-env browser, node */
 import { EventEmitter } from 'events';
-import * as clone from 'clone';
+import clone from './utils/clone';
 import type {
   JournalMetadata,
   GraphOptions,
