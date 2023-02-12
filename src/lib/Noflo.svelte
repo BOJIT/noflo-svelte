@@ -35,9 +35,9 @@
     import type { Graph } from '$lib/fbp-graph/Graph';
 
     /* Assets */
-    import "$lib/themes/the-graph-fontawesome.css";
-    import "$lib/themes/the-graph-dark.css";
-    import "$lib/themes/the-graph-light.css";
+    import "./themes/the-graph-fontawesome.css";
+    import "./themes/the-graph-dark.css";
+    import "./themes/the-graph-light.css";
 
     /* Core */
     import TheGraph from '$lib/the-graph';

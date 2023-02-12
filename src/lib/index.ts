@@ -12,16 +12,21 @@
 
 import Noflo from "$lib/Noflo.svelte";
 
+import Graph from "$lib/fbp-graph";
+import type { GraphJson } from "$lib/fbp-graph/Types";
+
 /*--------------------------------- State ------------------------------------*/
 
 /*------------------------------- Functions ----------------------------------*/
 
 /*-------------------------------- Exports -----------------------------------*/
 
+export { Graph as FbpGraph }
+export type { GraphJson as FbpGraphJson };
+
 export default Noflo;
 
 // TODO export:
 /*
-- fbp-graph as { Graph }
 - Component Type
 */
