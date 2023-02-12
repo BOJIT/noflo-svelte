@@ -8,8 +8,22 @@
  *
 -->
 
+<script lang="ts" context="module">
+    type SelectionData = {
+        type: 'edge' | 'node' | null,
+        target: string,
+    };
+
+    export type NofloState = {
+        selection: SelectionData,
+        canUndo: boolean,
+        canRedo: boolean,
+    };
+</script>
 
 <script lang="ts">
+    /*-------------------------------- Imports -------------------------------*/
+
     /* Svelte Core */
     import { afterUpdate, onDestroy, onMount } from 'svelte';
     import { createEventDispatcher } from 'svelte';
@@ -20,18 +34,8 @@
     import type { ComponentLibrary } from '$lib/types/ComponentTypes';
     import type { Graph } from '$lib/fbp-graph/Graph';
 
-    type SelectionData = {
-        type: 'edge' | 'node' | null,
-        target: string,
-    }
-
-    type State = {
-        selection: SelectionData,
-        canUndo: boolean,
-        canRedo: boolean,
-    }
-
-    /* Stylesheets */
+    /* Assets */
+    import "$lib/assets/fontawesome-webfont.woff2";
     import "$lib/themes/the-graph-fontawesome.css";
     import "$lib/themes/the-graph-dark.css";
     import "$lib/themes/the-graph-light.css";
@@ -47,21 +51,16 @@
     import History from '$lib/utils/history';
     import generateIconLibrary from '$lib/utils/generateIconLibrary';
 
+    /*--------------------------------- Types --------------------------------*/
 
-    /* Internal State */
-    let app: any;
-    let container: HTMLElement;
-    let iconLibrary: IconLibrary;
-    let history: History | null = null;
+    /*--------------------------------- Props --------------------------------*/
 
     /* Public Interface */
     export let library: ComponentLibrary;
     export let graph: Graph = new FbpGraph.Graph();
     export let theme: "light" | "dark" = "dark";
 
-    $: iconLibrary = generateIconLibrary(library);
-
-    export let state: State = {
+    export let state: NofloState = {
         selection: {
             type: null,
             target: '',
@@ -69,6 +68,79 @@
         canUndo: false,
         canRedo: false,
     }
+
+    /* Internal State */
+    let app: any;
+    let container: HTMLElement;
+    let iconLibrary: IconLibrary;
+    let history: History | null = null;
+
+
+    /*-------------------------------- Methods -------------------------------*/
+
+    export function addNode(key: string) {
+        /* Generate random ID then check that it is unique for the graph */
+        let id = Math.round(Math.random() * 100000).toString(36);
+        while(graph.nodes.some((node) => node.id === id)) {
+            id = Math.round(Math.random() * 100000).toString(36);
+        }
+
+        /* Place in stack if place is taken */
+        let increment = 0;
+        while(graph.nodes.some((node) => node.metadata?.x ===
+                                        (window.innerWidth/2 + increment))) {
+            increment += 20;
+        }
+
+        const metadata = {
+            label: key,
+            x: window.innerWidth/2 + increment,
+            y: window.innerHeight/2 + increment,
+        };
+
+        graph.addNode(id, key, metadata);
+
+        /* Reset any component selections */
+        app.unselectAll();
+    };
+
+    export function removeNode(id: string) {
+        app.unselectAll();
+        graph.removeNode(id);
+    };
+
+    export function removeEdge(edge: any) {
+        app.unselectAll();
+        graph.removeEdge(edge.from.node, edge.from.port,
+                            edge.to.node,   edge.to.port);
+    };
+
+    export function recentreGraph() {
+        app.triggerFit();
+    };
+
+    export function clearGraph() {
+        graph = new FbpGraph.Graph();
+        addGraphHooks();
+    };
+
+    export function clearHistory() {
+        history = new History(graph, 10);
+    };
+
+    export async function undo() {
+        if(history?.canUndo) {
+            let g = await history.undo();
+            if(g !== undefined) { graph = g; }
+        }
+    };
+
+    export async function redo() {
+        if(history?.canRedo) {
+            let g = await history.redo();
+            if(g !== undefined) { graph = g; }
+        }
+    };
 
     /*------------------------------- Callbacks ------------------------------*/
 
@@ -145,6 +217,8 @@
 
     /*-------------------------------- Lifecycle -----------------------------*/
 
+    $: iconLibrary = generateIconLibrary(library);
+
     onMount(() => {
         /* Initialise new graph with no history */
         addGraphHooks();
@@ -163,72 +237,6 @@
         if(typeof window !== 'undefined')
             ReactDOM.unmountComponentAtNode(container);
     });
-
-    /*-------------------------------- Helpers -------------------------------*/
-
-    /* Add component to graph and UI */
-    function addNode(key: string) {
-        /* Generate random ID then check that it is unique for the graph */
-        let id = Math.round(Math.random() * 100000).toString(36);
-        while(graph.nodes.some((node) => node.id === id)) {
-            id = Math.round(Math.random() * 100000).toString(36);
-        }
-
-        /* Place in stack if place is taken */
-        let increment = 0;
-        while(graph.nodes.some((node) => node.metadata?.x ===
-                                        (window.innerWidth/2 + increment))) {
-            increment += 20;
-        }
-
-        const metadata = {
-            label: key,
-            x: window.innerWidth/2 + increment,
-            y: window.innerHeight/2 + increment,
-        };
-
-        graph.addNode(id, key, metadata);
-
-        /* Reset any component selections */
-        app.unselectAll();
-    };
-
-    /* Expose function API */
-    export const API = {
-        addNode,
-        removeNode: (id: string) => {
-            app.unselectAll();
-            graph.removeNode(id);
-        },
-        removeEdge: (edge: any) => {
-            app.unselectAll();
-            graph.removeEdge(edge.from.node, edge.from.port,
-                             edge.to.node,   edge.to.port);
-        },
-        // autolayoutGraph,
-        recentreGraph: () => {
-            app.triggerFit();
-        },
-        clearGraph: () => {
-            graph = new FbpGraph.Graph();
-            addGraphHooks();
-        },
-        clearHistory: () => {
-            history = new History(graph, 10);
-        },
-        undo: async () => {
-            if(history?.canUndo) {
-                let g = await history.undo();
-                if(g !== undefined) { graph = g; }
-            }
-        },
-        redo: async () => {
-            if(history?.canRedo) {
-                let g = await history.redo();
-                if(g !== undefined) { graph = g; }
-            }
-        }
-    }
 </script>
 
 

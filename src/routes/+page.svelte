@@ -1,53 +1,60 @@
 <!--
- * @file index.svelte
+ * @file +page.svelte
  * @author James Bennion-Pedley
- * @brief Brief summary here
- * @date 23/07/2022
+ * @brief Demo page
+ * @date 12/02/2023
  *
- * @copyright Copyright (c) 2022
+ * @copyright Copyright (c) 2023
  *
 -->
 
-
 <script lang='ts'>
-    import Noflo from "$lib/Noflo.svelte";
+    /*-------------------------------- Imports -------------------------------*/
+
+    import Noflo, { type NofloState } from "$lib/Noflo.svelte";
     import Library from "$lib/test/components";
 
-    let API: any;
-    let state: any;
+    /*--------------------------------- Props --------------------------------*/
+
+    let noflo: Noflo;
+    let state: NofloState;
+
+    /*-------------------------------- Methods -------------------------------*/
+
+    /*------------------------------- Lifecycle ------------------------------*/
+
 </script>
 
 
 <div class="editor">
-    <Noflo library={Library} bind:API bind:state/>
+    <Noflo library={Library} bind:this={noflo} bind:state/>
 </div>
-
 
 <div class=overlay>
     <button on:click={() => {
-        API.addNode('filter');
+        noflo.addNode('filter');
     }}>Add Filter</button>
     <button on:click={() => {
-        API.addNode('console log');
+        noflo.addNode('console log');
     }}>Add Log</button>
     <button on:click={() => {
         if(state.selection.type === 'node') {
-            API.removeNode(state.selection.target);
+            noflo.removeNode(state.selection.target);
         } else if(state.selection.type === 'edge') {
-            API.removeEdge(state.selection.target);
+            noflo.removeEdge(state.selection.target);
         }
     }}>Remove Selected</button>
     <button on:click={() => {
-        API.recentreGraph();
+        noflo.recentreGraph();
     }}>Recentre</button>
     <button on:click={() => {
-        API.clearGraph();
+        noflo.clearGraph();
     }}>Clear</button>
     <button on:click={() => {
-        API.undo();
+        noflo.undo();
     }}>Undo</button>
     <button on:click={() => {
-        API.redo();
+        noflo.redo();
     }}>Redo</button>
 </div>
 
@@ -77,3 +84,4 @@
         font-size: 1.5rem;
     }
 </style>
+

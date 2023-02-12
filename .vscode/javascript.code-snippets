@@ -34,4 +34,28 @@
         ],
         "description": "Generate separator for JS file"
     },
+    "template": {
+        "scope": "javascript, typescript",
+        "prefix": "template",
+        "body": [
+            "/**",
+            " * @file ${TM_FILENAME}",
+            " * @author ${1:James Bennion-Pedley}",
+            " * @brief ${2:Brief summary here}",
+            " * @date ${CURRENT_DATE}/${CURRENT_MONTH}/${CURRENT_YEAR}",
+            " * ",
+            " * @copyright Copyright (c) ${CURRENT_YEAR}",
+            " * ",
+            " */",
+            "",
+            "/*-------------------------------- Imports -----------------------------------*/",
+            "",
+            "/*--------------------------------- State ------------------------------------*/",
+            "",
+            "/*------------------------------- Functions ----------------------------------*/",
+            "",
+            "/*-------------------------------- Exports -----------------------------------*/",
+        ],
+        "description": "Generic Template for JS file"
+    },
 }
