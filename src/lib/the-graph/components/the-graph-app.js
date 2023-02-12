@@ -202,9 +202,6 @@ function register(context) {
         zoomY = 0;
 
         onWheel(event) {
-            // Don't bounce
-            event.preventDefault();
-
             if (!this.zoomFactor) { // WAT
                 this.zoomFactor = 0;
             }
