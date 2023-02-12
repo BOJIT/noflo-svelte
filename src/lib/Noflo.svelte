@@ -35,7 +35,6 @@
     import type { Graph } from '$lib/fbp-graph/Graph';
 
     /* Assets */
-    import "$lib/assets/fontawesome-webfont.woff2";
     import "$lib/themes/the-graph-fontawesome.css";
     import "$lib/themes/the-graph-dark.css";
     import "$lib/themes/the-graph-light.css";

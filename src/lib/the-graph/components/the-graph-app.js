@@ -484,7 +484,7 @@ function register(context) {
             // Wheel to zoom
             if ('onwheel' in domNode) {
                 // Chrome and Firefox
-                domNode.addEventListener('wheel', this.onWheel.bind(this));
+                domNode.addEventListener('wheel', this.onWheel.bind(this), {passive: true});
             } else if ('onmousewheel' in domNode) {
                 // Safari
                 domNode.addEventListener('mousewheel', this.onWheel.bind(this));
