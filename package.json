@@ -24,6 +24,7 @@
     },
     "type": "module",
     "dependencies": {
+        "@svicons/ionicons-outline": "^0.1.11",
         "ease-component": "^1.0.0",
         "svelvet": "^6.0.4"
     }

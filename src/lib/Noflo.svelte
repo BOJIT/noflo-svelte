@@ -22,6 +22,7 @@
     import { onMount, onDestroy, tick } from 'svelte';
 
     import Svelvet, { type Node, type Edge } from 'svelvet';
+    import GraphNode from '$lib/components/GraphNode.svelte';
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -35,37 +36,41 @@
     let height = 1;
 
     // TEMP
+
+    import { Folder } from "@svicons/ionicons-outline";
+
     const initialNodes: Node[] = [
         {
             id: 1,
-            position: { x: 200, y: 50 },
-            data: { label: 'Input Node' },
-            width: 175,
-            height: 40,
-            bgColor: 'white'
+            position: { x: 0, y: 50 },
+            data: { custom: GraphNode, icon: Folder },
+            width: 60,
+            height: 60,
+            bgColor: 'transparent',
+            borderColor: 'transparent',
         },
         {
             id: 2,
-            position: { x: 25, y: 150 },
-            data: { label: 'Option #1' },
-            width: 175,
-            height: 40,
-            bgColor: '#B8FFC6',
+            position: { x: 100, y: 150 },
+            data: { custom: GraphNode, icon: Folder },
+            width: 60,
+            height: 60,
+            bgColor: '#transparent',
             borderColor: 'transparent'
         },
         {
             id: 3,
-            position: { x: 375, y: 150 },
-            data: { label: 'Option #2' },
-            width: 175,
-            height: 40,
-            bgColor: '#FFB8B8',
+            position: { x: 300, y: 50 },
+            data: { custom: GraphNode, icon: Folder },
+            width: 60,
+            height: 60,
+            bgColor: '#transparent',
             borderColor: 'transparent'
         }
     ];
     const initialEdges: Edge[] = [
-        { id: 'e1-2', source: 1, target: 2, label: ' YES ', animate: true },
-        { id: 'e2-3', source: 1, target: 3, label: ' NO ', animate: true }
+        { id: 'e1-2', source: 1, target: 2, animate: true, edgeColor: 'white' },
+        { id: 'e2-3', source: 2, target: 3, animate: true, edgeColor: 'white' },
     ];
 
     /*-------------------------------- Methods -------------------------------*/
