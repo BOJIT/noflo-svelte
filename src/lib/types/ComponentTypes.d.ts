@@ -1,5 +1,5 @@
 /**
- * @file ComponentTypes.d.ts
+ * @file NofloTypes.d.ts
  * @author James Bennion-Pedley
  * @brief Custom types relating to the raw Component Library objects
  * @date 23/07/2022
@@ -14,17 +14,17 @@ import { Component, ComponentOptions } from "noflo/lib/Component";
 
 /*----------------------------------- Types ----------------------------------*/
 
-type ComponentConstructor = new (o: ComponentOptions) => Component;
+type NofloComponentConstructor = new (o: ComponentOptions) => Component;
 
-export type ComponentFactory = {
+export type NofloComponentFactory = {
     // Metadata
     category?: string,
     long_name?: string
 
     // Component Definition
-    factory: (cc: ComponentConstructor) => Component;
+    factory: (cc: NofloComponentConstructor) => Component;
 }
 
-export type ComponentLibrary = {
-    [key: string]: ComponentFactory
+export type NofloComponentLibrary = {
+    [key: string]: NofloComponentFactory
 }

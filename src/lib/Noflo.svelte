@@ -1,244 +1,108 @@
 <!--
  * @file Noflo.svelte
  * @author James Bennion-Pedley
- * @brief Main entry point for Noflo graph UI
- * @date 23/07/2022
+ * @brief Graph UI for NoFlo
+ * @date 13/02/2023
  *
- * @copyright Copyright (c) 2022
+ * @copyright Copyright (c) 2023
  *
 -->
 
-<script lang="ts" context="module">
-    type SelectionData = {
-        type: 'edge' | 'node' | null,
-        target: string,
-    };
+<script lang='ts' context="module">
+    /*--------------------------------- Types --------------------------------*/
 
-    export type NofloState = {
-        selection: SelectionData,
-        canUndo: boolean,
-        canRedo: boolean,
-    };
+    type NofloTheme = 'light' | 'dark';
+
+    import type { NofloComponentLibrary } from './types/ComponentTypes';
 </script>
 
-<script lang="ts">
+<script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
-    /* Svelte Core */
-    import { afterUpdate, onDestroy, onMount } from 'svelte';
-    import { createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
+    import { onMount, onDestroy, tick } from 'svelte';
 
-    /* Types */
-    import type { IconLibrary } from '$lib/types/IconTypes';
-    import type { ComponentLibrary } from '$lib/types/ComponentTypes';
-    import type { Graph } from '$lib/fbp-graph/Graph';
-
-    /* Assets */
-    import "./themes/the-graph-fontawesome.css";
-    import "./themes/the-graph-dark.css";
-    import "./themes/the-graph-light.css";
-
-    /* Core */
-    import TheGraph from '$lib/the-graph';
-
-    /* Third-Party */
-    import FbpGraph from '$lib/fbp-graph';
-    import ReactDOM from 'react-dom';
-
-    /* Utils */
-    import History from '$lib/utils/history';
-    import generateIconLibrary from '$lib/utils/generateIconLibrary';
-
-    /*--------------------------------- Types --------------------------------*/
+    import Svelvet, { type Node, type Edge } from 'svelvet';
 
     /*--------------------------------- Props --------------------------------*/
 
-    /* Public Interface */
-    export let library: ComponentLibrary;
-    export let graph: Graph = new FbpGraph.Graph();
-    export let theme: "light" | "dark" = "dark";
+    export let Theme: NofloTheme = 'light';
+    export let library: NofloComponentLibrary = {};
 
-    export let state: NofloState = {
-        selection: {
-            type: null,
-            target: '',
+    let container: HTMLDivElement;
+    let rs: ResizeObserver;
+
+    let width = 1;
+    let height = 1;
+
+    // TEMP
+    const initialNodes: Node[] = [
+        {
+            id: 1,
+            position: { x: 200, y: 50 },
+            data: { label: 'Input Node' },
+            width: 175,
+            height: 40,
+            bgColor: 'white'
         },
-        canUndo: false,
-        canRedo: false,
-    }
-
-    /* Internal State */
-    let app: any;
-    let container: HTMLElement;
-    let iconLibrary: IconLibrary;
-    let history: History | null = null;
-
+        {
+            id: 2,
+            position: { x: 25, y: 150 },
+            data: { label: 'Option #1' },
+            width: 175,
+            height: 40,
+            bgColor: '#B8FFC6',
+            borderColor: 'transparent'
+        },
+        {
+            id: 3,
+            position: { x: 375, y: 150 },
+            data: { label: 'Option #2' },
+            width: 175,
+            height: 40,
+            bgColor: '#FFB8B8',
+            borderColor: 'transparent'
+        }
+    ];
+    const initialEdges: Edge[] = [
+        { id: 'e1-2', source: 1, target: 2, label: ' YES ', animate: true },
+        { id: 'e2-3', source: 1, target: 3, label: ' NO ', animate: true }
+    ];
 
     /*-------------------------------- Methods -------------------------------*/
 
-    export function addNode(key: string) {
-        /* Generate random ID then check that it is unique for the graph */
-        let id = Math.round(Math.random() * 100000).toString(36);
-        while(graph.nodes.some((node) => node.id === id)) {
-            id = Math.round(Math.random() * 100000).toString(36);
-        }
+    /*------------------------------- Lifecycle ------------------------------*/
 
-        /* Place in stack if place is taken */
-        let increment = 0;
-        while(graph.nodes.some((node) => node.metadata?.x ===
-                                        (window.innerWidth/2 + increment))) {
-            increment += 20;
-        }
 
-        const metadata = {
-            label: key,
-            x: window.innerWidth/2 + increment,
-            y: window.innerHeight/2 + increment,
-        };
 
-        graph.addNode(id, key, metadata);
-
-        /* Reset any component selections */
-        app.unselectAll();
-    };
-
-    export function removeNode(id: string) {
-        app.unselectAll();
-        graph.removeNode(id);
-    };
-
-    export function removeEdge(edge: any) {
-        app.unselectAll();
-        graph.removeEdge(edge.from.node, edge.from.port,
-                            edge.to.node,   edge.to.port);
-    };
-
-    export function recentreGraph() {
-        app.triggerFit();
-    };
-
-    export function clearGraph() {
-        graph = new FbpGraph.Graph();
-        addGraphHooks();
-    };
-
-    export function clearHistory() {
-        history = new History(graph, 10);
-    };
-
-    export async function undo() {
-        if(history?.canUndo) {
-            let g = await history.undo();
-            if(g !== undefined) { graph = g; }
-        }
-    };
-
-    export async function redo() {
-        if(history?.canRedo) {
-            let g = await history.redo();
-            if(g !== undefined) { graph = g; }
-        }
-    };
-
-    /*------------------------------- Callbacks ------------------------------*/
-
-    /* Handle component selection */
-    function nodeSelectedCallback(id: string) {
-        if(id === undefined) {
-            app.refs.graph.setSelectedNodes({});
-            state.selection.type = null;
-            state.selection.target = '';
-        } else {
-            let sel: any = {};
-            sel[id] = true;
-            app.refs.graph.setSelectedEdges([]);
-            app.refs.graph.setSelectedNodes(sel);
-            state.selection.type = 'node';
-            state.selection.target = id;
-        }
-    }
-
-    /* Handle edge selection */
-    function edgeSelectedCallback(id: any, edge:any) {
-        if(id === undefined) {
-            app.refs.graph.setSelectedEdges([]);
-            state.selection.type = null;
-            state.selection.target = '';
-        } else {
-            let sel: any[] = [];
-            sel[0] = edge;
-            app.refs.graph.setSelectedNodes({});
-            app.refs.graph.setSelectedEdges(sel);
-            state.selection.type = 'edge';
-            state.selection.target = edge;
-        }
-    }
-
-    /*------------------------------ React State -----------------------------*/
-
-    function addGraphHooks() {
-        graph.on('startTransaction', () => {
-            /* Ensure initial state is in history */
-            if(history === null) { history = new History(graph, 10) }
+    onMount(async () => {
+        rs = new ResizeObserver((e) => {
+            width = e[0].contentRect.width;
+            height = e[0].contentRect.height;
         });
 
-        graph.on('endTransaction', () => {
-            history?.save(graph);
-            // render(false)
-            dispatch('graphChange');
-        });
-    }
+        rs.observe(container);
 
-    function render(redraw: boolean) {
-        const props = {
-            readonly: false,
-            height: window.innerHeight,
-            width: window.innerWidth,
-            graph,
-            library: iconLibrary,
-            enableHotKeys: false,
-            onNodeSelection: nodeSelectedCallback,
-            onEdgeSelection: edgeSelectedCallback,
-        };
-
-        /* If redraw is set to true, clear out and re-render the editor */
-        if(redraw === true) {
-            if(container != null) {
-                if(typeof window !== 'undefined')
-                    ReactDOM.unmountComponentAtNode(container);
-            }
-        }
-
-        if(typeof window !== 'undefined')
-            app = ReactDOM.render(TheGraph.App(props), container);
-    }
-
-    /*-------------------------------- Lifecycle -----------------------------*/
-
-    $: iconLibrary = generateIconLibrary(library);
-
-    onMount(() => {
-        /* Initialise new graph with no history */
-        addGraphHooks();
-
-        render(true);
-
-        window.addEventListener('resize', () => render(true));
-    })
-
-    afterUpdate(() => {
-        // klayjsInit(workerURL);
-        render(false);
+        await tick();
+        width = container.clientWidth;
+        height = container.clientHeight;
     });
 
     onDestroy(() => {
-        if(typeof window !== 'undefined')
-            ReactDOM.unmountComponentAtNode(container);
-    });
+        rs?.unobserve(container);
+    })
 </script>
 
 
-<div bind:this={container} class:the-graph-dark="{theme === "dark"}"
-                           class:the-graph-light="{theme === "light"}" />
+<div bind:this={container} class="container">
+    <Svelvet nodes={initialNodes} edges={initialEdges} bgColor="transparent"
+        width={width} height={height} background={true}
+    />
+</div>
 
+
+<style>
+    .container {
+        width: 100%;
+        height: 100%;
+    }
+</style>

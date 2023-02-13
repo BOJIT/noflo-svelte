@@ -11,13 +11,14 @@
 <script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
-    import Noflo, { type NofloState } from "$lib/Noflo.svelte";
+    import Noflo, { type NofloTheme } from "$lib/Noflo.svelte";
     import Library from "$lib/test/components";
 
     /*--------------------------------- Props --------------------------------*/
 
     let noflo: Noflo;
-    let state: NofloState;
+
+    let theme: NofloTheme;
 
     /*-------------------------------- Methods -------------------------------*/
 
@@ -27,52 +28,45 @@
 
 
 <div class="editor">
-    <Noflo library={Library} bind:this={noflo} bind:state/>
+    <Noflo library={Library} bind:this={noflo} bind:theme/>
 </div>
 
 <div class=overlay>
     <button on:click={() => {
-        noflo.addNode('filter');
-    }}>Add Filter</button>
-    <button on:click={() => {
-        noflo.addNode('console log');
-    }}>Add Log</button>
-    <button on:click={() => {
-        if(state.selection.type === 'node') {
-            noflo.removeNode(state.selection.target);
-        } else if(state.selection.type === 'edge') {
-            noflo.removeEdge(state.selection.target);
+        if(theme === 'light') {
+            theme = 'dark';
+            document.body.classList.add('dark');
+        } else {
+            theme = 'light';
+            document.body.classList.remove('dark');
         }
-    }}>Remove Selected</button>
-    <button on:click={() => {
-        noflo.recentreGraph();
-    }}>Recentre</button>
-    <button on:click={() => {
-        noflo.clearGraph();
-    }}>Clear</button>
-    <button on:click={() => {
-        noflo.undo();
-    }}>Undo</button>
-    <button on:click={() => {
-        noflo.redo();
-    }}>Redo</button>
+    }}>Toggle Theme</button>
 </div>
 
 
 <style>
     :global(body) {
         margin: 0px;
-        background-color: black;
+        background-color: rgb(22, 22, 22);
+    }
+
+    :global(body.dark) {
+        background-color: antiquewhite;
     }
 
     .editor {
+        top: 5vh;
+        left: 5vw;
+
         position: fixed;
-        width: 100%;
-        height: 100%;
+        width: 90vw;
+        height: 90vh;
         z-index: 0;
+
+        border: 1px solid red;
     }
 
-    .overlay {
+    /* .overlay {
         position: fixed;
         z-index: 1;
         top: 0;
@@ -82,6 +76,6 @@
 
     .overlay button {
         font-size: 1.5rem;
-    }
+    } */
 </style>
 
