@@ -7,7 +7,7 @@
   } from '../../store/types/types';
 
   import EditNode from './EditNode.svelte';
-  import { writable, derived, get, readable } from 'svelte/store';
+  import { get } from 'svelte/store';
   import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
 
   export let node: NodeType;
@@ -137,8 +137,6 @@
       });
     }
   };
-
-  console.log('what is lockedOption?', $lockedOption)
 </script>
 
 <svelte:window

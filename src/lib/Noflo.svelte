@@ -9,10 +9,6 @@
 -->
 
 <script lang='ts' context="module">
-    /*--------------------------------- Types --------------------------------*/
-
-    type NofloTheme = 'light' | 'dark';
-
     import type { NofloComponentLibrary } from '$lib/types/ComponentTypes';
 </script>
 
@@ -21,12 +17,12 @@
 
     import { onMount, onDestroy, tick } from 'svelte';
 
-    import Svelvet, { type Node, type Edge } from '$lib/middlewares/svelvet';
+    import Svelvet, { type Node, type Edge, type GraphTheme } from '$lib/middlewares/svelvet';
     import GraphNode from '$lib/components/GraphNode.svelte';
 
     /*--------------------------------- Props --------------------------------*/
 
-    export let Theme: NofloTheme = 'light';
+    export let theme: GraphTheme = 'dark';
     export let library: NofloComponentLibrary = {};
 
     let container: HTMLDivElement;
@@ -101,6 +97,7 @@
 <div bind:this={container} class="container">
     <Svelvet nodes={initialNodes} edges={initialEdges} bgColor="transparent"
         width={width} height={height} background={true}
+        minimap={true} theme={theme}
     />
 </div>
 

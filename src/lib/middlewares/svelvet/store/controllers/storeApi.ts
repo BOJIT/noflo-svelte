@@ -84,6 +84,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     edgeEditModal: writable(null), // this is used for edgeEditModal feature. When an edge is right clicked, store.edgeEditModal is set to the edgeId string. This causes a modal to be rendered
     lockedOption: writable(false),
     editableOption: writable(false),
+    themeStore: writable('dark'),
   };
   return stores[canvasId];
 }

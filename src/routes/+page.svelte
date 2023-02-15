@@ -9,6 +9,8 @@
 -->
 
 <script lang='ts'>
+    // TEMP
+    import type { GraphTheme } from "$lib/middlewares/svelvet";
     /*-------------------------------- Imports -------------------------------*/
 
     import Noflo, { type NofloTheme } from "$lib/Noflo.svelte";
@@ -18,7 +20,7 @@
 
     let noflo: Noflo;
 
-    let theme: NofloTheme;
+    let theme: GraphTheme;
 
     /*-------------------------------- Methods -------------------------------*/
 
@@ -66,16 +68,16 @@
         border: 1px solid red;
     }
 
-    /* .overlay {
+    .overlay {
         position: fixed;
         z-index: 1;
         top: 0;
         left: 0;
-        padding: 1rem;
+        padding: 0.5rem;
     }
 
     .overlay button {
-        font-size: 1.5rem;
-    } */
+        font-size: 1.2rem;
+    }
 </style>
 

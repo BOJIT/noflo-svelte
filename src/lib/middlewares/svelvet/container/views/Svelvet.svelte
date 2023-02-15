@@ -3,6 +3,7 @@
   import type {
     UserNodeType,
     UserEdgeType,
+    GraphTheme,
   } from '../../store/types/types';
 
   import {
@@ -33,6 +34,7 @@
   export let boundary = false;
   export let locked: boolean = false; // if true, node movement is disabled
   export let editable: boolean = false;
+  export let theme: GraphTheme = 'dark';
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -60,6 +62,7 @@
     store.boundary.set(boundary);
     store.lockedOption.set(locked);
     store.editableOption.set(editable);
+    store.themeStore.set(theme);
 
     // make sure that all canvas options are compatible
     sanitizeCanvasOptions(store);
@@ -86,6 +89,7 @@
     store.boundary.set(boundary);
     store.lockedOption.set(locked);
     store.editableOption.set(editable);
+    store.themeStore.set(theme);
 
     // make sure that all canvas options are compatible
     sanitizeCanvasOptions(store);

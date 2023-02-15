@@ -60,6 +60,7 @@ export interface StoreType {
   edgeEditModal: Writable<null | string>; // this options is used to place the edgeEdit modal when an edge is right-clicked. null is no modal, positionType if modal should be placed at position defined by postionType.x, positionType.y
   lockedOption: Writable<boolean>;
   editableOption: Writable<boolean>;
+  themeStore: Writable<GraphTheme>;
 }
 
 export interface PositionType {
@@ -135,3 +136,5 @@ export interface TemporaryEdgeType {
   createEdge: Function;
   createNode: Function;
 }
+
+export type GraphTheme = 'light' | 'dark';

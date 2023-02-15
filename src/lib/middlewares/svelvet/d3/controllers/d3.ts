@@ -67,7 +67,7 @@ export function determineD3Instance(
     return d3
       .zoom()
       .filter(() => !get(nodeSelected))
-      .scaleExtent([0.4, 2]) // limits for zooming in/out
+      .scaleExtent([0.2, 10]) // limits for zooming in/out
       .translateExtent([
         [0, 0],
         [boundary.x, boundary.y],
@@ -81,7 +81,7 @@ export function determineD3Instance(
     return d3
       .zoom()
       .filter(() => !get(nodeSelected))
-      .scaleExtent([0.4, 2])
+      .scaleExtent([0.2, 10])
       .on('zoom', handleZoom);
   }
 }

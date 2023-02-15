@@ -6,10 +6,6 @@
   import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
   import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
   import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
-  import type {
-    EdgeType,
-    NodeType,
-  } from '../../store/types/types';
   import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
   import Node from '../../nodes/views/Node.svelte';
 
@@ -46,7 +42,9 @@
     heightStore,
     d3Scale,
     edgeEditModal,
+    themeStore,
   } = store;
+
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
@@ -56,6 +54,8 @@
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
+
+  const gridMultiplier = 3;
 
   // leveraging d3 library to zoom/pan
   let d3 = {
@@ -147,7 +147,17 @@
         .selectAll('#dot')
         .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
         .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('opacity', Math.min(e.transform.k, 1));
+        .attr('opacity', Math.min(e.transform.k - 0.5, 1));
+
+      d3.select(`#coarse-background-${canvasId}`)
+        .attr('x', e.transform.x)
+        .attr('y', e.transform.y)
+        .attr('width', gridMultiplier * gridSize * e.transform.k)
+        .attr('height', gridMultiplier * gridSize * e.transform.k)
+        .selectAll('#coarse-dot')
+        .attr('x', gridMultiplier * ((gridSize * e.transform.k) / 2 - dotSize / 2))
+        .attr('y', gridMultiplier * ((gridSize * e.transform.k) / 2 - dotSize / 2))
+        .attr('opacity', Math.min(e.transform.k - 0.2, 1));
     }
     // transform 'g' SVG elements (edge, edge text, edge anchor)
     d3.select(`.Edges-${canvasId} g`).attr('transform', e.transform);
@@ -240,6 +250,23 @@
         style="fill: gray"
       />
     </pattern>
+
+    <pattern
+        id={`coarse-background-${canvasId}`}
+        x="0"
+        y="0"
+        width={gridMultiplier*gridSize}
+        height={gridMultiplier*gridSize}
+        patternUnits="userSpaceOnUse"
+    >
+        <circle
+        id="coarse-dot"
+        cx={gridSize / 2 - dotSize / 2}
+        cy={gridSize / 2 - dotSize / 2}
+        r="1"
+        style={$themeStore === 'dark' ? "fill: #222222" : "fill: white"}
+        />
+    </pattern>
   </defs>
 
   {#if $backgroundStore}
@@ -247,6 +274,12 @@
       width="100%"
       height="100%"
       style="fill: url(#background-{canvasId});"
+    />
+
+    <rect
+        width="100%"
+        height="100%"
+        style="fill: url(#coarse-background-{canvasId});"
     />
   {/if}
 
