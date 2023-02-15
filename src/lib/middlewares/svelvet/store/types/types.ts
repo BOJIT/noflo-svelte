@@ -5,10 +5,10 @@ import type { AnchorType } from '../../edges/types/types';
 
 export interface UserNodeType {
   id: string;
+  icon: SvelteComponent;
   width: number;
   height: number;
   bgColor: string;
-  data: object;
   position: { x: number; y: number };
   borderColor?: string | undefined;
   src?: string;
@@ -76,7 +76,6 @@ export interface NodeType {
   positionX: number;
   positionY: number;
   bgColor: string;
-  data: object;
   canvasId: string;
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store

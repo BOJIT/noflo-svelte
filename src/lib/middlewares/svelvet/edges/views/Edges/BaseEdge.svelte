@@ -86,7 +86,7 @@
     class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
-    stroke={edgeColor ? edgeColor : 'gray'}
+    stroke={edgeColor ? edgeColor : 'grey'}
     aria-label="svg-path"
   />
 {/if}

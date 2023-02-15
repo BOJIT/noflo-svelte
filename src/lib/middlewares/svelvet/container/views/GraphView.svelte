@@ -205,15 +205,7 @@
     <!-- This container is transformed by d3zoom -->
     <div class={`Node Node-${canvasId}`}>
       {#each nodes as node}
-        {#if node.data.html}
-          <Node {node} {canvasId} nodeId={node.id}>{@html node.data.html}</Node>
-        {:else if node.data.custom}
-          <Node {node} {canvasId} nodeId={node.id}
-            ><svelte:component this={node.data.custom} /></Node
-          >
-        {:else}
-          <Node {node} {canvasId} nodeId={node.id}>{node.data.label}</Node>
-        {/if}
+        <Node {node} {canvasId} nodeId={node.id} />
       {/each}
 
       {#each potentialAnchors as potentialAnchor}
@@ -264,7 +256,7 @@
         cx={gridSize / 2 - dotSize / 2}
         cy={gridSize / 2 - dotSize / 2}
         r="1"
-        style={$themeStore === 'dark' ? "fill: #222222" : "fill: white"}
+        style={$themeStore === 'light' ? "fill: #222222" : "fill: white"}
         />
     </pattern>
   </defs>

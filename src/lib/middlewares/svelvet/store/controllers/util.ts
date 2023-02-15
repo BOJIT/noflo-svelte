@@ -311,15 +311,14 @@ export function populateNodesStore(
     // TODO: move sanitizing default values to middleware
     const node = new Node(
       nodeId.toString(),
+      userNode.icon,
       userNode.position.x,
       userNode.position.y,
       userNode.width,
       userNode.height,
       userNode.bgColor,
-      userNode.data,
       canvasId,
       userNode.borderColor === undefined ? 'black' : userNode.borderColor,
-      userNode.image === undefined ? false : userNode.image,
       userNode.src === undefined ? '' : userNode.src,
       userNode.textColor === undefined ? '' : userNode.textColor,
       userNode.borderRadius === undefined ? 0 : userNode.borderRadius,

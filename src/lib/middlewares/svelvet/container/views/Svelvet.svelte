@@ -33,7 +33,7 @@
   export let initialLocation = { x: 0, y: 0 };
   export let boundary = false;
   export let locked: boolean = false; // if true, node movement is disabled
-  export let theme: GraphTheme = 'dark';
+  export let theme: GraphTheme = 'light';
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store

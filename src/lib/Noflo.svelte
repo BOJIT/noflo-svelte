@@ -17,12 +17,16 @@
 
     import { onMount, onDestroy, tick } from 'svelte';
 
-    import Svelvet, { type Node, type Edge, type GraphTheme } from '$lib/middlewares/svelvet';
-    import GraphNode from '$lib/components/GraphNode.svelte';
+    import Svelvet, {
+        type UserNodeType,
+        type UserEdgeType,
+        type GraphTheme,
+    }
+    from '$lib/middlewares/svelvet';
 
     /*--------------------------------- Props --------------------------------*/
 
-    export let theme: GraphTheme = 'dark';
+    export let theme: GraphTheme = 'light';
     export let library: NofloComponentLibrary = {};
 
     let container: HTMLDivElement;
@@ -33,42 +37,40 @@
 
     // TEMP
 
-    import { Folder } from "@svicons/ionicons-outline";
+    import { Folder, Settings, PaperPlane } from "@svicons/ionicons-outline";
 
-    const initialNodes: Node[] = [
+    const initialNodes: UserNodeType[] = [
         {
-            id: 1,
+            id: "1",
+            icon: Folder,
             position: { x: 0, y: 50 },
-            data: {label: 'test'},
-            // data: { custom: GraphNode, icon: Folder },
             width: 60,
             height: 60,
             bgColor: 'transparent',
             borderColor: 'transparent',
         },
         {
-            id: 2,
-            data: {label: 'test'},
+            id: "2",
+            icon: Settings,
             position: { x: 100, y: 150 },
-            // data: { custom: GraphNode, icon: Folder },
             width: 60,
             height: 120,
             bgColor: '#transparent',
             borderColor: 'transparent'
         },
         {
-            id: 3,
+            id: "3",
+            icon: PaperPlane,
             position: { x: 300, y: 50 },
-            data: {label: 'test'},
             width: 60,
             height: 60,
             bgColor: '#transparent',
             borderColor: 'transparent'
         }
     ];
-    const initialEdges: Edge[] = [
-        { id: 'e1-2', source: 1, target: 2, animate: true, edgeColor: 'white' },
-        { id: 'e2-3', source: 2, target: 3, animate: true, edgeColor: 'white' },
+    const initialEdges: UserEdgeType[] = [
+        { id: 'e1-2', source: "1", target: "2", animate: true },
+        { id: 'e2-3', source: "2", target: "3", animate: true },
     ];
 
     /*-------------------------------- Methods -------------------------------*/
@@ -99,7 +101,7 @@
 <div bind:this={container} class="container">
     <Svelvet nodes={initialNodes} edges={initialEdges} bgColor="transparent"
         width={width} height={height} background={true}
-        minimap={true} theme={theme}
+        minimap={true} bind:theme={theme}
     />
 </div>
 

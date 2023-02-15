@@ -4,8 +4,6 @@
 
     import { get } from 'svelte/store';
 
-    import { Settings } from "@svicons/ionicons-outline";
-
     import { findStore } from '../../store/controllers/storeApi';
     import type {
         NodeType,
@@ -16,8 +14,6 @@
     export let node: NodeType;
     export let canvasId: string;
     export let nodeId: string;
-
-    let icon: SvelteComponent = Settings;
 
     const store = findStore(canvasId);
 
@@ -160,8 +156,7 @@
     cursor: {$lockedOption ? "default" : "grab"}"
   id="svelvet-{node.id}"
 >
-    <svelte:component this={icon} color="#c8ced0" height="52px"/>
-    <!-- <slot /> -->
+    <svelte:component this={node.icon} color="#c8ced0" height="45px"/>
 </div>
 
 <style>

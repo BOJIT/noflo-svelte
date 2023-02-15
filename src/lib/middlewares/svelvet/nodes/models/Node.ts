@@ -1,11 +1,13 @@
+import { get } from 'svelte/store';
+import type { SvelteComponent } from 'svelte';
 /** this is where we create our node store */
 import type { NodeType } from '../../store/types/types';
-import { get } from 'svelte/store';
 import { getPotentialAnchors } from '../../interactiveNodes/controllers/util';
 import { stores } from '../../store/models/store';
 import { getAnchors, getEdgeById } from '../../edges/controllers/util';
 /** A Node class that implements NodeType interface
  * @param {string} id The id of the Node
+ * @param {SvelteComponent} icon The node icon
  * @param {number} positionX The X-axis position of the Node (left top corner of the Node)
  * @param {number} positionY The Y-axis position of the Node (left top corner of the Node)
  * @param {number} width The width of the Node
@@ -24,15 +26,14 @@ import { getAnchors, getEdgeById } from '../../edges/controllers/util';
 export class Node implements NodeType {
   constructor(
     public id: string,
+    public icon: SvelteComponent,
     public positionX: number,
     public positionY: number,
     public width: number,
     public height: number,
     public bgColor: string,
-    public data: object,
     public canvasId: string,
     public borderColor: string,
-    public image: boolean,
     public src: string,
     public textColor: string,
     public borderRadius: number,

@@ -20,7 +20,7 @@
 
     let noflo: Noflo;
 
-    let theme: GraphTheme;
+    let theme: GraphTheme = 'light';
 
     /*-------------------------------- Methods -------------------------------*/
 
@@ -42,6 +42,7 @@
             theme = 'light';
             document.body.classList.remove('dark');
         }
+        console.log(theme);
     }}>Toggle Theme</button>
 </div>
 
@@ -49,11 +50,11 @@
 <style>
     :global(body) {
         margin: 0px;
-        background-color: rgb(22, 22, 22);
+        background-color: antiquewhite;
     }
 
     :global(body.dark) {
-        background-color: antiquewhite;
+        background-color: rgb(22, 22, 22);
     }
 
     .editor {
