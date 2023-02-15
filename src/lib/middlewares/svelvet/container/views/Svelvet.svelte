@@ -31,8 +31,6 @@
   export let initialZoom = 3;
   export let initialLocation = { x: 0, y: 0 };
   export let boundary = false;
-  export let collapsible = false;
-  export let shareable: boolean = false; // used for "importExport" feature
   export let locked: boolean = false; // if true, node movement is disabled
   export let editable: boolean = false;
 

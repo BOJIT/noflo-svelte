@@ -53,22 +53,6 @@
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
 
-  /*
-    This block of code is responsible for reactivity of the collapsible feature
-    When collaspsibleStore changes, nodes/edges/resizeNodes/anchors are filtered so that
-    only the visible ones are displayed
-  */
-  let filteredNodes: NodeType[];
-  let filteredEdges: EdgeType[];
-  let filteredAnchors: AnchorType[];
-//   $: {
-//     const tmp = $collapsibleStore; // assignment is necessary for reactivity
-//     const obj = filterByCollapsible(store, nodes, resizeNodes, anchors, edges);
-//     filteredNodes = obj['filteredNodes'];
-//     filteredEdges = obj['filteredEdges'];
-//     filteredAnchors = obj['filteredAnchors'];
-//   }
-
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -210,7 +194,7 @@
   <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
     <!-- This container is transformed by d3zoom -->
     <div class={`Node Node-${canvasId}`}>
-      {#each filteredNodes as node}
+      {#each nodes as node}
         {#if node.data.html}
           <Node {node} {canvasId} nodeId={node.id}>{@html node.data.html}</Node>
         {:else if node.data.custom}
@@ -268,7 +252,7 @@
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    {#each filteredEdges as edge}
+    {#each edges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge edgeId={edge.id} {canvasId} />
       {:else if edge.type === 'smoothstep'}
@@ -284,7 +268,7 @@
       <TemporaryEdge {temporaryEdge} />
     {/each}
 
-    {#each filteredAnchors as anchor}
+    {#each anchors as anchor}
       <!-- note that these are SVG -->
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each}
