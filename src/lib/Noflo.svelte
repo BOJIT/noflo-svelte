@@ -39,7 +39,8 @@
         {
             id: 1,
             position: { x: 0, y: 50 },
-            data: { custom: GraphNode, icon: Folder },
+            data: {label: 'test'},
+            // data: { custom: GraphNode, icon: Folder },
             width: 60,
             height: 60,
             bgColor: 'transparent',
@@ -47,17 +48,18 @@
         },
         {
             id: 2,
+            data: {label: 'test'},
             position: { x: 100, y: 150 },
-            data: { custom: GraphNode, icon: Folder },
+            // data: { custom: GraphNode, icon: Folder },
             width: 60,
-            height: 60,
+            height: 120,
             bgColor: '#transparent',
             borderColor: 'transparent'
         },
         {
             id: 3,
             position: { x: 300, y: 50 },
-            data: { custom: GraphNode, icon: Folder },
+            data: {label: 'test'},
             width: 60,
             height: 60,
             bgColor: '#transparent',

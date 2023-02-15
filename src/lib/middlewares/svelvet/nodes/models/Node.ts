@@ -1,6 +1,6 @@
 /** this is where we create our node store */
 import type { NodeType } from '../../store/types/types';
-import { writable, derived, get, readable } from 'svelte/store';
+import { get } from 'svelte/store';
 import { getPotentialAnchors } from '../../interactiveNodes/controllers/util';
 import { stores } from '../../store/models/store';
 import { getAnchors, getEdgeById } from '../../edges/controllers/util';
@@ -130,31 +130,5 @@ export class Node implements NodeType {
     for (const potentialAnchor of potentialAnchorsArr) {
       potentialAnchor.delete();
     }
-  }
-
-  /**
-   * setExportableData is going to construct an object that holds all the node data that can be exported. This method is used for Exporting Diagrams feature.
-   *
-   * @returns An object with all the exportable data of the Node. The format of this object should align with the original format of node data user provided.
-   */
-  setExportableData() {
-    const exportableData = {
-      id: this.id,
-      // canvasId: this.canvasId,
-      width: this.width,
-      height: this.height,
-      position: { x: this.positionX, y: this.positionY },
-      data: this.data,
-      bgColor: this.bgColor,
-      borderColor: this.borderColor,
-      textColor: this.textColor,
-      borderRadius: this.borderRadius,
-      image: this.image,
-      src: this.src,
-      childNodes: this.childNodes,
-      customClassName: this.className,
-    };
-
-    return exportableData;
   }
 }

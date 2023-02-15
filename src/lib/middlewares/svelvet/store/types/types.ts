@@ -1,4 +1,6 @@
 import type { Writable } from 'svelte/store';
+import type { SvelteComponent } from "svelte";
+
 import type { AnchorType } from '../../edges/types/types';
 
 export interface UserNodeType {
@@ -9,7 +11,6 @@ export interface UserNodeType {
   data: object;
   position: { x: number; y: number };
   borderColor?: string | undefined;
-  image?: boolean;
   src?: string;
   textColor?: string;
   targetPosition?: 'left' | 'right' | 'top' | 'bottom';
@@ -59,7 +60,6 @@ export interface StoreType {
   boundary: Writable<boolean | PositionType>;
   edgeEditModal: Writable<null | string>; // this options is used to place the edgeEdit modal when an edge is right-clicked. null is no modal, positionType if modal should be placed at position defined by postionType.x, positionType.y
   lockedOption: Writable<boolean>;
-  editableOption: Writable<boolean>;
   themeStore: Writable<GraphTheme>;
 }
 
@@ -70,6 +70,7 @@ export interface PositionType {
 
 export interface NodeType {
   id: string;
+  icon: SvelteComponent;
   width: number;
   height: number;
   positionX: number;
@@ -79,9 +80,7 @@ export interface NodeType {
   canvasId: string;
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
-  setExportableData: Function;
   borderColor: string;
-  image: boolean;
   src: string;
   textColor: string;
   borderRadius: number;
@@ -108,7 +107,6 @@ export interface EdgeType {
   clickCallback: Function;
   className: string;
   delete: Function;
-  setExportableData: Function;
 }
 
 export interface PotentialAnchorType {

@@ -1,8 +1,7 @@
-import { findStore } from '../../store/controllers/storeApi';
-import type { EdgeType, UserEdgeType } from '../../store/types/types';
+import type { EdgeType } from '../../store/types/types';
 
 import { stores } from '../../store/models/store';
-import { getAnchors, getAnchorFromEdge } from '../../edges/controllers/util';
+import { getAnchorFromEdge } from '../../edges/controllers/util';
 /**
  * Class Edge that implements EdgeType.
  * @param id The id of the Edge
@@ -59,38 +58,5 @@ export class Edge implements EdgeType {
       delete edges[this.id];
       return { ...edges };
     });
-  }
-
-  /**
-   * setExportableData will construct an object that holds all the edge data that can be exported. This is needed for the Exporting Diagram feature.
-   * @returns The object of exportable edge data. The format of the object should be as close as what user initially passes in to Svelvet.
-   */
-  setExportableData() {
-    const exportableData: UserEdgeType = {
-      id: this.id,
-      label: this.label,
-      type: this.type,
-      labelBgColor: this.labelBgColor,
-      labelTextColor: this.labelTextColor,
-      edgeColor: this.edgeColor,
-      animate: this.animate,
-      noHandle: this.noHandle,
-      arrow: this.arrow,
-      source: 'dummy', // these will be set later
-      target: 'dummy', // these will be set later
-    };
-
-    // set source, target on exportableData
-    const store = findStore(this.canvasId);
-    const anchors = getAnchors(store, { edgeId: this.id });
-    if (anchors.length !== 2) throw 'there should be two anchors per edge';
-    for (const anchor of anchors) {
-      if (anchor.sourceOrTarget === 'target')
-        exportableData.target = anchor.nodeId;
-      if (anchor.sourceOrTarget === 'source')
-        exportableData.source = anchor.nodeId;
-    }
-
-    return exportableData;
   }
 }
