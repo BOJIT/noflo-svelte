@@ -35,6 +35,7 @@
     .node {
         width: 60px;
         height: 60px;
+
         background-color: #d8e0e2;
         border-radius: 10px;
         border: 3px solid black;

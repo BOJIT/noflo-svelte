@@ -12,8 +12,8 @@
 
 import Noflo from "$lib/Noflo.svelte";
 
-import Graph from "$lib/fbp-graph";
-import type { GraphJson } from "$lib/fbp-graph/Types";
+import Graph from "$lib/middlewares/fbp-graph";
+import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 
 /*--------------------------------- State ------------------------------------*/
 

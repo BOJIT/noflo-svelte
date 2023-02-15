@@ -13,7 +13,7 @@
 
     type NofloTheme = 'light' | 'dark';
 
-    import type { NofloComponentLibrary } from './types/ComponentTypes';
+    import type { NofloComponentLibrary } from '$lib/types/ComponentTypes';
 </script>
 
 <script lang='ts'>
@@ -21,7 +21,7 @@
 
     import { onMount, onDestroy, tick } from 'svelte';
 
-    import Svelvet, { type Node, type Edge } from 'svelvet';
+    import Svelvet, { type Node, type Edge } from '$lib/middlewares/svelvet';
     import GraphNode from '$lib/components/GraphNode.svelte';
 
     /*--------------------------------- Props --------------------------------*/

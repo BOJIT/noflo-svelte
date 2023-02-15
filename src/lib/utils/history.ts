@@ -10,9 +10,9 @@
 
 /*--------------------------------- Imports ----------------------------------*/
 
-import FbpGraph from '$lib/fbp-graph';
+import FbpGraph from '$lib/middlewares/fbp-graph';
 
-import type { Graph } from '$lib/fbp-graph/Graph';
+import type { Graph } from '$lib/middlewares/fbp-graph/Graph';
 import type { GraphJson } from 'fbp-graph/lib/Types';
 
 /*------------------------------ Primary Class -------------------------------*/
