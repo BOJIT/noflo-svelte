@@ -6,8 +6,11 @@
         NodeType,
     } from '../../store/types/types';
 
-    const nodeWidth = 54;
-    let nodeHeight = 54;
+    const portSpacing = 17.5;
+
+    // TEMP
+    let inports: string[] = ["TEST", "example", "node"];
+    let outports: string[] = ["out", "node2"];
 
     export let node: NodeType;
     export let canvasId: string;
@@ -28,6 +31,31 @@
     //   (1) if the mouse moves, meaning that the node is being dragged
     //   (2) if the mouse leaves the node
     let isUserClick = false;
+
+    function shadeColor(color, percent) {
+        var R = parseInt(color.substring(1,3),16);
+        var G = parseInt(color.substring(3,5),16);
+        var B = parseInt(color.substring(5,7),16);
+
+        R = parseInt(R * (100 + percent) / 100);
+        G = parseInt(G * (100 + percent) / 100);
+        B = parseInt(B * (100 + percent) / 100);
+
+        R = (R<255)?R:255;
+        G = (G<255)?G:255;
+        B = (B<255)?B:255;
+
+        R = Math.round(R)
+        G = Math.round(G)
+        B = Math.round(B)
+
+        var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+        var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+        var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+
+        return "#"+RR+GG+BB;
+    }
+
 
     //
     const mousedown = (e) => {
@@ -89,8 +117,8 @@
             // const d3Scale = get(store.d3Scale);
             // divide the movement value by scale to keep it proportional to d3Zoom transformations
             node.setPositionFromMovement(
-            offsetX - nodeWidth / 2,
-            offsetY - nodeHeight / 2
+            offsetX - node.width / 2,
+            offsetY - node.height / 2
             );
             return { ...nodes };
         });
@@ -137,26 +165,43 @@
   on:touchstart={mousedown}
   on:mouseenter={mouseenter}
 
-  class="Node {node.className}"
+  class="node"
   style="left: {node.positionX}px;
     top: {node.positionY}px;
-    height: {nodeHeight}px;
-    width: {nodeWidth}px;
-    {node.bgColor ? `background-color: ${node.bgColor}` : ""}"
+    height: {node.height}px;
+    width: {node.width}px;"
   id="svelvet-{node.id}"
 >
-    <svelte:component this={node.icon} color="#c8ced0" height="45px"/>
+    <div class="ring">
+        <div class="icon"  style="{node.bgColor !== 'default' ? `background-color: ${node.bgColor}` : ""}">
+            <svelte:component this={node.icon}
+                color={node.bgColor !== 'default' ? shadeColor(node.bgColor, -30) : "#c8ced0"}
+                height="45px"/>
+        </div>
+    </div>
 
     {#if node.label !== ''}
         <div class="label">{node.label}</div>
     {/if}
+
+    <svg class="ports">
+        {#each inports as ip, idx }
+            <circle cx={6.5}
+                cy={node.height/2 + (idx * portSpacing) - (inports.length - 1)/2 * portSpacing}
+                r={3} stroke="#444444" fill="white" />
+        {/each}
+        {#each outports as op, idx }
+            <circle cx={node.width + 13.5}
+                cy={node.height/2 + (idx * portSpacing) - (outports.length - 1)/2 * portSpacing}
+                r={3} stroke="#444444" fill="white" />
+        {/each}
+    </svg>
 </div>
 
 <style>
-    .Node {
-        background-color: #d8e0e2;
+    .node {
         border-radius: 12px;
-        border: 3px solid black;
+        border: 3px solid #444444;
 
         position: absolute;
         display: grid;
@@ -168,6 +213,42 @@
         align-items: center;
         text-align: center;
         pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
+    }
+
+    .ring {
+        grid-row: 1;
+        grid-column: 1;
+
+        width: 60px;
+        height: 100%;
+
+        position: relative;
+    }
+
+    .icon {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+
+        width: calc(100% - 4px);
+        height: calc(100% - 4px);
+        border-radius:8px;
+        background-color: #d8e0e2f7;
+
+        display: grid;
+        place-items: center;
+    }
+
+    .ports {
+        grid-row: 1;
+        grid-column: 1;
+
+        width: 80px;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+
+        pointer-events: none;
     }
 
     .label {

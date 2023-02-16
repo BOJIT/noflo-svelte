@@ -68,11 +68,26 @@
             position: { x: 300, y: 50 },
             width: 60,
             height: 60,
-        }
+        },
+        {
+            id: "4",
+            icon: PaperPlane,
+            position: { x: 300, y: -50 },
+            width: 60,
+            height: 60,
+        },
+        {
+            id: "5",
+            icon: Settings,
+            position: { x: 200, y: -20 },
+            width: 60,
+            height: 60,
+        },
     ];
     let initialEdges: UserEdgeType[] = [
         { id: 'e1-2', source: "1", target: "2", animate: true },
         { id: 'e2-3', source: "2", target: "3", animate: true },
+        { id: 'e4-5s', source: "4", target: "5", animate: true },
     ];
 
     /*-------------------------------- Methods -------------------------------*/

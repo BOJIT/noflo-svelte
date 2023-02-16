@@ -4,4 +4,4 @@
 
 - [ ] Stop graph reverting on prop change
 
-- Stop jittery handling of zooming
+- [ ] Stop jittery handling of zooming
