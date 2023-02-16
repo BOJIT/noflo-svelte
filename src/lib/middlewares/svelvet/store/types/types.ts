@@ -13,6 +13,7 @@
 import type { SvelteComponent } from "svelte";
 import type { Writable } from 'svelte/store';
 
+import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 import type { AnchorType } from '../../edges/types/types';
 
 /*-------------------------------- Exports -----------------------------------*/
@@ -54,6 +55,9 @@ export interface UserEdgeType {
 Type for a single svelvet store
 */
 export interface StoreType {
+    graphStore: Writable<GraphJson>;
+    themeStore: Writable<NofloTheme>;
+
     nodesStore: Writable<{ [key: string]: NodeType }>;
     edgesStore: Writable<{ [key: string]: EdgeType }>;
     anchorsStore: Writable<{ [key: string]: AnchorType }>;
@@ -68,7 +72,6 @@ export interface StoreType {
     options: Writable<{ [key: string]: any }>;
     temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
     nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
-    themeStore: Writable<NofloTheme>;
 }
 
 export interface PositionType {
@@ -80,10 +83,11 @@ export interface NodeType {
     // Must be set
     id: string;
     icon: SvelteComponent;
+    component: string;
     label: string;
     bgColor: string;
-    inPorts?: string[];
-    outPorts?: string[];
+    inPorts: string[];
+    outPorts: string[];
 
     // Derived
     positionX: number;
@@ -91,9 +95,9 @@ export interface NodeType {
     height: number;
     width: number;
     canvasId: string;
+
     setPositionFromMovement: Function;
     delete: Function; //This is the method to delete the node from the store
-    childNodes: string[];
     clickCallback: Function; // user-supplied callback that executes when the node is clicked
 }
 
@@ -146,5 +150,4 @@ export interface TemporaryEdgeType {
 // Additional types
 
 export type NofloTheme = 'light' | 'dark';
-
 export type NofloMinimap = 'none' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

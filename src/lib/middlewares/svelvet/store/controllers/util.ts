@@ -314,14 +314,17 @@ export function populateNodesStore(
     const node = new Node(
       nodeId.toString(),
       userNode.icon,
+      '',
       userNode.label === undefined ? '' : userNode.label,
+      userNode.bgColor === undefined ? 'default' : userNode.bgColor,
+      [],
+      [],
+
       userNode.position.x,
       userNode.position.y,
       userNode.height,
       userNode.width,
-      userNode.bgColor === undefined ? 'default' : userNode.bgColor,
       canvasId,
-      userNode.childNodes === undefined ? [] : userNode.childNodes,
       userNode.clickCallback === undefined ? () => {} : userNode.clickCallback
     );
 

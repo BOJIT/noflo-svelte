@@ -5,36 +5,23 @@ import type { NodeType } from '../../store/types/types';
 import { getPotentialAnchors } from '../../interactiveNodes/controllers/util';
 import { stores } from '../../store/models/store';
 import { getAnchors, getEdgeById } from '../../edges/controllers/util';
-/** A Node class that implements NodeType interface
- * @param {string} id The id of the Node
- * @param {SvelteComponent} icon The node icon
- * @param {number} positionX The X-axis position of the Node (left top corner of the Node)
- * @param {number} positionY The Y-axis position of the Node (left top corner of the Node)
- * @param {number} width The width of the Node
- * @param {number} height The height of the Node
- * @param {string} bgColor The background color of the node
- * @param {object} data A data object that user can specify; possible keys are 'label' and 'custom';
- * @param {string} canvasId The canvasId of the Svelvet component that the instantiated Node will be on.
- * @param {string} borderColor The border color of the Node
- * @param {boolean} image A boolean set to true if the Node needs to display an image
- * @param {string} src The src link for the image; image and src are closely tied and a src link is only needed when image sets to true
- * @param {string} textColor The color of the text in the Node
- * @param {string} borderRadius The border radius of the Node
- * @param {string} childNodes An array of node ids that will be grouped as child nodes of this Node. This is for the GroupNodes feature. The current implementation of this feature works one way but not the other (when you drag the parent node, the child nodes will move as a group but when you drag the child node, the parent node would not move along)
- * @param {string} className The custom class name if user specifies. This is for the custom className feature for Node.
- */
+
+
 export class Node implements NodeType {
   constructor(
     public id: string,
     public icon: SvelteComponent,
+    public component: string,
     public label: string,
+    public bgColor: string,
+    public inPorts: string[],
+    public outPorts: string[],
+
     public positionX: number,
     public positionY: number,
     public height: number,
     public width: number,
-    public bgColor: string,
     public canvasId: string,
-    public childNodes: string[],
     public clickCallback: Function
   ) {}
 
@@ -53,14 +40,6 @@ export class Node implements NodeType {
     //update all necessary data
     this.positionX += movementX;
     this.positionY += movementY;
-
-    // update children
-    nodesStore.update((nodes) => {
-      if (this.childNodes)
-        for (const childNodeId of this.childNodes)
-          nodes[childNodeId].setPositionFromMovement(movementX, movementY);
-      return { ...nodes };
-    });
 
     //update all the anchors on the node in the anchorsStore
     anchorsStore.update((anchors) => {

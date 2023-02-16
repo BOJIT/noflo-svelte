@@ -1,4 +1,4 @@
-import type { ComponentFactory } from "$lib/types/ComponentTypes";
+import type { ComponentFactory } from "$lib/types/Component";
 
 const componentFactory: ComponentFactory = {
     category: 'core',

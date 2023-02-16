@@ -13,6 +13,8 @@
 import { stores } from '../models/store';
 import { writable, get } from 'svelte/store';
 
+import Graph from '$lib/middlewares/fbp-graph';
+
 import type { StoreType, UserNodeType, UserEdgeType } from '../types/types';
 import {
     populateAnchorsStore,
@@ -20,6 +22,8 @@ import {
     populateEdgesStore,
     populatePotentialAnchorStore,
 } from './util';
+
+import graphSync from '$lib/state/graphSync';
 
 /*--------------------------------- State ------------------------------------*/
 
@@ -51,7 +55,10 @@ function findStore(canvasId: string): StoreType {
  */
 function createStoreEmpty(canvasId: string): StoreType {
     stores[canvasId] = {
-        nodesStore: writable({}),
+        graphStore: writable(new Graph.Graph().toJSON()),
+        themeStore: writable('dark'),
+
+        nodesStore: writable({}),   // Unused
         edgesStore: writable({}),
         anchorsStore: writable({}),
         potentialAnchorsStore: writable({}),
@@ -65,8 +72,11 @@ function createStoreEmpty(canvasId: string): StoreType {
         options: writable({}),
         temporaryEdgeStore: writable([]),
         nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
-        themeStore: writable('dark'),
     };
+
+    // Initialise synchronised state
+    graphSync.init(stores[canvasId], canvasId);
+
     return stores[canvasId];
 }
 
@@ -87,7 +97,7 @@ function populateSvelvetStoreFromUserInput(
     const store = findStore(canvasId);
 
     // populate store.nodesStore with user nodes
-    populateNodesStore(store, nodes, canvasId);
+    // populateNodesStore(store, nodes, canvasId);
     // populate store.anchorsStore with anchors. Note the userdoes not explictly define anchors; anchors are calculated from the edges
     populateAnchorsStore(store, nodes, edges, canvasId);
     // populate edges

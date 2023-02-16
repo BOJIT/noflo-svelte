@@ -12,7 +12,7 @@
 
 import { Component } from "noflo/lib/Component";
 
-import type { ComponentLibrary } from "$lib/types/ComponentTypes";
+import type { ComponentLibrary } from "$lib/types/Component";
 import type { Icon, IconLibrary } from "$lib/types/IconTypes";
 
 /*------------------------------ Implementation ------------------------------*/

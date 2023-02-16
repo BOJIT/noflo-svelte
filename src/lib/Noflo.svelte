@@ -8,10 +8,6 @@
  *
 -->
 
-<script lang='ts' context="module">
-    import type { NofloComponentLibrary } from '$lib/types/ComponentTypes';
-</script>
-
 <script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
@@ -19,13 +15,16 @@
 
     import "@fontsource/jetbrains-mono";
 
+    import Graph from './middlewares/fbp-graph';
+    import type { GraphJson } from './middlewares/fbp-graph/Types';
+    import type { NofloComponentLoader } from './types/Component';
+
     import Svelvet, {
         type UserNodeType,
         type UserEdgeType,
         type NofloTheme,
         type NofloMinimap,
-    }
-    from '$lib/middlewares/svelvet';
+    } from '$lib/middlewares/svelvet';
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -33,11 +32,15 @@
     export let minimap: NofloMinimap = 'none';
     export let translucent: boolean = false;
 
-    export let library: NofloComponentLibrary = {}; // TODO replace with library function
+    export let loader: NofloComponentLoader = (key: string) => {
+        return null;
+    };
 
+    export let graph: GraphJson;
+
+    // Resize handler state
     let container: HTMLDivElement;
     let rs: ResizeObserver;
-
     let width = 1;
     let height = 1;
 
@@ -85,9 +88,9 @@
         },
     ];
     let initialEdges: UserEdgeType[] = [
-        { id: 'e1-2', source: "1", target: "2", type: "bezier", animate: true },
-        { id: 'e2-3', source: "2", target: "3", type: "bezier", animate: true },
-        { id: 'e4-5', source: "4", target: "5", type: "bezier", animate: true },
+        // { id: 'e1-2', source: "1", target: "2", type: "bezier", animate: true },
+        // { id: 'e2-3', source: "2", target: "3", type: "bezier", animate: true },
+        // { id: 'e4-5', source: "4", target: "5", type: "bezier", animate: true },
     ];
 
     /*-------------------------------- Methods -------------------------------*/
@@ -95,6 +98,7 @@
     /*------------------------------- Lifecycle ------------------------------*/
 
     onMount(async () => {
+        // Setup resizability watcher
         rs = new ResizeObserver((e) => {
             width = e[0].contentRect.width;
             height = e[0].contentRect.height;
@@ -108,6 +112,7 @@
     });
 
     onDestroy(() => {
+        // Destroy resizability watcher
         rs?.unobserve(container);
     })
 </script>
@@ -117,7 +122,9 @@
     class:svelvet-dark={theme === 'dark'}
     class:translucent
 >
-    <Svelvet bind:nodes={initialNodes} bind:edges={initialEdges}
+    <Svelvet
+        bind:graph
+        bind:nodes={initialNodes} bind:edges={initialEdges}
         width={width} height={height} background={true}
         minimap={minimap} bind:theme={theme} snap
     />

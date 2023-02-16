@@ -15,6 +15,11 @@ import Noflo from "$lib/Noflo.svelte";
 import Graph from "$lib/middlewares/fbp-graph";
 import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 
+import type {
+    NofloTheme,
+    NofloMinimap,
+} from "$lib/middlewares/svelvet/store/types/types";
+
 /*--------------------------------- State ------------------------------------*/
 
 /*------------------------------- Functions ----------------------------------*/
@@ -24,9 +29,9 @@ import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 export { Graph as FbpGraph }
 export type { GraphJson as FbpGraphJson };
 
-export default Noflo;
+export type {
+    NofloTheme,
+    NofloMinimap,
+};
 
-// TODO export:
-/*
-- Component Type
-*/
+export default Noflo;

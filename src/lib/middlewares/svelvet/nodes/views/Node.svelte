@@ -261,6 +261,7 @@
 
         font-size: 10px;
         font-family: "JetBrains Mono";
+        white-space: nowrap;
 
         position: absolute;
         bottom: -30px;

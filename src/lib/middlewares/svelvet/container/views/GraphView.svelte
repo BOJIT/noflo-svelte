@@ -33,11 +33,8 @@
     /*--------------------------------- Props --------------------------------*/
 
     export let canvasId: string;
-    export let width: number;
-    export let height: number;
     export let initialZoom = 3;
     export let initialLocation: PositionType;
-    export let boundary = false;
     export let minimap: NofloMinimap = 'none';
 
     // here we lookup the store using the unique key

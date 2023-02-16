@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-    import type { NofloMinimap } from '../store/types/types';
+  import type { NofloMinimap } from '../store/types/types';
   import GreyNode from './GreyNodeBoundless.svelte';
 
   export let key: string;

@@ -10,6 +10,8 @@
 
 /*---------------------------------- Imports ---------------------------------*/
 
+import type { SvelteComponent } from "svelte";
+
 import { Component, ComponentOptions } from "noflo/lib/Component";
 
 /*----------------------------------- Types ----------------------------------*/
@@ -18,6 +20,7 @@ type NofloComponentConstructor = new (o: ComponentOptions) => Component;
 
 export type NofloComponentFactory = {
     // Metadata
+    icon?: SvelteComponent
     category?: string,
     long_name?: string
 
@@ -25,6 +28,4 @@ export type NofloComponentFactory = {
     factory: (cc: NofloComponentConstructor) => Component;
 }
 
-export type NofloComponentLibrary = {
-    [key: string]: NofloComponentFactory
-}
+export type NofloComponentLoader = (key: string) => NofloComponentFactory | null;

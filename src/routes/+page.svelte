@@ -9,18 +9,94 @@
 -->
 
 <script lang='ts'>
-    // TEMP
-    import type { GraphTheme } from "$lib/middlewares/svelvet";
     /*-------------------------------- Imports -------------------------------*/
 
-    import Noflo, { type NofloTheme } from "$lib/Noflo.svelte";
+    import Noflo, { type NofloTheme } from "$lib";
     import Library from "$lib/test/components";
 
     /*--------------------------------- Props --------------------------------*/
 
     let noflo: Noflo;
-
-    let theme: GraphTheme = 'light';
+    let theme: NofloTheme = 'light';
+    let graph = {
+        "caseSensitive": false,
+        "properties": {
+        "name": ""
+        },
+        "inports": {},
+        "outports": {},
+        "groups": [],
+        "processes": {
+        "q7": {
+            "component": "serial in",
+            "metadata": {
+                "label": "serial in",
+                "x": 100,
+                "y": 50,
+            }
+        },
+        "23wa": {
+            "component": "reshape",
+            "metadata": {
+                "label": "reshape",
+                "x": 100,
+                "y": 200,
+                "portSettings": [
+                    {
+                        "name": "augend",
+                        "mode": "constant",
+                        "constant": "{}"
+                    },
+                    {
+                        "name": "addend",
+                        "mode": "constant",
+                        "constant": "ts\n\t\t{et\"}\n\t"
+                    }
+                ]
+            }
+        }
+        },
+        "connections": [
+        {
+            "src": {
+            "process": "q7",
+            "port": "out"
+            },
+            "tgt": {
+            "process": "q7",
+            "port": "port"
+            },
+            "metadata": {}
+        },
+        {
+            "src": {
+            "process": "q7",
+            "port": "out"
+            },
+            "tgt": {
+            "process": "23wa",
+            "port": "augend"
+            },
+            "metadata": {
+            "route": 0
+            }
+        },
+        {
+            "data": {},
+            "tgt": {
+            "process": "23wa",
+            "port": "augend"
+            }
+        },
+        {
+            "data": {},
+            "tgt": {
+            "process": "23wa",
+            "port": "addend"
+            }
+        }
+        ]
+    };
 
     /*-------------------------------- Methods -------------------------------*/
 
@@ -30,13 +106,16 @@
 
 
 <div class="editor">
-    <Noflo library={Library} bind:this={noflo} bind:theme minimap='top-right'/>
+    <Noflo bind:this={noflo} bind:graph={graph} bind:theme minimap='top-right'/>
 </div>
 
 <div class=overlay>
     <button on:click={() => {
         theme = theme === 'light' ? 'dark' : 'light';
     }}>Toggle Theme</button>
+    <button on:click={() => {
+        console.log(graph);
+    }}>Log Graph</button>
 </div>
 
 

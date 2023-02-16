@@ -30,6 +30,7 @@
     } from '../controllers/middleware';
 
     import GraphView from './GraphView.svelte';
+    import type { GraphJson } from '$lib/middlewares/fbp-graph/Types';
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -51,6 +52,7 @@
     export let initialLocation = { x: 0, y: 0 };
 
     export let theme: NofloTheme = 'light';
+    export let graph: GraphJson;
 
     const store = createStoreEmpty(canvasId);
 
@@ -58,7 +60,7 @@
 
 
     /*------------------------------- Lifecycle ------------------------------*/
-      // sets the state of the store to the values passed in from the Svelvet Component on initial render
+
     onMount(() => {
         // sanitize user input
         let output = sanitizeUserNodesAndEdges(nodes, edges);
@@ -74,31 +76,29 @@
         const optionsObj = { snap, snapTo }; // TODO: rename to snap
         store.options.set(optionsObj); //
         store.nodeCreate.set(nodeCreate);
+
         store.themeStore.set(theme);
+        store.graphStore.set(graph);
 
         // set node/edge related stores
         populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
+
+        // Push graph state back to prop
+        store.graphStore.subscribe((g) => {
+            graph = g;
+        });
     });
 
     afterUpdate(() => {
-        // sanitize user input
-        let output = sanitizeUserNodesAndEdges(nodes, edges);
-        const userNodes = output['userNodes'];
-        const userEdges = output['userEdges'];
-
-        // set canvas related stores. you need to do this before setting node/edge related stores because
-        // initializing nodes/edges might read relevant options from the store.
+        // set canvas related stores
         store.widthStore.set(width);
         store.heightStore.set(height);
         store.backgroundStore.set(background);
         store.movementStore.set(movement);
-        const optionsObj = { snap, snapTo }; // TODO: rename to snap
+        const optionsObj = { snap, snapTo };
         store.options.set(optionsObj); //
         store.nodeCreate.set(nodeCreate);
         store.themeStore.set(theme);
-
-        // set node/edge related stores
-        populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
     });
 </script>
 
@@ -110,8 +110,6 @@
 >
     <GraphView
         {canvasId}
-        {width}
-        {height}
         {initialLocation}
         {initialZoom}
         {minimap}
