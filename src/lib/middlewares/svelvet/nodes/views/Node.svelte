@@ -152,8 +152,8 @@
     top: {node.positionY}px;
     width: {node.width - 6}px;
     height: {node.height - 6}px;
-    color: {node.textColor};
-    cursor: {$lockedOption ? "default" : "grab"}"
+    cursor: {$lockedOption ? "default" : "grab"};
+    {node.bgColor ? `background-color: ${node.bgColor}` : ""}"
   id="svelvet-{node.id}"
 >
     <svelte:component this={node.icon} color="#c8ced0" height="45px"/>

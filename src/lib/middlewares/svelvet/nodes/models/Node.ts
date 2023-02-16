@@ -33,10 +33,6 @@ export class Node implements NodeType {
     public height: number,
     public bgColor: string,
     public canvasId: string,
-    public borderColor: string,
-    public src: string,
-    public textColor: string,
-    public borderRadius: number,
     public childNodes: string[],
     public className: string,
     public clickCallback: Function

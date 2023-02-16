@@ -10,12 +10,8 @@ export interface UserNodeType {
   height: number;
   bgColor: string;
   position: { x: number; y: number };
-  borderColor?: string | undefined;
-  src?: string;
-  textColor?: string;
   targetPosition?: 'left' | 'right' | 'top' | 'bottom';
   sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
-  borderRadius?: number;
   childNodes?: string[];
   className?: string;
   clickCallback?: Function;
@@ -60,7 +56,7 @@ export interface StoreType {
   boundary: Writable<boolean | PositionType>;
   edgeEditModal: Writable<null | string>; // this options is used to place the edgeEdit modal when an edge is right-clicked. null is no modal, positionType if modal should be placed at position defined by postionType.x, positionType.y
   lockedOption: Writable<boolean>;
-  themeStore: Writable<GraphTheme>;
+  themeStore: Writable<NofloTheme>;
 }
 
 export interface PositionType {
@@ -79,10 +75,6 @@ export interface NodeType {
   canvasId: string;
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
-  borderColor: string;
-  src: string;
-  textColor: string;
-  borderRadius: number;
   childNodes: string[];
   className: string; //This is for custom className for node
   clickCallback: Function; // user-supplied callback that executes when the node is clicked
@@ -134,4 +126,8 @@ export interface TemporaryEdgeType {
   createNode: Function;
 }
 
-export type GraphTheme = 'light' | 'dark';
+// Additional types
+
+export type NofloTheme = 'light' | 'dark';
+
+export type NofloMinimap = 'none' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

@@ -17,7 +17,6 @@
   import MinimapBoundary from '../../Minimap/MinimapBoundary.svelte';
   import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
   import EditEdge from '../../editEdges/views/EditEdge.svelte';
-  import type { AnchorType } from '../../edges/types/types';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
@@ -219,6 +218,7 @@
     </div>
   </div>
 </div>
+
 <!-- rendering dots on the background depending on the zoom level -->
 <svg
   class={`Edges Edges-${canvasId}`}
@@ -301,22 +301,22 @@
 </svg>
 
 <style>
-  /* svg {
-  } */
-  .Nodes {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
-  .Node {
-    color: black; /* remove this once color is set to default via types */
-    width: 100%;
-    height: 100%;
-  }
-  #graphview-container {
-    pointer-events: none;
-  }
-  .pointer-events-auto {
-    pointer-events: auto;
-  }
+    .Nodes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .Node {
+        width: 100%;
+        height: 100%;
+    }
+
+    #graphview-container {
+        pointer-events: none;
+    }
+
+    .pointer-events-auto {
+        pointer-events: auto;
+    }
 </style>

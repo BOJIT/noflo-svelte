@@ -35,28 +35,12 @@
 
 <div class=overlay>
     <button on:click={() => {
-        if(theme === 'light') {
-            theme = 'dark';
-            document.body.classList.add('dark');
-        } else {
-            theme = 'light';
-            document.body.classList.remove('dark');
-        }
-        console.log(theme);
+        theme = theme === 'light' ? 'dark' : 'light';
     }}>Toggle Theme</button>
 </div>
 
 
 <style>
-    :global(body) {
-        margin: 0px;
-        background-color: antiquewhite;
-    }
-
-    :global(body.dark) {
-        background-color: rgb(22, 22, 22);
-    }
-
     .editor {
         top: 5vh;
         left: 5vw;

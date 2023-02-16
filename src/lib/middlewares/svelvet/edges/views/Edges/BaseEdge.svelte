@@ -35,6 +35,7 @@
   //   and they would be only responsible to detecting events and dispatch actions.
   const edgeId = baseEdgeProps.id;
   const store = findStore(canvasId);
+  const theme = store.themeStore;
   const edge = getEdgeById(store, edgeId);
   const handleClick = () => {
     const store = findStore(canvasId);
@@ -77,7 +78,7 @@
     class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
-    stroke={edgeColor ? edgeColor : 'gray'}
+    stroke={edgeColor !== 'default' ? edgeColor : ($theme === 'dark' ? 'white' : 'black')}
     marker-end="url(#arrow)"
     aria-label="svg-path"
   />
@@ -86,7 +87,7 @@
     class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
-    stroke={edgeColor ? edgeColor : 'grey'}
+    stroke={edgeColor !== 'default' ? edgeColor : ($theme === 'dark' ? 'white' : 'black')}
     aria-label="svg-path"
   />
 {/if}
