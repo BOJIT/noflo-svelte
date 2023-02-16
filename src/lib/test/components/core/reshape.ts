@@ -3,7 +3,7 @@ import { ExtensionPuzzle } from "@svicons/ionicons-outline";
 
 const componentFactory: NofloComponentFactory = {
     inPorts: ['augend', 'addend', 'anotherInput', 'otherTest', 'HEY'],
-    outPorts: ['sum'],
+    outPorts: ['sum', 'notify'],
     category: 'core',
     icon: ExtensionPuzzle,
 

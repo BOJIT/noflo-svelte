@@ -17,6 +17,7 @@
     const {
         nodesStore,
         nodeSelected,
+        d3Scale,
     } = store;
 
     let isSelected = false;
@@ -185,11 +186,20 @@
             <circle cx={6.5}
                 cy={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing}
                 r={3} stroke="#444444" fill="white" />
+                <text class="port-annotation" class:visible={$d3Scale > 2}
+                    x="12.5" y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing + 1.25}>
+                    {ip}
+                </text>
         {/each}
         {#each node.outPorts as op, idx }
             <circle cx={node.width + 13.5}
                 cy={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing}
                 r={3} stroke="#444444" fill="white" />
+
+            <text class="port-annotation" class:visible={$d3Scale > 2}
+                text-anchor="end" x={node.width + 7.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing + 1.25}>
+                {op}
+            </text>
         {/each}
     </svg>
 </div>
@@ -245,6 +255,19 @@
         left: 0px;
 
         pointer-events: none;
+        z-index: 5;
+    }
+
+    .port-annotation {
+        font-size: 4px;
+        font-family: "JetBrains Mono";
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.4s;
+    }
+
+    .port-annotation.visible {
+        opacity: 1;
     }
 
     .label {
