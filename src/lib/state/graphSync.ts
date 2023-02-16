@@ -15,6 +15,8 @@ import { get } from "svelte/store";
 import writableDerived from "svelte-writable-derived";
 import { Help } from "@svicons/ionicons-outline";
 
+// import { Component } from "noflo";
+
 import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 import type { FbpGraphNodeMetadata } from "$lib/types/Graph";
 import type {
@@ -46,6 +48,8 @@ function init(store: StoreType, canvasId: string) {
 
         for (const [key, val] of Object.entries(g.processes)) {
             const c = loader(val.component);
+            // const instance = c?.factory(Component);
+
             if(c && val.metadata !== undefined) {
                 const meta: FbpGraphNodeMetadata = val.metadata as FbpGraphNodeMetadata;
                 const n = new Node(

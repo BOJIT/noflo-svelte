@@ -10,17 +10,12 @@
 
 /*-------------------------------- Imports -----------------------------------*/
 
-import { stores } from '../models/store';
-import { writable, get } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 import Graph from '$lib/middlewares/fbp-graph';
 
-import type { StoreType, UserNodeType, UserEdgeType } from '../types/types';
-import {
-    populateAnchorsStore,
-    populateEdgesStore,
-    populatePotentialAnchorStore,
-} from './util';
+import { stores } from '../models/store';
+import type { StoreType } from '../types/types';
 
 import graphSync from '$lib/state/graphSync';
 
