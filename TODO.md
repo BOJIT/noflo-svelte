@@ -2,7 +2,7 @@
 
 - [ ] Add Node method for central store
 
-- [-] Outports reflect loaded components
+- [X] Outports reflect loaded components
 
 - [ ] Graph error handling
 

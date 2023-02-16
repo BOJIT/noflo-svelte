@@ -131,6 +131,9 @@
     <button on:click={() => {
         console.log(graph);
     }}>Log Graph</button>
+    <button on:click={() => {
+        noflo.addNode('reshape');
+    }}>Add Reshape</button>
 </div>
 
 
