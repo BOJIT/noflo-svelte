@@ -22,7 +22,7 @@
     let graph = {
         "caseSensitive": false,
         "properties": {
-        "name": ""
+            "name": ""
         },
         "inports": {},
         "outports": {},
@@ -31,7 +31,7 @@
         "q7": {
             "component": "console log",
             "metadata": {
-                "label": "serial in",
+                "label": "console log",
                 "x": 100,
                 "y": 50,
             }
@@ -108,6 +108,10 @@
     /*------------------------------- Lifecycle ------------------------------*/
 
 </script>
+
+<svelte:head>
+    <title>Noflo-Svelte</title>
+</svelte:head>
 
 
 <div class="editor">

@@ -8,10 +8,6 @@
 
     const portSpacing = 17.5;
 
-    // TEMP
-    let inports: string[] = ["TEST", "example", "node"];
-    let outports: string[] = ["out", "node2"];
-
     export let node: NodeType;
     export let canvasId: string;
     export let nodeId: string;
@@ -185,14 +181,14 @@
     {/if}
 
     <svg class="ports">
-        {#each inports as ip, idx }
+        {#each node.inPorts as ip, idx }
             <circle cx={6.5}
-                cy={node.height/2 + (idx * portSpacing) - (inports.length - 1)/2 * portSpacing}
+                cy={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing}
                 r={3} stroke="#444444" fill="white" />
         {/each}
-        {#each outports as op, idx }
+        {#each node.outPorts as op, idx }
             <circle cx={node.width + 13.5}
-                cy={node.height/2 + (idx * portSpacing) - (outports.length - 1)/2 * portSpacing}
+                cy={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing}
                 r={3} stroke="#444444" fill="white" />
         {/each}
     </svg>

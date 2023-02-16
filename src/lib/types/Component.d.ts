@@ -20,6 +20,8 @@ type NofloComponentConstructor = new (o: ComponentOptions) => Component;
 
 export type NofloComponentFactory = {
     // Metadata
+    inPorts: string[]   // These should match the ports in your factory
+    outPorts: string[]  // These are purely added so we don't need an instance to preview
     icon?: SvelteComponent
     category?: string,
     long_name?: string

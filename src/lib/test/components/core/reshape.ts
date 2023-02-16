@@ -1,12 +1,16 @@
 import type { NofloComponentFactory } from "$lib/types/Component";
+import { ExtensionPuzzle } from "@svicons/ionicons-outline";
 
 const componentFactory: NofloComponentFactory = {
+    inPorts: ['augend', 'addend', 'anotherInput', 'otherTest', 'HEY'],
+    outPorts: ['sum'],
     category: 'core',
+    icon: ExtensionPuzzle,
+
     factory: (Component) => {
         /* Core component initialisation */
         const c = new Component({
             description: 'reshapes a data packet',
-            icon: 'shapes',
             inPorts: {
                 augend: {
                     datatype: 'number',

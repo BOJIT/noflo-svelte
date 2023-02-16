@@ -1,14 +1,16 @@
 import type { NofloComponentFactory } from "$lib/types/Component";
-import { PaperPlane } from "@svicons/ionicons-outline";
+import { Receipt } from "@svicons/ionicons-outline";
 
 const componentFactory: NofloComponentFactory = {
+    inPorts: ['in'],
+    outPorts: [],
     category: 'core',
-    icon: PaperPlane,
+    icon: Receipt,
+
     factory: (Component) => {
         /* Core component initialisation */
         const c = new Component({
             description: 'Logs packets to browser console',
-            icon: 'info',
             inPorts: {
                 in: {
                     datatype: 'object',
