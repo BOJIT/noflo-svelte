@@ -26,7 +26,6 @@
     } from '../../store/controllers/storeApi';
 
     import {
-        sanitizeCanvasOptions,
         sanitizeUserNodesAndEdges,
     } from '../controllers/middleware';
 
@@ -77,8 +76,6 @@
         store.nodeCreate.set(nodeCreate);
         store.themeStore.set(theme);
 
-        // make sure that all canvas options are compatible
-        sanitizeCanvasOptions(store);
         // set node/edge related stores
         populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
     });
@@ -100,8 +97,6 @@
         store.nodeCreate.set(nodeCreate);
         store.themeStore.set(theme);
 
-        // make sure that all canvas options are compatible
-        sanitizeCanvasOptions(store);
         // set node/edge related stores
         populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
     });

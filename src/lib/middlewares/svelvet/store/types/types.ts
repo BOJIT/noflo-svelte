@@ -77,14 +77,19 @@ export interface PositionType {
 }
 
 export interface NodeType {
+    // Must be set
     id: string;
     icon: SvelteComponent;
     label: string;
+    bgColor: string;
+    inPorts?: string[];
+    outPorts?: string[];
+
+    // Derived
     positionX: number;
     positionY: number;
     height: number;
     width: number;
-    bgColor: string;
     canvasId: string;
     setPositionFromMovement: Function;
     delete: Function; //This is the method to delete the node from the store
