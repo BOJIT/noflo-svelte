@@ -1,7 +1,7 @@
 {
     "name": "@bojit/noflo-svelte",
     "private": false,
-    "version": "2.99.9",
+    "version": "2.99.10",
     "scripts": {
         "dev": "vite dev",
         "build": "vite build",
@@ -28,6 +28,7 @@
         "@svicons/ionicons-outline": "^0.1.11",
         "d3-selection": "^3.0.0",
         "d3-zoom": "^3.0.0",
-        "ease-component": "^1.0.0"
+        "ease-component": "^1.0.0",
+        "events": "^3.3.0"
     }
 }
