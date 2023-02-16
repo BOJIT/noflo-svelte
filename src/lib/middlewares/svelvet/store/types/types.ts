@@ -6,10 +6,11 @@ import type { AnchorType } from '../../edges/types/types';
 export interface UserNodeType {
   id: string;
   icon: SvelteComponent;
+  label?: string,
   width: number;
   height: number;
-  bgColor: string;
   position: { x: number; y: number };
+  bgColor?: string;
   targetPosition?: 'left' | 'right' | 'top' | 'bottom';
   sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
   childNodes?: string[];
@@ -67,6 +68,7 @@ export interface PositionType {
 export interface NodeType {
   id: string;
   icon: SvelteComponent;
+  label: string;
   width: number;
   height: number;
   positionX: number;

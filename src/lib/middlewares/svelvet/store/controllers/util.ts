@@ -312,6 +312,7 @@ export function populateNodesStore(
     const node = new Node(
       nodeId.toString(),
       userNode.icon,
+      userNode.label === undefined ? '' : userNode.label,
       userNode.position.x,
       userNode.position.y,
       userNode.width,

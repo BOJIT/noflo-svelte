@@ -27,6 +27,7 @@ export class Node implements NodeType {
   constructor(
     public id: string,
     public icon: SvelteComponent,
+    public label: string,
     public positionX: number,
     public positionY: number,
     public width: number,

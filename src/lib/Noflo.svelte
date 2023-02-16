@@ -17,6 +17,8 @@
 
     import { onMount, onDestroy, tick } from 'svelte';
 
+    import "@fontsource/jetbrains-mono";
+
     import Svelvet, {
         type UserNodeType,
         type UserEdgeType,
@@ -55,6 +57,7 @@
         {
             id: "2",
             icon: Settings,
+            label: "component/2",
             position: { x: 100, y: 150 },
             width: 60,
             height: 120,

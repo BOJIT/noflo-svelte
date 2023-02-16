@@ -255,7 +255,7 @@
         id="coarse-dot"
         cx={gridSize / 2 - dotSize / 2}
         cy={gridSize / 2 - dotSize / 2}
-        r="1"
+        r="0.75"
         style={$themeStore === 'light' ? "fill: #222222" : "fill: white"}
         />
     </pattern>

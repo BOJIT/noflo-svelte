@@ -157,6 +157,10 @@
   id="svelvet-{node.id}"
 >
     <svelte:component this={node.icon} color="#c8ced0" height="45px"/>
+
+    {#if node.label !== ''}
+        <div class="Label">{node.label}</div>
+    {/if}
 </div>
 
 <style>
@@ -175,5 +179,24 @@
     align-items: center;
     text-align: center;
     pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
+  }
+
+  .Label {
+    background-color: rgba(100, 100, 100, 0.2);
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 3vmin;
+
+    font-size: 10px;
+    font-family: "JetBrains Mono";
+
+    position: absolute;
+    bottom: -30px;
+  }
+
+  :global(.svelvet-dark) .Label {
+    color: white;
   }
 </style>
