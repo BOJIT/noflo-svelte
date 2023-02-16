@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { afterUpdate } from 'svelte';
-
     import { get } from 'svelte/store';
 
     import { findStore } from '../../store/controllers/storeApi';
@@ -8,7 +6,8 @@
         NodeType,
     } from '../../store/types/types';
 
-    import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
+    const nodeWidth = 54;
+    let nodeHeight = 54;
 
     export let node: NodeType;
     export let canvasId: string;
@@ -19,15 +18,9 @@
     const {
         nodesStore,
         nodeSelected,
-        lockedOption
     } = store;
 
     let isSelected = false;
-
-    // forceCssHeightAndWidth forces the size of the node to be defined by CSS
-    afterUpdate(() => {
-        if (node.className) forceCssHeightAndWidth(store, node);
-    });
 
     // this state variable is used for "clickCallback" functionality
     // on mouseup, the callback will fire only if userClick is true
@@ -93,11 +86,11 @@
             const offsetY =
             ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
 
-            const d3Scale = get(store.d3Scale);
+            // const d3Scale = get(store.d3Scale);
             // divide the movement value by scale to keep it proportional to d3Zoom transformations
             node.setPositionFromMovement(
-            offsetX - node.width / 2,
-            offsetY - node.height / 2
+            offsetX - nodeWidth / 2,
+            offsetY - nodeHeight / 2
             );
             return { ...nodes };
         });
@@ -147,53 +140,52 @@
   class="Node {node.className}"
   style="left: {node.positionX}px;
     top: {node.positionY}px;
-    width: {node.width - 6}px;
-    height: {node.height - 6}px;
-    cursor: {$lockedOption ? "default" : "grab"};
+    height: {nodeHeight}px;
+    width: {nodeWidth}px;
     {node.bgColor ? `background-color: ${node.bgColor}` : ""}"
   id="svelvet-{node.id}"
 >
     <svelte:component this={node.icon} color="#c8ced0" height="45px"/>
 
     {#if node.label !== ''}
-        <div class="Label">{node.label}</div>
+        <div class="label">{node.label}</div>
     {/if}
 </div>
 
 <style>
-  .Node {
-    background-color: #d8e0e2;
-    border-radius: 12px;
-    border: 3px solid black;
+    .Node {
+        background-color: #d8e0e2;
+        border-radius: 12px;
+        border: 3px solid black;
 
-    position: absolute;
-    display: grid;
-    place-items: center;
+        position: absolute;
+        display: grid;
+        place-items: center;
 
-    user-select: none;
-    justify-content: center;
-    overscroll-behavior: auto;
-    align-items: center;
-    text-align: center;
-    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
-  }
+        user-select: none;
+        justify-content: center;
+        overscroll-behavior: auto;
+        align-items: center;
+        text-align: center;
+        pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
+    }
 
-  .Label {
-    background-color: rgba(100, 100, 100, 0.2);
-    padding-top: 2px;
-    padding-bottom: 3px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 3vmin;
+    .label {
+        background-color: rgba(100, 100, 100, 0.2);
+        padding-top: 2px;
+        padding-bottom: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 3vmin;
 
-    font-size: 10px;
-    font-family: "JetBrains Mono";
+        font-size: 10px;
+        font-family: "JetBrains Mono";
 
-    position: absolute;
-    bottom: -30px;
-  }
+        position: absolute;
+        bottom: -30px;
+    }
 
-  :global(.svelvet-dark) .Label {
-    color: white;
-  }
+    :global(.svelvet-dark) .label {
+        color: white;
+    }
 </style>

@@ -15,9 +15,10 @@
   //nHeight/nWidth represent the height and width of the grey nodes
   //top/left represent the actual position of the grey nodes on the minimap
 
+  // TODO get height based on numPorts
   $: {
-    nHeight = Math.max(node.height * heightRatio, 5);
-    nWidth = Math.max(node.width * widthRatio, 5);
+    nHeight = Math.max(54 * heightRatio, 5);
+    nWidth = Math.max(54 * widthRatio, 5);
     top = node.positionY * heightRatio - nodeYbottomPosition * heightRatio + 1;
     left = node.positionX * widthRatio - nodeXleftPosition * widthRatio + 1;
   }

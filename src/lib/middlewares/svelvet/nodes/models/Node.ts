@@ -30,12 +30,11 @@ export class Node implements NodeType {
     public label: string,
     public positionX: number,
     public positionY: number,
-    public width: number,
     public height: number,
+    public width: number,
     public bgColor: string,
     public canvasId: string,
     public childNodes: string[],
-    public className: string,
     public clickCallback: Function
   ) {}
 
@@ -49,23 +48,8 @@ export class Node implements NodeType {
       nodesStore,
       anchorsStore,
       potentialAnchorsStore,
-      boundary,
-      lockedOption,
     } = stores[this.canvasId];
 
-    if (get(lockedOption)) return; // don't do anything if locked is enabled
-
-    // boundary sets the boundary of the canvas, or else it is false if their is no boundary
-    // check if out of bounds, and if so return without doing anything
-    const boundaryObj = get(boundary);
-    if (
-      typeof boundaryObj === 'object' &&
-      (this.positionX + this.width + movementX >= boundaryObj.x ||
-        this.positionY + this.height + movementY >= boundaryObj.y ||
-        this.positionY + movementY <= 0 ||
-        this.positionX + movementX <= 0)
-    )
-      return;
     //update all necessary data
     this.positionX += movementX;
     this.positionY += movementY;

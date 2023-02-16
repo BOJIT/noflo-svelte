@@ -63,7 +63,7 @@ export interface StoreType {
     backgroundStore: Writable<boolean>;
     movementStore: Writable<boolean>;
     nodeIdSelected: Writable<number>;
-    nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged
+    nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged TODO fix!
     d3Scale: Writable<number>; // for zoom and pan
     options: Writable<{ [key: string]: any }>;
     temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
@@ -80,16 +80,15 @@ export interface NodeType {
     id: string;
     icon: SvelteComponent;
     label: string;
-    width: number;
-    height: number;
     positionX: number;
     positionY: number;
+    height: number;
+    width: number;
     bgColor: string;
     canvasId: string;
     setPositionFromMovement: Function;
     delete: Function; //This is the method to delete the node from the store
     childNodes: string[];
-    className: string; //This is for custom className for node
     clickCallback: Function; // user-supplied callback that executes when the node is clicked
 }
 

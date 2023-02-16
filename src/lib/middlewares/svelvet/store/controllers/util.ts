@@ -317,12 +317,11 @@ export function populateNodesStore(
       userNode.label === undefined ? '' : userNode.label,
       userNode.position.x,
       userNode.position.y,
-      userNode.width,
       userNode.height,
+      userNode.width,
       userNode.bgColor === undefined ? 'default' : userNode.bgColor,
       canvasId,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
-      userNode.className === undefined ? '' : userNode.className,
       userNode.clickCallback === undefined ? () => {} : userNode.clickCallback
     );
 
