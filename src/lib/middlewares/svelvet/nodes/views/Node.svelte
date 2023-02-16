@@ -1,6 +1,5 @@
 <script lang="ts">
     import { afterUpdate } from 'svelte';
-    import type { SvelteComponent } from "svelte";
 
     import { get } from 'svelte/store';
 
@@ -19,8 +18,6 @@
 
     const {
         nodesStore,
-        edgesStore,
-        anchorsStore,
         nodeSelected,
         lockedOption
     } = store;

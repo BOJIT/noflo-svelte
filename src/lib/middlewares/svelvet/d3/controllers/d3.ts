@@ -1,8 +1,22 @@
-// import { zoom, zoomTransform } from 'd3-zoom';
-// import { select, selectAll } from 'd3-selection';
+/**
+ * @file d3.ts
+ * @author James Bennion-Pedley
+ * @brief D3 core handler code
+ * @date 16/02/2023
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
+/*-------------------------------- Imports -----------------------------------*/
+
 import { get } from 'svelte/store';
 
-export function zoomInit(
+/*--------------------------------- State ------------------------------------*/
+
+/*------------------------------- Functions ----------------------------------*/
+
+function zoomInit(
     d3,
     canvasId,
     d3Zoom,
@@ -48,46 +62,21 @@ export function zoomInit(
     return d3Translate;
 }
 
-// create d3 instance conditionally based on boundary prop
-export function determineD3Instance(
-    boundary,
+function determineD3Instance(
     d3,
     nodeSelected,
-    width,
-    height,
-    movementStore,
-    backgroundStore,
-    gridSize,
-    dotSize,
-    canvasId,
-    d3Scale,
     handleZoom
 ) {
-    if (boundary) {
-        return d3
-        .zoom()
-        .filter((e) => {
-            return !get(nodeSelected);
-            // return !(get(nodeSelected) && e.sourceEvent?.constructor.name === 'MouseEvent')
-        })
-        .scaleExtent([0.2, 10]) // limits for zooming in/out
-        .translateExtent([
-            [0, 0],
-            [boundary.x, boundary.y],
-        ]) // world extent
-        .extent([
-            [0, 0],
-            [width, height],
-        ])
-        .on('zoom', handleZoom);
-    } else {
-        return d3
-        .zoom()
-        .filter((e) => {
-            return !get(nodeSelected);
-            // return !(get(nodeSelected) && e.sourceEvent?.constructor.name === 'MouseEvent')
-        })
-        .scaleExtent([0.2, 10])
-        .on('zoom', handleZoom);
-    }
+    return d3
+    .zoom()
+    .filter((e: any) => {
+        return !get(nodeSelected);
+        // return !(get(nodeSelected) && e.sourceEvent?.constructor.name === 'MouseEvent')
+    })
+    .scaleExtent([0.2, 10])
+    .on('zoom', handleZoom);
 }
+
+/*-------------------------------- Exports -----------------------------------*/
+
+export { zoomInit, determineD3Instance}

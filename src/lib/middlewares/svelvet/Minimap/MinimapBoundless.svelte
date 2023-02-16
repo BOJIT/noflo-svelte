@@ -1,10 +1,13 @@
-<script>
-  import { onMount, createEventDispatcher } from 'svelte';
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+    import type { NofloMinimap } from '../store/types/types';
   import GreyNode from './GreyNodeBoundless.svelte';
 
-  export let key;
+  export let key: string;
   export let d3Translate;
   export let store;
+
+  export let location: NofloMinimap;
 
   const { nodesStore, widthStore, heightStore } = store; // for whatever reason, the REPL does not allow Minimap in particular to use findStoreById. We have to pass in the store directly
 
@@ -101,6 +104,10 @@
 </script>
 
 <div
+  class:top-left={location === 'top-left'}
+  class:top-right={location === 'top-right'}
+  class:bottom-left={location === 'bottom-left'}
+  class:bottom-right={location === 'bottom-right'}
   on:click={handleClick}
   bind:this={map}
   class={`miniMap miniMap-${key}`}
@@ -135,12 +142,31 @@
     border-radius: 0.5rem;
     color: rgb(142, 142, 142);
     position: absolute;
-    bottom: 15px;
-    right: 15px;
     z-index: 10;
     box-shadow: 2px 2px 7px rgb(77, 77, 77);
     overflow: hidden;
   }
+
+  .top-left {
+    top: 15px;
+    left: 15px;
+  }
+
+  .top-right {
+    top: 15px;
+    right: 15px;
+  }
+
+  .bottom-left {
+    bottom: 15px;
+    left: 15px;
+  }
+
+  .bottom-right {
+    bottom: 15px;
+    right: 15px;
+  }
+
   .viewBox {
     background-color: rgb(120, 120, 120);
     border: solid red 1px;

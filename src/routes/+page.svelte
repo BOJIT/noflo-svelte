@@ -30,7 +30,7 @@
 
 
 <div class="editor">
-    <Noflo library={Library} bind:this={noflo} bind:theme/>
+    <Noflo library={Library} bind:this={noflo} bind:theme minimap='top-right'/>
 </div>
 
 <div class=overlay>

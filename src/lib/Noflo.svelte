@@ -102,9 +102,9 @@
     class:svelvet-dark={theme === 'dark'}
     class:translucent
 >
-    <Svelvet bind:nodes={initialNodes} bind:edges={initialEdges} bgColor="transparent"
+    <Svelvet bind:nodes={initialNodes} bind:edges={initialEdges}
         width={width} height={height} background={true}
-        minimap={true} bind:theme={theme}
+        minimap={minimap} bind:theme={theme} snap
     />
 </div>
 

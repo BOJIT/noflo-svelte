@@ -1,3 +1,5 @@
+// TODO sort/deprecate
+
 const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
 
 import { get } from 'svelte/store';
@@ -317,7 +319,7 @@ export function populateNodesStore(
       userNode.position.y,
       userNode.width,
       userNode.height,
-      userNode.bgColor,
+      userNode.bgColor === undefined ? 'default' : userNode.bgColor,
       canvasId,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
       userNode.className === undefined ? '' : userNode.className,
