@@ -10,20 +10,22 @@
 
 /*-------------------------------- Imports -----------------------------------*/
 
+import { get } from "svelte/store";
+
 import writableDerived from "svelte-writable-derived";
+import { Help } from "@svicons/ionicons-outline";
 
 import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
+import type { FbpGraphNodeMetadata } from "$lib/types/Graph";
 import type {
     NodeType,
     StoreType,
 } from "$lib/middlewares/svelvet/store/types/types";
+
 import { Node } from "$lib/middlewares/svelvet/nodes/models/Node";
 
 /*--------------------------------- State ------------------------------------*/
 
-// TEMP
-import { Settings } from "@svicons/ionicons-outline";
-import type { FbpGraphNodeMetadata } from "$lib/types/Graph";
 
 /*------------------------------- Functions ----------------------------------*/
 
@@ -37,15 +39,18 @@ function init(store: StoreType, canvasId: string) {
     function graphToNodes(g: GraphJson) : { [key: string]: NodeType } {
         const nodes: { [key: string]: NodeType } = {};
 
+        const loader = get(store.loaderStore);
+
         if(g.processes === undefined)
             return nodes;
 
         for (const [key, val] of Object.entries(g.processes)) {
-            if(val.metadata !== undefined) {
+            const c = loader(val.component);
+            if(c && val.metadata !== undefined) {
                 const meta: FbpGraphNodeMetadata = val.metadata as FbpGraphNodeMetadata;
                 const n = new Node(
                     key,
-                    Settings,
+                    c.icon === undefined ? Help : c.icon,
                     val.component,
                     meta.label === undefined ? '' : meta.label,
                     meta.bgColor === undefined ? 'default' : meta.bgColor,
@@ -62,6 +67,7 @@ function init(store: StoreType, canvasId: string) {
 
                 nodes[key] = n;
             }
+            // TODO handle error if component could not be loaded
         }
 
         return nodes;

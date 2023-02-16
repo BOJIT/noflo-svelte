@@ -12,7 +12,8 @@
     /*-------------------------------- Imports -------------------------------*/
 
     import Noflo, { type NofloTheme } from "$lib";
-    import Library from "$lib/test/components";
+    import library from "$lib/test/components";
+    import type { NofloComponentFactory } from "$lib/types/Component";
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -28,7 +29,7 @@
         "groups": [],
         "processes": {
         "q7": {
-            "component": "serial in",
+            "component": "console log",
             "metadata": {
                 "label": "serial in",
                 "x": 100,
@@ -98,6 +99,10 @@
         ]
     };
 
+    function loader(key: string) : NofloComponentFactory | undefined {
+        return library[key];
+    };
+
     /*-------------------------------- Methods -------------------------------*/
 
     /*------------------------------- Lifecycle ------------------------------*/
@@ -106,7 +111,13 @@
 
 
 <div class="editor">
-    <Noflo bind:this={noflo} bind:graph={graph} bind:theme minimap='top-right'/>
+    <Noflo
+        bind:this={noflo}
+        bind:graph
+        loader={loader}
+        bind:theme
+        minimap='top-right'
+        />
 </div>
 
 <div class=overlay>

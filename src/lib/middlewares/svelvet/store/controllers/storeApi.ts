@@ -18,7 +18,6 @@ import Graph from '$lib/middlewares/fbp-graph';
 import type { StoreType, UserNodeType, UserEdgeType } from '../types/types';
 import {
     populateAnchorsStore,
-    populateNodesStore,
     populateEdgesStore,
     populatePotentialAnchorStore,
 } from './util';
@@ -56,6 +55,7 @@ function findStore(canvasId: string): StoreType {
 function createStoreEmpty(canvasId: string): StoreType {
     stores[canvasId] = {
         graphStore: writable(new Graph.Graph().toJSON()),
+        loaderStore: writable((key: string) => null),
         themeStore: writable('dark'),
 
         nodesStore: writable({}),   // Unused
@@ -80,33 +80,6 @@ function createStoreEmpty(canvasId: string): StoreType {
     return stores[canvasId];
 }
 
-
-/**
- * populateSvelvetStoreFromUserInput will populate all the states and set these states into the Svelvet store initialized by invoking createStoreEmpty
- *
- * @param canvasId The canvasId of the Svelvet component you are creating a store for
- * @param nodes This is an array of objects containing node info that is defined by the user. NOTE THAT THE STRUCTURE DIFFERS FROM THE NODES CLASS. The whole point of populateSvelvetStoreFromUserInput is to convert nodes into proper Svelvet Node objects. An example of nodes is in $routes/testingplayground/index.svelte
- * @param edges Same as nodes, this is an array of objects containing edge info THAT IS DIFFERENT FROM THE EDGE CLASS.
- */
-function populateSvelvetStoreFromUserInput(
-    canvasId: string,
-    nodes: UserNodeType[],
-    edges: UserEdgeType[]
-  ): void {
-    // find the store
-    const store = findStore(canvasId);
-
-    // populate store.nodesStore with user nodes
-    // populateNodesStore(store, nodes, canvasId);
-    // populate store.anchorsStore with anchors. Note the userdoes not explictly define anchors; anchors are calculated from the edges
-    populateAnchorsStore(store, nodes, edges, canvasId);
-    // populate edges
-    populateEdgesStore(store, edges, canvasId);
-    //populate potential anchors if "node create" feature is turned on
-    if (get(store.nodeCreate))
-        populatePotentialAnchorStore(store, nodes, canvasId);
-}
-
 /*-------------------------------- Exports -----------------------------------*/
 
-export { findStore, createStoreEmpty, populateSvelvetStoreFromUserInput };
+export { findStore, createStoreEmpty };

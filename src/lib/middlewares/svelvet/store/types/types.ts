@@ -15,23 +15,9 @@ import type { Writable } from 'svelte/store';
 
 import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 import type { AnchorType } from '../../edges/types/types';
+import type { NofloComponentLoader } from "$lib/types/Component";
 
 /*-------------------------------- Exports -----------------------------------*/
-
-export interface UserNodeType {
-    id: string;
-    icon: SvelteComponent;
-    label?: string,
-    width: number;
-    height: number;
-    position: { x: number; y: number };
-    bgColor?: string;
-    targetPosition?: 'left' | 'right' | 'top' | 'bottom';
-    sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
-    childNodes?: string[];
-    className?: string;
-    clickCallback?: Function;
-}
 
 export interface UserEdgeType {
     id: string;
@@ -56,12 +42,14 @@ Type for a single svelvet store
 */
 export interface StoreType {
     graphStore: Writable<GraphJson>;
+    loaderStore: Writable<NofloComponentLoader>;
     themeStore: Writable<NofloTheme>;
 
     nodesStore: Writable<{ [key: string]: NodeType }>;
     edgesStore: Writable<{ [key: string]: EdgeType }>;
     anchorsStore: Writable<{ [key: string]: AnchorType }>;
     potentialAnchorsStore: Writable<{ [key: string]: PotentialAnchorType }>;
+
     widthStore: Writable<number>;
     heightStore: Writable<number>;
     backgroundStore: Writable<boolean>;

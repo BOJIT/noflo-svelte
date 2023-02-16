@@ -1,7 +1,9 @@
-import type { ComponentFactory } from "$lib/types/Component";
+import type { NofloComponentFactory } from "$lib/types/Component";
+import { PaperPlane } from "@svicons/ionicons-outline";
 
-const componentFactory: ComponentFactory = {
+const componentFactory: NofloComponentFactory = {
     category: 'core',
+    icon: PaperPlane,
     factory: (Component) => {
         /* Core component initialisation */
         const c = new Component({

@@ -1,6 +1,6 @@
-import type { ComponentFactory } from "$lib/types/Component";
+import type { NofloComponentFactory } from "$lib/types/Component";
 
-const componentFactory: ComponentFactory = {
+const componentFactory: NofloComponentFactory = {
     category: 'core',
     factory: (Component) => {
         /* Core component initialisation */

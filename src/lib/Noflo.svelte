@@ -11,16 +11,14 @@
 <script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
-    import { onMount, onDestroy, tick } from 'svelte';
+    import { onMount, onDestroy, tick, createEventDispatcher } from 'svelte';
 
     import "@fontsource/jetbrains-mono";
 
-    import Graph from './middlewares/fbp-graph';
     import type { GraphJson } from './middlewares/fbp-graph/Types';
     import type { NofloComponentLoader } from './types/Component';
 
     import Svelvet, {
-        type UserNodeType,
         type UserEdgeType,
         type NofloTheme,
         type NofloMinimap,
@@ -28,15 +26,19 @@
 
     /*--------------------------------- Props --------------------------------*/
 
-    export let theme: NofloTheme = 'light';
-    export let minimap: NofloMinimap = 'none';
-    export let translucent: boolean = false;
-
+    // Core
+    export let graph: GraphJson;
     export let loader: NofloComponentLoader = (key: string) => {
         return null;
     };
 
-    export let graph: GraphJson;
+    // Config
+    export let theme: NofloTheme = 'light';
+    export let minimap: NofloMinimap = 'none';
+    export let translucent: boolean = false;
+
+    // Events
+    const dispatch = createEventDispatcher();
 
     // Resize handler state
     let container: HTMLDivElement;
@@ -45,48 +47,6 @@
     let height = 1;
 
     // TEMP
-
-    import { Folder, Settings, PaperPlane } from "@svicons/ionicons-outline";
-
-    let initialNodes: UserNodeType[] = [
-        {
-            id: "1",
-            icon: Folder,
-            position: { x: 0, y: 50 },
-            width: 60,
-            height: 60,
-            bgColor: '#ff7788',
-        },
-        {
-            id: "2",
-            icon: Settings,
-            label: "component/2",
-            position: { x: 100, y: 150 },
-            width: 60,
-            height: 120,
-        },
-        {
-            id: "3",
-            icon: PaperPlane,
-            position: { x: 300, y: 50 },
-            width: 60,
-            height: 60,
-        },
-        {
-            id: "4",
-            icon: PaperPlane,
-            position: { x: 300, y: -50 },
-            width: 60,
-            height: 60,
-        },
-        {
-            id: "5",
-            icon: Settings,
-            position: { x: 200, y: -20 },
-            width: 60,
-            height: 60,
-        },
-    ];
     let initialEdges: UserEdgeType[] = [
         // { id: 'e1-2', source: "1", target: "2", type: "bezier", animate: true },
         // { id: 'e2-3', source: "2", target: "3", type: "bezier", animate: true },
@@ -124,9 +84,10 @@
 >
     <Svelvet
         bind:graph
-        bind:nodes={initialNodes} bind:edges={initialEdges}
-        width={width} height={height} background={true}
-        minimap={minimap} bind:theme={theme} snap
+        loader={loader}
+        bind:theme
+        width={width} height={height}
+        background={true} minimap={minimap} snap
     />
 </div>
 

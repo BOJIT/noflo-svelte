@@ -11,35 +11,30 @@
 <script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
-    import { afterUpdate, onMount } from 'svelte';
+    import { afterUpdate, onMount, createEventDispatcher } from 'svelte';
+
+
+    import type { GraphJson } from '$lib/middlewares/fbp-graph/Types';
+    import type { NofloComponentLoader } from '$lib/types/Component';
 
     import type {
-        UserNodeType,
-        UserEdgeType,
         NofloTheme,
         NofloMinimap,
     } from '../../store/types/types';
 
-    import {
-        createStoreEmpty,
-        populateSvelvetStoreFromUserInput,
-    } from '../../store/controllers/storeApi';
-
-    import {
-        sanitizeUserNodesAndEdges,
-    } from '../controllers/middleware';
+    import { createStoreEmpty } from '../../store/controllers/storeApi';
 
     import GraphView from './GraphView.svelte';
-    import type { GraphJson } from '$lib/middlewares/fbp-graph/Types';
 
     /*--------------------------------- Props --------------------------------*/
 
     const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
 
-    export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
-    export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
-    export let minimap: NofloMinimap = 'none';
+    // Required components
+    export let graph: GraphJson;
+    export let loader: NofloComponentLoader;
 
+    // Optional config
     export let width: number = 1;
     export let height: number = 1;
     export let background: boolean = true;
@@ -50,9 +45,11 @@
     export let nodeCreate: boolean = false;
     export let initialZoom = 3;
     export let initialLocation = { x: 0, y: 0 };
-
     export let theme: NofloTheme = 'light';
-    export let graph: GraphJson;
+    export let minimap: NofloMinimap = 'none';
+
+    // Events
+    const dispatch = createEventDispatcher();
 
     const store = createStoreEmpty(canvasId);
 
@@ -62,11 +59,6 @@
     /*------------------------------- Lifecycle ------------------------------*/
 
     onMount(() => {
-        // sanitize user input
-        let output = sanitizeUserNodesAndEdges(nodes, edges);
-        const userNodes = output['userNodes'];
-        const userEdges = output['userEdges'];
-
         // set canvas related stores. you need to do this before setting node/edge related stores because
         // initializing nodes/edges might read relevant options from the store.
         store.widthStore.set(width);
@@ -77,11 +69,10 @@
         store.options.set(optionsObj); //
         store.nodeCreate.set(nodeCreate);
 
-        store.themeStore.set(theme);
+        // Set core graph stores
+        store.loaderStore.set(loader);
         store.graphStore.set(graph);
-
-        // set node/edge related stores
-        populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
+        store.themeStore.set(theme);
 
         // Push graph state back to prop
         store.graphStore.subscribe((g) => {
@@ -103,7 +94,6 @@
 </script>
 
 
-<!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
 <div
   class="svelvet"
   style={`width: ${width}px; height: ${height}px;`}

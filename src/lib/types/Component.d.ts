@@ -28,4 +28,4 @@ export type NofloComponentFactory = {
     factory: (cc: NofloComponentConstructor) => Component;
 }
 
-export type NofloComponentLoader = (key: string) => NofloComponentFactory | null;
+export type NofloComponentLoader = (key: string) => NofloComponentFactory | undefined | null;
