@@ -71,7 +71,6 @@ function determineD3Instance(
     .zoom()
     .filter((e: any) => {
         return !get(nodeSelected);
-        // return !(get(nodeSelected) && e.sourceEvent?.constructor.name === 'MouseEvent')
     })
     .scaleExtent([0.2, 10])
     .on('zoom', handleZoom);

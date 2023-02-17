@@ -20,14 +20,7 @@
         d3Scale,
     } = store;
 
-    let isSelected = false;
-
-    // this state variable is used for "clickCallback" functionality
-    // on mouseup, the callback will fire only if userClick is true
-    // isUserClick is set to true on mousedown, but set back to false in two cases
-    //   (1) if the mouse moves, meaning that the node is being dragged
-    //   (2) if the mouse leaves the node
-    let isUserClick = false;
+    let isSelected = false; // This signifies THIS node is selected
 
     function shadeColor(color, percent) {
         var R = parseInt(color.substring(1,3),16);
@@ -54,120 +47,126 @@
     }
 
 
-    //
-    const mousedown = (e) => {
+
+    const mousedown = (e) => { // and touchstart
         e.preventDefault();
-        // part of the "clickCallback" feature
-        isUserClick = true;
-        // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
-        $nodeSelected = true;
+
         isSelected = true;
+        $nodeSelected = true;
     };
+
+    const mouseup = (e) => {    // and touchend
+        e.preventDefault();
+
+        if(!isSelected)
+            return;
+
+        isSelected = false;
+        $nodeSelected = false;
+
+        // This implements the "snap to grid" feature
+        if (get(store.options).snap) {
+            // If user sets snap attribute as true inside Svelvet
+            const snapResize = get(store.options).snapTo;
+            const oldX = node.positionX;
+            const oldY = node.positionY;
+            const newX = Math.round(node.positionX / snapResize) * snapResize;
+            const newY = Math.round(node.positionY / snapResize) * snapResize;
+
+            nodesStore.update((nodes) => {
+                const node = nodes[nodeId];
+                node.setPositionFromMovement(newX - oldX, newY - oldY);
+                return { ...nodes };
+            });
+        }
+    };
+
     const rightclick = (e) => {
         e.preventDefault();
+
         node = $nodesStore[nodeId];
-        $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
-        isSelected = false;
+        // $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
     };
+
     const mouseleave = (e) => {
-        // part of the "clickCallback" feature
-        isUserClick = false;
         // re-enables d3 when mouse leaves node
-        $nodeSelected = false;
+        // $nodeSelected = false;
     };
+
     const mouseenter = (e) => {
         // disables d3 when mouse enters node
-        nodeSelected.set(true);
+        // $nodeSelected = true;
     };
+
     const mousemove = (e) => {
         e.preventDefault();
-        // part of the "clickCallback" feature
-        isUserClick = false;
+
+        if(!isSelected)
+            return;
+
         // part of the "drag node" feature
         if (isSelected) {
-        nodesStore.update((nodes) => {
-            const node = nodes[nodeId];
-            const d3Scale = get(store.d3Scale);
-            // divide the movement value by scale to keep it proportional to d3Zoom transformations
-            node.setPositionFromMovement(
-            e.movementX / d3Scale,
-            e.movementY / d3Scale
-            );
-            return { ...nodes };
-        });
+            nodesStore.update((nodes) => {
+                const node = nodes[nodeId];
+                const d3Scale = get(store.d3Scale);
+                // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                node.setPositionFromMovement(
+                    e.movementX / d3Scale,
+                    e.movementY / d3Scale
+                );
+                return { ...nodes };
+            });
         }
     };
 
     const touchmove = (e) => {
-        // part of the "clickCallback" feature
-        isUserClick = false;
+        if(!isSelected)
+            return;
+
         // part of the "drag node" feature
         if (isSelected) {
-        nodesStore.update((nodes) => {
-            const node = nodes[nodeId];
-            const { x, y, width, height } = e.target.getBoundingClientRect();
-            const offsetX =
-            ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
-            const offsetY =
-            ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
+            nodesStore.update((nodes) => {
+                const node = nodes[nodeId];
+                const { x, y, width, height } = e.target.getBoundingClientRect();
+                const offsetX =
+                ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+                const offsetY =
+                ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
 
-            // const d3Scale = get(store.d3Scale);
-            // divide the movement value by scale to keep it proportional to d3Zoom transformations
-            node.setPositionFromMovement(
-            offsetX - node.width / 2,
-            offsetY - node.height / 2
-            );
-            return { ...nodes };
-        });
-        }
-    };
-
-    const mouseup = (e) => {
-        e.preventDefault();
-        isSelected = false;
-        // this implements the "clickCallback" feature
-        if (node.clickCallback && isUserClick) node.clickCallback(node);
-
-        // This implements the "snap to grid" feature
-        if (get(store.options).snap) {
-        // If user sets snap attribute as true inside Svelvet
-        const snapResize = get(store.options).snapTo;
-        const oldX = node.positionX;
-        const oldY = node.positionY;
-        const newX = Math.round(node.positionX / snapResize) * snapResize;
-        const newY = Math.round(node.positionY / snapResize) * snapResize;
-
-        nodesStore.update((nodes) => {
-            const node = nodes[nodeId];
-            node.setPositionFromMovement(newX - oldX, newY - oldY);
-            return { ...nodes };
-        });
+                // const d3Scale = get(store.d3Scale);
+                // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                node.setPositionFromMovement(
+                    offsetX - node.width / 2,
+                    offsetY - node.height / 2
+                );
+                return { ...nodes };
+            });
         }
     };
 </script>
 
-<!-- TODO are these causing problems for zooming? -->
+
 <svelte:window
-  on:mousemove={mousemove}
-  on:mouseup={mouseup}
-  on:touchmove={touchmove}
-  on:touchend={mouseup}
+    on:mousemove={mousemove}
+    on:mouseup={mouseup}
+    on:touchmove={touchmove}
+    on:touchend={mouseup}
 />
 
 <!-- on:wheel prevents page scroll when using mousewheel in the Node -->
 <div
-  on:mouseleave={mouseleave}
-  on:mousedown={mousedown}
-  on:contextmenu={rightclick}
-  on:touchstart={mousedown}
-  on:mouseenter={mouseenter}
+    on:mouseenter={mouseenter}
+    on:mouseleave={mouseleave}
+    on:mousedown={mousedown}
+    on:touchstart={mousedown}
+    on:contextmenu={rightclick}
 
-  class="node"
-  style="left: {node.positionX}px;
-    top: {node.positionY}px;
-    height: {node.height}px;
-    width: {node.width}px;"
-  id="svelvet-{node.id}"
+    class="node"
+    style="left: {node.positionX}px;
+        top: {node.positionY}px;
+        height: {node.height}px;
+        width: {node.width}px;"
+    id="svelvet-{node.id}"
 >
     <div class="ring">
         <div class="icon"  style="{node.bgColor !== 'default' ? `background-color: ${node.bgColor}` : ""}">

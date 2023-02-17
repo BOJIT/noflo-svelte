@@ -103,6 +103,12 @@
 
     function handleZoom(e: any) {
         if (!$movementStore) return;
+
+        // Drop buggy jump calls
+        // console.log(Math.abs(e.transform.k - $d3Scale))
+        // if(Math.abs(e.transform.k - $d3Scale) > 1.5)
+        //     return;
+
         //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
         d3Scale.set(e.transform.k);
         // should not run d3.select below if backgroundStore is false

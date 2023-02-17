@@ -1,8 +1,8 @@
 - [x] Add inports and outports to Svelvet nodes. Align to fbp-graph datatype
 
-- [ ] Add Node method for central store
+- [x] Add Node method for central store
 
-- [X] Outports reflect loaded components
+- [x] Outports reflect loaded components
 
 - [ ] Graph error handling
 
