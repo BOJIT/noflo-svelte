@@ -12,22 +12,23 @@
     /*-------------------------------- Imports -------------------------------*/
 
     import BaseEdge from '../../edges/views/Edges/BaseEdge.svelte';
+    import type { PositionType } from '../../store/types/types';
 
     /*--------------------------------- Props --------------------------------*/
 
     export let animate: boolean = false;
 
-    export let source: [number, number] = [0, 0];
-    export let target: [number, number] = [0, 0];
+    export let source: PositionType;
+    export let target: PositionType;
 
     export let canvasId: string;
 
     let params = {
-        sourceX: source[0],
-        sourceY: source[1],
+        sourceX: source.x,
+        sourceY: source.y,
         sourcePosition: 'left',
-        targetX: target[0],
-        targetY: target[1],
+        targetX: target.x,
+        targetY: target.y,
         targetPosition: 'right',
         curvature: 0.25,
     };
@@ -149,12 +150,12 @@
 
         edgeColor: 'default',
 
-        sourceX: source[0],
-        sourceY: source[1],
+        sourceX: source.x,
+        sourceY: source.y,
         sourcePosition: 'left',
 
-        targetX: target[0],
-        targetY: target[1],
+        targetX: target.x,
+        targetY: target.y,
         targetPosition: 'right',
 
         path: path,

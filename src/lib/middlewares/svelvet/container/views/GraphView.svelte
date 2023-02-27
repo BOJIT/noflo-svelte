@@ -21,10 +21,7 @@
     import { determineD3Instance, zoomInit } from '../../d3/controllers/d3';
 
     import BezierEdge from '../../nodes/views/BezierEdge.svelte';
-    import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
-    import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
     import Node from '../../nodes/views/Node.svelte';
-    import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
     import MinimapBoundless from '../../minimap/MinimapBoundless.svelte';
 
     /*--------------------------------- Props --------------------------------*/
@@ -42,7 +39,7 @@
         edgesStore,
         nodesStore,
         anchorsStore,
-        temporaryEdgeStore,
+        edgeCandidateStore,
         nodeSelected,
         backgroundStore,
         movementStore,
@@ -55,7 +52,6 @@
     $: nodes = Object.values($nodesStore);
     $: edges = Object.values($edgesStore);
     $: anchors = Object.values($anchorsStore);
-    $: tempEdges = $temporaryEdgeStore;
 
     // declaring the grid and dot size for d3's transformations and zoom
     const gridSize = 15;
@@ -239,9 +235,10 @@
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    <BezierEdge canvasId={canvasId} source={[0, 0]} target={[100, 100]} animate/>
-
-
+    {#if $edgeCandidateStore.active}
+        <BezierEdge canvasId={canvasId} source={$edgeCandidateStore.source}
+            target={$edgeCandidateStore.target} animate/>
+    {/if}
 
 
     <!-- {#each edges as edge}

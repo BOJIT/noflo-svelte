@@ -19,6 +19,7 @@ import type { NofloComponentLoader } from "$lib/types/Component";
 
 /*-------------------------------- Exports -----------------------------------*/
 
+// TODO deprecate
 export interface UserEdgeType {
     id: string;
     source: string;
@@ -41,24 +42,30 @@ export interface UserEdgeType {
 Type for a single svelvet store
 */
 export interface StoreType {
+    // Global
     graphStore: Writable<GraphJson>;
     loaderStore: Writable<NofloComponentLoader>;
     themeStore: Writable<NofloTheme>;
 
     nodesStore: Writable<{ [key: string]: NodeType }>;
     edgesStore: Writable<{ [key: string]: EdgeType }>;
-    anchorsStore: Writable<{ [key: string]: AnchorType }>;
-    potentialAnchorsStore: Writable<{ [key: string]: PotentialAnchorType }>;
 
+    // Context
     widthStore: Writable<number>;
     heightStore: Writable<number>;
     backgroundStore: Writable<boolean>;
     movementStore: Writable<boolean>;
+    d3Scale: Writable<number>; // for zoom and pan
+
+    // Editor
+    edgeCandidateStore: Writable<EdgeCandiadate>;
+
+    // TODO Deprcate?
+    anchorsStore: Writable<{ [key: string]: AnchorType }>;
+    potentialAnchorsStore: Writable<{ [key: string]: PotentialAnchorType }>;
     nodeIdSelected: Writable<number>;
     nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged TODO fix!
-    d3Scale: Writable<number>; // for zoom and pan
     options: Writable<{ [key: string]: any }>;
-    temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
     nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
 }
 
@@ -120,22 +127,11 @@ export interface PotentialAnchorType {
     delete: Function;
 }
 
-export interface TemporaryEdgeType {
-    id: string;
-    sourcePotentialAnchorId: string; // this will always be set
-    sourceX: number;
-    sourceY: number;
-    targetPotentialAnchorId: string | null; // this will be null until the temporary edge reaches another temporary anchor
-    targetX: number;
-    targetY: number;
-    canvasId: string;
-    type: string;
-    edgeColor: string;
-    createEdge: Function;
-    createNode: Function;
+export interface EdgeCandiadate {
+    source: PositionType,
+    target: PositionType,
+    active: boolean,
 }
-
-// Additional types
 
 export type NofloTheme = 'light' | 'dark';
 export type NofloMinimap = 'none' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

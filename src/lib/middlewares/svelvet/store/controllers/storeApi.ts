@@ -53,6 +53,12 @@ function createStoreEmpty(canvasId: string): StoreType {
         loaderStore: writable((key: string) => null),
         themeStore: writable('dark'),
 
+        edgeCandidateStore: writable({
+            source: {x: 0, y: 0},
+            target: {x: 0, y: 0},
+            active: false,
+        }),
+
         nodesStore: writable({}),   // Unused
         edgesStore: writable({}),
         anchorsStore: writable({}),
@@ -65,7 +71,6 @@ function createStoreEmpty(canvasId: string): StoreType {
         nodeIdSelected: writable(-1),
         d3Scale: writable(1),
         options: writable({}),
-        temporaryEdgeStore: writable([]),
         nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
     };
 

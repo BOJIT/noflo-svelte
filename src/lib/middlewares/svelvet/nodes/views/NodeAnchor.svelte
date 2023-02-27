@@ -11,10 +11,7 @@
 <script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
-    // import BaseEdge from "../../edges/views/Edges/BaseEdge.svelte";
-    // import SimpleBezierEdge from "../../edges/views/Edges/SimpleBezierEdge.svelte";
-
-    import BezierEdge from "./BezierEdge.svelte";
+    import { findStore } from '../../store/controllers/storeApi';
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -24,31 +21,62 @@
     export let y: number;
 
     let active: boolean = false;
-    let potential: boolean = false; // TODO make a global store
+    let anchor: HTMLElement;
+
+    const store = findStore(canvasId);
+
+    const {
+        edgeCandidateStore,
+    } = store;
 
     /*-------------------------------- Methods -------------------------------*/
 
     function mousedown(e: MouseEvent | TouchEvent) {
+        if(active)
+            return;
+
         e.preventDefault();
 
-        active = !active;
+        // TODO get source position
+
+        active = true;
+        edgeCandidateStore.update((c) => {
+            c.source = { x: x, y: y}
+            c.active = true;
+            return c;
+        });
     }
 
-    function outsidemousedown(e: MouseEvent | TouchEvent) {
+
+    function mouseup(e: MouseEvent | TouchEvent) {
+        // If selecting an anchor, do nothing
+        if(e.target.classList.contains('anchor') && (e.target != anchor)) {
+            // Create new edge
+        }
+
         e.preventDefault();
 
-        potential = !potential;
+        console.log("UP");
+
+        active = false;
+        edgeCandidateStore.update((c) => {
+            c.active = false;
+            return c;
+        });
     }
 
     function mousemove(e: MouseEvent | TouchEvent) {
-        e.preventDefault();
-    }
+        if(!active)
+            return;
 
-    function mouseup(e: MouseEvent | TouchEvent) {
-        e.preventDefault();
+        // TODO get relative space coordinates
 
-        active = false;
-        potential = false;
+        edgeCandidateStore.update((c) => {
+            c.target = {x: e.screenX, y: e.screenY};
+            return c;
+        });
+
+        console.log(e);
     }
 
     /*------------------------------- Lifecycle ------------------------------*/
@@ -57,14 +85,13 @@
 
 
 <svelte:window
-  on:mouseup={mouseup}
-  on:mousedown={outsidemousedown}
-  on:touchend={mouseup}
+    on:mouseup={mouseup} on:mousemove={mousemove} on:touchmove={mousemove}
 />
 
-<circle on:mousedown={mousedown} on:touchstart={mousedown}
+<circle bind:this={anchor} on:mousedown={mousedown} on:mouseup={mouseup}
     on:mousemove={mousemove} on:touchmove={mousemove}
-    class="anchor" class:active class:potential cx={x} cy={y} r={3} stroke="#444444"
+    class="anchor" class:active class:potential={$edgeCandidateStore.active}
+    cx={x} cy={y} r={3} stroke="#444444"
 />
 
 <!-- <SimpleBezierEdge edgeId={edge.id} {canvasId} /> -->
