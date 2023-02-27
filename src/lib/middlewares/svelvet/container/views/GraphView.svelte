@@ -254,15 +254,7 @@
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
     {#each edges as edge}
-        {#if edge.type === 'straight'}
-            <StraightEdge edgeId={edge.id} {canvasId} />
-        {:else if edge.type === 'smoothstep'}
-            <SmoothStepEdge {edge} {canvasId} />
-        {:else if edge.type === 'step'}
-            <StepEdge {edge} {canvasId} />
-        {:else}
-            <SimpleBezierEdge edgeId={edge.id} {canvasId} />
-        {/if}
+        <SimpleBezierEdge edgeId={edge.id} {canvasId} />
     {/each}
 
     {#each tempEdges as temporaryEdge}

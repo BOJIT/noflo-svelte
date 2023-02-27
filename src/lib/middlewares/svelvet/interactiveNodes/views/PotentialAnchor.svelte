@@ -1,22 +1,13 @@
 <script lang="ts">
   import { findStore } from '../../store/controllers/storeApi';
   import { TemporaryEdge } from '../models/TemporaryEdge';
-  import { writable, derived, get, readable } from 'svelte/store';
+  import { get } from 'svelte/store';
   import { getPotentialAnchorById } from '../controllers/util';
-  import type {
-    NodeType,
-    EdgeType,
-    StoreType,
-    UserNodeType,
-    UserEdgeType,
-    TemporaryEdgeType,
-    PotentialAnchorType,
-  } from '../../store/types/types';
-  import { beforeUpdate, afterUpdate } from 'svelte';
+
   export let canvasId;
   export let x;
   export let y;
-  export let potentialAnchorId: string;
+  let potentialAnchorId: string = '';
 
   const store = findStore(canvasId);
   const potentialAnchor = getPotentialAnchorById(store, potentialAnchorId);

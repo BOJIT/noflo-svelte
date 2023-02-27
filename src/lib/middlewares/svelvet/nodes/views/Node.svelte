@@ -1,5 +1,6 @@
 <script lang="ts">
     import { get } from 'svelte/store';
+    import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
 
     import { findStore } from '../../store/controllers/storeApi';
     import type {
@@ -183,21 +184,22 @@
 
     <svg class="ports">
         {#each node.inPorts as ip, idx }
-            <circle cx={6.5}
+            <circle class="anchor" cx={11.5}
                 cy={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing}
-                r={3} stroke="#444444" fill="white" />
-                <text class="port-annotation" class:visible={$d3Scale > 2}
-                    x="12.5" y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing + 1.25}>
-                    {ip}
-                </text>
+                r={3} stroke="#444444"
+            />
+            <text class="port-annotation" class:visible={$d3Scale > 2}
+                x="17.5" y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing + 1.25}>
+                {ip}
+            </text>
         {/each}
         {#each node.outPorts as op, idx }
-            <circle cx={node.width + 13.5}
+            <circle class="anchor" cx={node.width + 18.5}
                 cy={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing}
-                r={3} stroke="#444444" fill="white" />
-
+                r={3} stroke="#444444"
+            />
             <text class="port-annotation" class:visible={$d3Scale > 2}
-                text-anchor="end" x={node.width + 7.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing + 1.25}>
+                text-anchor="end" x={node.width + 12.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing + 1.25}>
                 {op}
             </text>
         {/each}
@@ -249,13 +251,27 @@
         grid-row: 1;
         grid-column: 1;
 
-        width: 80px;
+        width: 90px;
         height: 100%;
         top: 0px;
         left: 0px;
 
         pointer-events: none;
         z-index: 5;
+    }
+
+    .ports .anchor {
+        pointer-events: all;
+        fill: white;
+    }
+
+    .ports .anchor:hover {
+        fill: #8da7a1;
+        filter: drop-shadow( 0px 0px 3px rgba(0, 0, 0, .7));
+    }
+
+    .svelvet-dark .ports .anchor:hover {
+        filter: drop-shadow( 0px 0px 3px rgba(255, 255, 255, 0.7));
     }
 
     .port-annotation {
