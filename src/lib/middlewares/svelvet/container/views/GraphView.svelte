@@ -21,12 +21,8 @@
     import { determineD3Instance, zoomInit } from '../../d3/controllers/d3';
 
     import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
-    import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
-    import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
-    import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
     import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
     import Node from '../../nodes/views/Node.svelte';
-    import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
     import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
     import MinimapBoundless from '../../minimap/MinimapBoundless.svelte';
 
@@ -45,7 +41,6 @@
         edgesStore,
         nodesStore,
         anchorsStore,
-        potentialAnchorsStore,
         temporaryEdgeStore,
         nodeSelected,
         backgroundStore,
@@ -59,7 +54,6 @@
     $: nodes = Object.values($nodesStore);
     $: edges = Object.values($edgesStore);
     $: anchors = Object.values($anchorsStore);
-    $: potentialAnchors = Object.values($potentialAnchorsStore);
     $: tempEdges = $temporaryEdgeStore;
 
     // declaring the grid and dot size for d3's transformations and zoom
@@ -180,18 +174,9 @@
     <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
         <!-- This container is transformed by d3zoom -->
         <div class={`Node Node-${canvasId}`}>
-        {#each nodes as node}
-            <Node {node} {canvasId} nodeId={node.id} />
-        {/each}
-
-        {#each potentialAnchors as potentialAnchor}
-            <PotentialAnchor
-                {canvasId}
-                x={potentialAnchor.positionX}
-                y={potentialAnchor.positionY}
-                potentialAnchorId={potentialAnchor.id}
-            />
-        {/each}
+            {#each nodes as node}
+                <Node {node} {canvasId} nodeId={node.id} />
+            {/each}
         </div>
     </div>
 </div>

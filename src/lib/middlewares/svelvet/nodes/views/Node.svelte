@@ -1,11 +1,10 @@
 <script lang="ts">
     import { get } from 'svelte/store';
-    import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
-
     import { findStore } from '../../store/controllers/storeApi';
     import type {
         NodeType,
     } from '../../store/types/types';
+    import NodeAnchor from './NodeAnchor.svelte';
 
     const portSpacing = 17.5;
 
@@ -55,9 +54,14 @@
     }
 
 
-    //
+    // Interactions (messy)
     const mousedown = (e) => {
         e.preventDefault();
+
+        // If selecting an anchor, do nothing
+        if(e.target.classList.contains('anchor'))
+            return;
+
         // part of the "clickCallback" feature
         isUserClick = true;
         // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
@@ -82,20 +86,21 @@
     };
     const mousemove = (e) => {
         e.preventDefault();
+
         // part of the "clickCallback" feature
         isUserClick = false;
         // part of the "drag node" feature
         if (isSelected) {
-        nodesStore.update((nodes) => {
-            const node = nodes[nodeId];
-            const d3Scale = get(store.d3Scale);
-            // divide the movement value by scale to keep it proportional to d3Zoom transformations
-            node.setPositionFromMovement(
-            e.movementX / d3Scale,
-            e.movementY / d3Scale
-            );
-            return { ...nodes };
-        });
+            nodesStore.update((nodes) => {
+                const node = nodes[nodeId];
+                const d3Scale = get(store.d3Scale);
+                // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                node.setPositionFromMovement(
+                    e.movementX / d3Scale,
+                    e.movementY / d3Scale
+                );
+                return { ...nodes };
+            });
         }
     };
 
@@ -174,7 +179,8 @@
         <div class="icon"  style="{node.bgColor !== 'default' ? `background-color: ${node.bgColor}` : ""}">
             <svelte:component this={node.icon}
                 color={node.bgColor !== 'default' ? shadeColor(node.bgColor, -30) : "#c8ced0"}
-                height="45px"/>
+                height="45px"
+            />
         </div>
     </div>
 
@@ -184,20 +190,14 @@
 
     <svg class="ports">
         {#each node.inPorts as ip, idx }
-            <circle class="anchor" cx={11.5}
-                cy={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing}
-                r={3} stroke="#444444"
-            />
+            <NodeAnchor canvasId={canvasId} x={11.5} y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing}/>
             <text class="port-annotation" class:visible={$d3Scale > 2}
                 x="17.5" y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing + 1.25}>
                 {ip}
             </text>
         {/each}
         {#each node.outPorts as op, idx }
-            <circle class="anchor" cx={node.width + 18.5}
-                cy={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing}
-                r={3} stroke="#444444"
-            />
+            <NodeAnchor canvasId={canvasId} x={node.width + 18.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing}/>
             <text class="port-annotation" class:visible={$d3Scale > 2}
                 text-anchor="end" x={node.width + 12.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing + 1.25}>
                 {op}
@@ -258,20 +258,6 @@
 
         pointer-events: none;
         z-index: 5;
-    }
-
-    .ports .anchor {
-        pointer-events: all;
-        fill: white;
-    }
-
-    .ports .anchor:hover {
-        fill: #8da7a1;
-        filter: drop-shadow( 0px 0px 3px rgba(0, 0, 0, .7));
-    }
-
-    .svelvet-dark .ports .anchor:hover {
-        filter: drop-shadow( 0px 0px 3px rgba(255, 255, 255, 0.7));
     }
 
     .port-annotation {
