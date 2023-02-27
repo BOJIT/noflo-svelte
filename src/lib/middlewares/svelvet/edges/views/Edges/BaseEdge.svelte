@@ -1,6 +1,5 @@
 <script lang="ts">
   import { findStore } from '../../../store/controllers/storeApi';
-  import { getEdgeById } from '../../../edges/controllers/util';
   import EdgeText from '../Edges/EdgeText.svelte';
   import type { EdgeProps } from '../Edges/types';
   export let baseEdgeProps: EdgeProps;
@@ -27,23 +26,8 @@
     centerY: centerY,
   };
 
-  // Click event handlers
-  // At some point in the future, it would be good to refactor event handling to use the flux architecture
-  //  ie, events will create an action that will be dispatched to some centralized reducer.
-  //  or in other words, the creators of Redux knew what they were doing.
-  // The advantage of this re-design would be greater modularity; views would be agnostic to the exact features implmemented,
-  //   and they would be only responsible to detecting events and dispatch actions.
-  const edgeId = baseEdgeProps.id;
   const store = findStore(canvasId);
   const theme = store.themeStore;
-  const edge = getEdgeById(store, edgeId);
-  const handleClick = () => {
-    const store = findStore(canvasId);
-    const edge = getEdgeById(store, edgeId);
-    // handles edge clickCallback feature
-    if (edge.clickCallback) edge.clickCallback(edge);
-    console.log(edge.className);
-  };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
@@ -69,22 +53,20 @@
   stroke={'red'}
   stroke-opacity="0"
   stroke-width="20"
-  on:click={handleClick}
-  on:keypress
 />
 
 {#if arrow}
   <path
-    class={animate ? `animate ${edge.className}` : `${edge.className}`}
+    class:animate
     d={path}
-    fill="transparent"
+    fill="blue"
     stroke={edgeColor !== 'default' ? edgeColor : ($theme === 'dark' ? 'white' : 'black')}
     marker-end="url(#arrow)"
     aria-label="svg-path"
   />
 {:else}
   <path
-    class={animate ? `animate ${edge.className}` : `${edge.className}`}
+    class:animate
     d={path}
     fill="transparent"
     stroke={edgeColor !== 'default' ? edgeColor : ($theme === 'dark' ? 'white' : 'black')}

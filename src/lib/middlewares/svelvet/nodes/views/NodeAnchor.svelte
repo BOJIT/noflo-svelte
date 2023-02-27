@@ -11,8 +11,10 @@
 <script lang='ts'>
     /*-------------------------------- Imports -------------------------------*/
 
-    import BaseEdge from "../../edges/views/Edges/BaseEdge.svelte";
-    import SimpleBezierEdge from "../../edges/views/Edges/SimpleBezierEdge.svelte";
+    // import BaseEdge from "../../edges/views/Edges/BaseEdge.svelte";
+    // import SimpleBezierEdge from "../../edges/views/Edges/SimpleBezierEdge.svelte";
+
+    import BezierEdge from "./BezierEdge.svelte";
 
     /*--------------------------------- Props --------------------------------*/
 

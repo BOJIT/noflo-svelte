@@ -20,6 +20,7 @@
     import { findStore } from '../../store/controllers/storeApi';
     import { determineD3Instance, zoomInit } from '../../d3/controllers/d3';
 
+    import BezierEdge from '../../nodes/views/BezierEdge.svelte';
     import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
     import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
     import Node from '../../nodes/views/Node.svelte';
@@ -238,18 +239,22 @@
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    {#each edges as edge}
+    <BezierEdge canvasId={canvasId} source={[0, 0]} target={[100, 100]} animate/>
+
+
+
+
+    <!-- {#each edges as edge}
         <SimpleBezierEdge edgeId={edge.id} {canvasId} />
     {/each}
 
     {#each tempEdges as temporaryEdge}
         <TemporaryEdge {temporaryEdge} />
-    {/each}
+    {/each} -->
 
-    {#each anchors as anchor}
-        <!-- note that these are SVG -->
+    <!-- {#each anchors as anchor}
         <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
-    {/each}
+    {/each} -->
   </g>
 </svg>
 
