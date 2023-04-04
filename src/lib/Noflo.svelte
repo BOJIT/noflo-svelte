@@ -8,28 +8,35 @@
  *
 -->
 
-<script lang='ts'>
+<script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
-    import { afterUpdate, onMount, onDestroy, tick, createEventDispatcher } from 'svelte';
+    import {
+        afterUpdate,
+        onMount,
+        onDestroy,
+        tick,
+        createEventDispatcher,
+    } from "svelte";
 
     import "@fontsource/jetbrains-mono";
 
-    import type { GraphJson } from './middlewares/fbp-graph/Types';
-    import type { NofloComponentLoader } from './types/Component';
+    import type { GraphJson } from "./middlewares/fbp-graph/Types";
+    import type { NofloComponentLoader } from "./types/Component";
 
     import type {
         NofloTheme,
         NofloMinimap,
-    } from '$lib/middlewares/svelvet/store/types/types';
+    } from "$lib/middlewares/svelvet/store/types/types";
 
-    import { createStoreEmpty } from '$lib/middlewares/svelvet/store/controllers/storeApi';
-    import { addNodeToStore } from './middlewares/svelvet/nodes/controllers/util';
-    import GraphView from '$lib/middlewares/svelvet/container/views/GraphView.svelte';
+    import { createStoreEmpty } from "$lib/middlewares/svelvet/store/controllers/storeApi";
+    import { addNodeToStore } from "./middlewares/svelvet/nodes/controllers/util";
+    import GraphView from "$lib/middlewares/svelvet/container/views/GraphView.svelte";
 
     /*--------------------------------- Props --------------------------------*/
 
-    const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
+    const pkStringGenerator = () =>
+        (Math.random() + 1).toString(36).substring(7);
 
     // Core
     export let graph: GraphJson;
@@ -38,8 +45,8 @@
     };
 
     // Config
-    export let theme: NofloTheme = 'light';
-    export let minimap: NofloMinimap = 'none';
+    export let theme: NofloTheme = "light";
+    export let minimap: NofloMinimap = "none";
     export let translucent: boolean = false;
 
     export let background: boolean = true;
@@ -70,11 +77,11 @@
     //     // { id: 'e4-5', source: "4", target: "5", type: "bezier", animate: true },
     // ];
 
-    export function addNode(component: string) : boolean {
+    export function addNode(component: string): boolean {
         const ret = addNodeToStore(store, canvasId, component);
 
-        if(ret === false) {
-            dispatch('error', 'invalid component!');
+        if (ret === false) {
+            dispatch("error", "invalid component!");
             return false;
         }
 
@@ -134,24 +141,16 @@
     });
 </script>
 
-
-<div bind:this={container} class="container"
-    class:svelvet-dark={theme === 'dark'}
+<div
+    bind:this={container}
+    class="container"
+    class:svelvet-dark={theme === "dark"}
     class:translucent
 >
-    <div
-    class="svelvet"
-    style={`width: ${width}px; height: ${height}px;`}
-    >
-        <GraphView
-            {canvasId}
-            {initialLocation}
-            {initialZoom}
-            {minimap}
-        />
+    <div class="svelvet" style={`width: ${width}px; height: ${height}px;`}>
+        <GraphView {canvasId} {initialLocation} {initialZoom} {minimap} />
     </div>
 </div>
-
 
 <style>
     .container {
@@ -176,6 +175,6 @@
         position: relative;
         overflow: hidden;
         display: grid;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: "Segoe UI", sans-serif;
     }
 </style>

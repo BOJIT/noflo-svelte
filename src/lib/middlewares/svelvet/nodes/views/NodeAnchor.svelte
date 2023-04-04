@@ -8,10 +8,10 @@
  *
 -->
 
-<script lang='ts'>
+<script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
-    import { findStore } from '../../store/controllers/storeApi';
+    import { findStore } from "../../store/controllers/storeApi";
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -25,15 +25,12 @@
 
     const store = findStore(canvasId);
 
-    const {
-        edgeCandidateStore,
-    } = store;
+    const { edgeCandidateStore } = store;
 
     /*-------------------------------- Methods -------------------------------*/
 
     function mousedown(e: MouseEvent | TouchEvent) {
-        if(active)
-            return;
+        if (active) return;
 
         e.preventDefault();
 
@@ -41,16 +38,15 @@
 
         active = true;
         edgeCandidateStore.update((c) => {
-            c.source = { x: x, y: y}
+            c.source = { x: x, y: y };
             c.active = true;
             return c;
         });
     }
 
-
     function mouseup(e: MouseEvent | TouchEvent) {
         // If selecting an anchor, do nothing
-        if(e.target.classList.contains('anchor') && (e.target != anchor)) {
+        if (e.target.classList.contains("anchor") && e.target != anchor) {
             // Create new edge
         }
 
@@ -66,13 +62,12 @@
     }
 
     function mousemove(e: MouseEvent | TouchEvent) {
-        if(!active)
-            return;
+        if (!active) return;
 
         // TODO get relative space coordinates
 
         edgeCandidateStore.update((c) => {
-            c.target = {x: e.screenX, y: e.screenY};
+            c.target = { x: e.screenX, y: e.screenY };
             return c;
         });
 
@@ -80,18 +75,27 @@
     }
 
     /*------------------------------- Lifecycle ------------------------------*/
-
 </script>
 
-
 <svelte:window
-    on:mouseup={mouseup} on:mousemove={mousemove} on:touchmove={mousemove}
+    on:mouseup={mouseup}
+    on:mousemove={mousemove}
+    on:touchmove={mousemove}
 />
 
-<circle bind:this={anchor} on:mousedown={mousedown} on:mouseup={mouseup}
-    on:mousemove={mousemove} on:touchmove={mousemove}
-    class="anchor" class:active class:potential={$edgeCandidateStore.active}
-    cx={x} cy={y} r={3} stroke="#444444"
+<circle
+    bind:this={anchor}
+    on:mousedown={mousedown}
+    on:mouseup={mouseup}
+    on:mousemove={mousemove}
+    on:touchmove={mousemove}
+    class="anchor"
+    class:active
+    class:potential={$edgeCandidateStore.active}
+    cx={x}
+    cy={y}
+    r={3}
+    stroke="#444444"
 />
 
 <!-- <SimpleBezierEdge edgeId={edge.id} {canvasId} /> -->
@@ -113,7 +117,7 @@
     }
 
     .anchor.potential {
-        fill:green;
+        fill: green;
     }
 
     .anchor.active {
@@ -122,10 +126,10 @@
 
     .anchor:hover {
         fill: #8da7a1;
-        filter: drop-shadow( 0px 0px 3px rgba(0, 0, 0, .7));
+        filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.7));
     }
 
     :global(.svelvet-dark) .anchor:hover {
-        filter: drop-shadow( 0px 0px 3px rgba(255, 255, 255, 0.7));
+        filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.7));
     }
 </style>

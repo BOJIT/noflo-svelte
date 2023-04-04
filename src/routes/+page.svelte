@@ -8,7 +8,7 @@
  *
 -->
 
-<script lang='ts'>
+<script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
     import Noflo, { type NofloTheme } from "$lib";
@@ -18,124 +18,127 @@
     /*--------------------------------- Props --------------------------------*/
 
     let noflo: Noflo;
-    let theme: NofloTheme = 'light';
+    let theme: NofloTheme = "light";
     let graph = {
-        "caseSensitive": false,
-        "properties": {
-            "name": ""
+        caseSensitive: false,
+        properties: {
+            name: "",
         },
-        "inports": {},
-        "outports": {},
-        "groups": [],
-        "processes": {
-        "q7": {
-            "component": "console log",
-            "metadata": {
-                "label": "console log",
-                "x": 100,
-                "y": 50,
-            }
-        },
-        "23wa": {
-            "component": "reshape",
-            "metadata": {
-                "label": "reshape",
-                "x": 100,
-                "y": 200,
-                "portSettings": [
-                    {
-                        "name": "augend",
-                        "mode": "constant",
-                        "constant": "{}"
-                    },
-                    {
-                        "name": "addend",
-                        "mode": "constant",
-                        "constant": "ts\n\t\t{et\"}\n\t"
-                    }
-                ]
-            }
-        }
-        },
-        "connections": [
-        {
-            "src": {
-            "process": "q7",
-            "port": "out"
+        inports: {},
+        outports: {},
+        groups: [],
+        processes: {
+            q7: {
+                component: "console log",
+                metadata: {
+                    label: "console log",
+                    x: 100,
+                    y: 50,
+                },
             },
-            "tgt": {
-            "process": "q7",
-            "port": "port"
+            "23wa": {
+                component: "reshape",
+                metadata: {
+                    label: "reshape",
+                    x: 100,
+                    y: 200,
+                    portSettings: [
+                        {
+                            name: "augend",
+                            mode: "constant",
+                            constant: "{}",
+                        },
+                        {
+                            name: "addend",
+                            mode: "constant",
+                            constant: 'ts\n\t\t{et"}\n\t',
+                        },
+                    ],
+                },
             },
-            "metadata": {}
         },
-        {
-            "src": {
-            "process": "q7",
-            "port": "out"
+        connections: [
+            {
+                src: {
+                    process: "q7",
+                    port: "out",
+                },
+                tgt: {
+                    process: "q7",
+                    port: "port",
+                },
+                metadata: {},
             },
-            "tgt": {
-            "process": "23wa",
-            "port": "augend"
+            {
+                src: {
+                    process: "q7",
+                    port: "out",
+                },
+                tgt: {
+                    process: "23wa",
+                    port: "augend",
+                },
+                metadata: {
+                    route: 0,
+                },
             },
-            "metadata": {
-            "route": 0
-            }
-        },
-        {
-            "data": {},
-            "tgt": {
-            "process": "23wa",
-            "port": "augend"
-            }
-        },
-        {
-            "data": {},
-            "tgt": {
-            "process": "23wa",
-            "port": "addend"
-            }
-        }
-        ]
+            {
+                data: {},
+                tgt: {
+                    process: "23wa",
+                    port: "augend",
+                },
+            },
+            {
+                data: {},
+                tgt: {
+                    process: "23wa",
+                    port: "addend",
+                },
+            },
+        ],
     };
 
-    function loader(key: string) : NofloComponentFactory | undefined {
+    function loader(key: string): NofloComponentFactory | undefined {
         return library[key];
-    };
+    }
 
     /*-------------------------------- Methods -------------------------------*/
 
     /*------------------------------- Lifecycle ------------------------------*/
-
 </script>
 
 <svelte:head>
     <title>Noflo-Svelte</title>
 </svelte:head>
 
-
 <div class="editor">
     <Noflo
         bind:this={noflo}
         bind:graph
-        loader={loader}
+        {loader}
         bind:theme
-        minimap='top-right'
-        />
+        minimap="top-right"
+    />
 </div>
 
-<div class=overlay>
-    <button on:click={() => {
-        theme = theme === 'light' ? 'dark' : 'light';
-    }}>Toggle Theme</button>
-    <button on:click={() => {
-        console.log(graph);
-    }}>Log Graph</button>
-    <button on:click={() => {
-        noflo.addNode('reshape');
-    }}>Add Reshape</button>
+<div class="overlay">
+    <button
+        on:click={() => {
+            theme = theme === "light" ? "dark" : "light";
+        }}>Toggle Theme</button
+    >
+    <button
+        on:click={() => {
+            console.log(graph);
+        }}>Log Graph</button
+    >
+    <button
+        on:click={() => {
+            noflo.addNode("reshape");
+        }}>Add Reshape</button
+    >
 </div>
-
 
 <style>
     .editor {
@@ -162,4 +165,3 @@
         font-size: 1.2rem;
     }
 </style>
-

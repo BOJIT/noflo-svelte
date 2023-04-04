@@ -1,10 +1,8 @@
 <script lang="ts">
-    import { get } from 'svelte/store';
-    import { findStore } from '../../store/controllers/storeApi';
-    import type {
-        NodeType,
-    } from '../../store/types/types';
-    import NodeAnchor from './NodeAnchor.svelte';
+    import { get } from "svelte/store";
+    import { findStore } from "../../store/controllers/storeApi";
+    import type { NodeType } from "../../store/types/types";
+    import NodeAnchor from "./NodeAnchor.svelte";
 
     const portSpacing = 17.5;
 
@@ -14,11 +12,7 @@
 
     const store = findStore(canvasId);
 
-    const {
-        nodesStore,
-        nodeSelected,
-        d3Scale,
-    } = store;
+    const { nodesStore, nodeSelected, d3Scale } = store;
 
     let isSelected = false;
 
@@ -30,37 +24,38 @@
     let isUserClick = false;
 
     function shadeColor(color, percent) {
-        var R = parseInt(color.substring(1,3),16);
-        var G = parseInt(color.substring(3,5),16);
-        var B = parseInt(color.substring(5,7),16);
+        var R = parseInt(color.substring(1, 3), 16);
+        var G = parseInt(color.substring(3, 5), 16);
+        var B = parseInt(color.substring(5, 7), 16);
 
-        R = parseInt(R * (100 + percent) / 100);
-        G = parseInt(G * (100 + percent) / 100);
-        B = parseInt(B * (100 + percent) / 100);
+        R = parseInt((R * (100 + percent)) / 100);
+        G = parseInt((G * (100 + percent)) / 100);
+        B = parseInt((B * (100 + percent)) / 100);
 
-        R = (R<255)?R:255;
-        G = (G<255)?G:255;
-        B = (B<255)?B:255;
+        R = R < 255 ? R : 255;
+        G = G < 255 ? G : 255;
+        B = B < 255 ? B : 255;
 
-        R = Math.round(R)
-        G = Math.round(G)
-        B = Math.round(B)
+        R = Math.round(R);
+        G = Math.round(G);
+        B = Math.round(B);
 
-        var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
-        var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
-        var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+        var RR =
+            R.toString(16).length == 1 ? "0" + R.toString(16) : R.toString(16);
+        var GG =
+            G.toString(16).length == 1 ? "0" + G.toString(16) : G.toString(16);
+        var BB =
+            B.toString(16).length == 1 ? "0" + B.toString(16) : B.toString(16);
 
-        return "#"+RR+GG+BB;
+        return "#" + RR + GG + BB;
     }
-
 
     // Interactions (messy)
     const mousedown = (e) => {
         e.preventDefault();
 
         // If selecting an anchor, do nothing
-        if(e.target.classList.contains('anchor'))
-            return;
+        if (e.target.classList.contains("anchor")) return;
 
         // part of the "clickCallback" feature
         isUserClick = true;
@@ -109,22 +104,24 @@
         isUserClick = false;
         // part of the "drag node" feature
         if (isSelected) {
-        nodesStore.update((nodes) => {
-            const node = nodes[nodeId];
-            const { x, y, width, height } = e.target.getBoundingClientRect();
-            const offsetX =
-            ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
-            const offsetY =
-            ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
+            nodesStore.update((nodes) => {
+                const node = nodes[nodeId];
+                const { x, y, width, height } =
+                    e.target.getBoundingClientRect();
+                const offsetX =
+                    ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+                const offsetY =
+                    ((e.touches[0].clientY - y) / height) *
+                    e.target.offsetHeight;
 
-            // const d3Scale = get(store.d3Scale);
-            // divide the movement value by scale to keep it proportional to d3Zoom transformations
-            node.setPositionFromMovement(
-            offsetX - node.width / 2,
-            offsetY - node.height / 2
-            );
-            return { ...nodes };
-        });
+                // const d3Scale = get(store.d3Scale);
+                // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                node.setPositionFromMovement(
+                    offsetX - node.width / 2,
+                    offsetY - node.height / 2
+                );
+                return { ...nodes };
+            });
         }
     };
 
@@ -136,70 +133,104 @@
 
         // This implements the "snap to grid" feature
         if (get(store.options).snap) {
-        // If user sets snap attribute as true inside Svelvet
-        const snapResize = get(store.options).snapTo;
-        const oldX = node.positionX;
-        const oldY = node.positionY;
-        const newX = Math.round(node.positionX / snapResize) * snapResize;
-        const newY = Math.round(node.positionY / snapResize) * snapResize;
+            // If user sets snap attribute as true inside Svelvet
+            const snapResize = get(store.options).snapTo;
+            const oldX = node.positionX;
+            const oldY = node.positionY;
+            const newX = Math.round(node.positionX / snapResize) * snapResize;
+            const newY = Math.round(node.positionY / snapResize) * snapResize;
 
-        nodesStore.update((nodes) => {
-            const node = nodes[nodeId];
-            node.setPositionFromMovement(newX - oldX, newY - oldY);
-            return { ...nodes };
-        });
+            nodesStore.update((nodes) => {
+                const node = nodes[nodeId];
+                node.setPositionFromMovement(newX - oldX, newY - oldY);
+                return { ...nodes };
+            });
         }
     };
 </script>
 
 <!-- TODO are these causing problems for zooming? -->
 <svelte:window
-  on:mousemove={mousemove}
-  on:mouseup={mouseup}
-  on:touchmove={touchmove}
-  on:touchend={mouseup}
+    on:mousemove={mousemove}
+    on:mouseup={mouseup}
+    on:touchmove={touchmove}
+    on:touchend={mouseup}
 />
 
 <!-- on:wheel prevents page scroll when using mousewheel in the Node -->
 <div
-  on:mouseleave={mouseleave}
-  on:mousedown={mousedown}
-  on:contextmenu={rightclick}
-  on:touchstart={mousedown}
-  on:mouseenter={mouseenter}
-
-  class="node"
-  style="left: {node.positionX}px;
+    on:mouseleave={mouseleave}
+    on:mousedown={mousedown}
+    on:contextmenu={rightclick}
+    on:touchstart={mousedown}
+    on:mouseenter={mouseenter}
+    class="node"
+    style="left: {node.positionX}px;
     top: {node.positionY}px;
     height: {node.height}px;
     width: {node.width}px;"
-  id="svelvet-{node.id}"
+    id="svelvet-{node.id}"
 >
     <div class="ring">
-        <div class="icon"  style="{node.bgColor !== 'default' ? `background-color: ${node.bgColor}` : ""}">
-            <svelte:component this={node.icon}
-                color={node.bgColor !== 'default' ? shadeColor(node.bgColor, -30) : "#c8ced0"}
+        <div
+            class="icon"
+            style={node.bgColor !== "default"
+                ? `background-color: ${node.bgColor}`
+                : ""}
+        >
+            <svelte:component
+                this={node.icon}
+                color={node.bgColor !== "default"
+                    ? shadeColor(node.bgColor, -30)
+                    : "#c8ced0"}
                 height="45px"
             />
         </div>
     </div>
 
-    {#if node.label !== ''}
+    {#if node.label !== ""}
         <div class="label">{node.label}</div>
     {/if}
 
     <svg class="ports">
-        {#each node.inPorts as ip, idx }
-            <NodeAnchor canvasId={canvasId} x={11.5} y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing}/>
-            <text class="port-annotation" class:visible={$d3Scale > 2}
-                x="17.5" y={node.height/2 + (idx * portSpacing) - (node.inPorts.length - 1)/2 * portSpacing + 1.25}>
+        {#each node.inPorts as ip, idx}
+            <NodeAnchor
+                {canvasId}
+                x={11.5}
+                y={node.height / 2 +
+                    idx * portSpacing -
+                    ((node.inPorts.length - 1) / 2) * portSpacing}
+            />
+            <text
+                class="port-annotation"
+                class:visible={$d3Scale > 2}
+                x="17.5"
+                y={node.height / 2 +
+                    idx * portSpacing -
+                    ((node.inPorts.length - 1) / 2) * portSpacing +
+                    1.25}
+            >
                 {ip}
             </text>
         {/each}
-        {#each node.outPorts as op, idx }
-            <NodeAnchor canvasId={canvasId} x={node.width + 18.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing}/>
-            <text class="port-annotation" class:visible={$d3Scale > 2}
-                text-anchor="end" x={node.width + 12.5} y={node.height/2 + (idx * portSpacing) - (node.outPorts.length - 1)/2 * portSpacing + 1.25}>
+        {#each node.outPorts as op, idx}
+            <NodeAnchor
+                {canvasId}
+                x={node.width + 18.5}
+                y={node.height / 2 +
+                    idx * portSpacing -
+                    ((node.outPorts.length - 1) / 2) * portSpacing}
+            />
+            <text
+                class="port-annotation"
+                class:visible={$d3Scale > 2}
+                text-anchor="end"
+                x={node.width + 12.5}
+                y={node.height / 2 +
+                    idx * portSpacing -
+                    ((node.outPorts.length - 1) / 2) * portSpacing +
+                    1.25}
+            >
                 {op}
             </text>
         {/each}
@@ -240,7 +271,7 @@
 
         width: calc(100% - 4px);
         height: calc(100% - 4px);
-        border-radius:8px;
+        border-radius: 8px;
         background-color: #d8e0e2f7;
 
         display: grid;

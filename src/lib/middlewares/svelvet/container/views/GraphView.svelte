@@ -11,25 +11,25 @@
 <script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
 
-    import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
-    import { select, selectAll, pointer } from 'd3-selection';
+    import { zoom, zoomTransform, zoomIdentity } from "d3-zoom";
+    import { select, selectAll, pointer } from "d3-selection";
 
-    import type { NofloMinimap, PositionType } from '../../store/types/types';
-    import { findStore } from '../../store/controllers/storeApi';
-    import { determineD3Instance, zoomInit } from '../../d3/controllers/d3';
+    import type { NofloMinimap, PositionType } from "../../store/types/types";
+    import { findStore } from "../../store/controllers/storeApi";
+    import { determineD3Instance, zoomInit } from "../../d3/controllers/d3";
 
-    import BezierEdge from '../../nodes/views/BezierEdge.svelte';
-    import Node from '../../nodes/views/Node.svelte';
-    import MinimapBoundless from '../../minimap/MinimapBoundless.svelte';
+    import BezierEdge from "../../nodes/views/BezierEdge.svelte";
+    import Node from "../../nodes/views/Node.svelte";
+    import MinimapBoundless from "../../minimap/MinimapBoundless.svelte";
 
     /*--------------------------------- Props --------------------------------*/
 
     export let canvasId: string;
     export let initialZoom = 3;
     export let initialLocation: PositionType;
-    export let minimap: NofloMinimap = 'none';
+    export let minimap: NofloMinimap = "none";
 
     // here we lookup the store using the unique key
     const store = findStore(canvasId);
@@ -71,25 +71,21 @@
         pointer,
     };
 
-    let d3Zoom = determineD3Instance(
-        d3,
-        nodeSelected,
-        handleZoom,
-    );
+    let d3Zoom = determineD3Instance(d3, nodeSelected, handleZoom);
 
     /*-------------------------------- Methods -------------------------------*/
 
     function miniMapClick(event: CustomEvent) {
-      // For edges
-      d3.select(`.Edges-${key}`)
-        .transition()
-        .duration(500)
-        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
-      // For nodes
-      d3.select(`.Nodes-${key}`)
-        .transition()
-        .duration(500)
-        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+        // For edges
+        d3.select(`.Edges-${key}`)
+            .transition()
+            .duration(500)
+            .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+        // For nodes
+        d3.select(`.Nodes-${key}`)
+            .transition()
+            .duration(500)
+            .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
     }
 
     function handleZoom(e: any) {
@@ -99,44 +95,52 @@
         // should not run d3.select below if backgroundStore is false
         if (backgroundStore) {
             d3.select(`#background-${canvasId}`)
-                .attr('x', e.transform.x)
-                .attr('y', e.transform.y)
-                .attr('width', gridSize * e.transform.k)
-                .attr('height', gridSize * e.transform.k)
-                .selectAll('#dot')
-                .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
-                .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
-                .attr('opacity', Math.min(e.transform.k - 0.5, 1));
+                .attr("x", e.transform.x)
+                .attr("y", e.transform.y)
+                .attr("width", gridSize * e.transform.k)
+                .attr("height", gridSize * e.transform.k)
+                .selectAll("#dot")
+                .attr("x", (gridSize * e.transform.k) / 2 - dotSize / 2)
+                .attr("y", (gridSize * e.transform.k) / 2 - dotSize / 2)
+                .attr("opacity", Math.min(e.transform.k - 0.5, 1));
 
             d3.select(`#coarse-background-${canvasId}`)
-                .attr('x', e.transform.x)
-                .attr('y', e.transform.y)
-                .attr('width', gridMultiplier * gridSize * e.transform.k)
-                .attr('height', gridMultiplier * gridSize * e.transform.k)
-                .selectAll('#coarse-dot')
-                .attr('x', gridMultiplier * ((gridSize * e.transform.k) / 2 - dotSize / 2))
-                .attr('y', gridMultiplier * ((gridSize * e.transform.k) / 2 - dotSize / 2))
-                .attr('opacity', Math.min(e.transform.k - 0.2, 1));
+                .attr("x", e.transform.x)
+                .attr("y", e.transform.y)
+                .attr("width", gridMultiplier * gridSize * e.transform.k)
+                .attr("height", gridMultiplier * gridSize * e.transform.k)
+                .selectAll("#coarse-dot")
+                .attr(
+                    "x",
+                    gridMultiplier *
+                        ((gridSize * e.transform.k) / 2 - dotSize / 2)
+                )
+                .attr(
+                    "y",
+                    gridMultiplier *
+                        ((gridSize * e.transform.k) / 2 - dotSize / 2)
+                )
+                .attr("opacity", Math.min(e.transform.k - 0.2, 1));
         }
 
         // transform 'g' SVG elements (edge, edge text, edge anchor)
-        d3.select(`.Edges-${canvasId} g`).attr('transform', e.transform);
+        d3.select(`.Edges-${canvasId} g`).attr("transform", e.transform);
         // transform div elements (nodes)
         let transform = d3.zoomTransform(this);
         d3Translate = transform;
         // selects and transforms all node divs from class 'Node' and performs transformation
         d3.select(`.Node-${canvasId}`)
-        .style(
-            'transform',
-            'translate(' +
-            transform.x +
-            'px,' +
-            transform.y +
-            'px) scale(' +
-            transform.k +
-            ')'
-        )
-        .style('transform-origin', '0 0');
+            .style(
+                "transform",
+                "translate(" +
+                    transform.x +
+                    "px," +
+                    transform.y +
+                    "px) scale(" +
+                    transform.k +
+                    ")"
+            )
+            .style("transform-origin", "0 0");
     }
 
     /*------------------------------- Lifecycle ------------------------------*/
@@ -146,7 +150,7 @@
         d3.select(`.Edges-${canvasId}`).call(d3Zoom);
         d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
         d3.select(`#background-${canvasId}`).call(d3Zoom);
-        d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
+        d3.selectAll("#dot").call(d3Zoom); // TODO: this should be a class, not an ID
         d3Translate = zoomInit(
             d3,
             canvasId,
@@ -159,12 +163,17 @@
     });
 </script>
 
-
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <div id="graphview-container">
-    {#if minimap !== 'none'}
+    {#if minimap !== "none"}
         <div class="pointer-events-auto">
-            <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} {store} location={minimap}/>
+            <MinimapBoundless
+                on:message={miniMapClick}
+                {key}
+                {d3Translate}
+                {store}
+                location={minimap}
+            />
         </div>
     {/if}
 
@@ -182,7 +191,8 @@
 <svg
     class={`Edges Edges-${canvasId}`}
     viewBox="0 0 {$widthStore} {$heightStore}"
-    on:contextmenu|preventDefault>
+    on:contextmenu|preventDefault
+>
     <defs>
         <pattern
             id={`background-${canvasId}`}
@@ -205,8 +215,8 @@
             id={`coarse-background-${canvasId}`}
             x="0"
             y="0"
-            width={gridMultiplier*gridSize}
-            height={gridMultiplier*gridSize}
+            width={gridMultiplier * gridSize}
+            height={gridMultiplier * gridSize}
             patternUnits="userSpaceOnUse"
         >
             <circle
@@ -214,7 +224,9 @@
                 cx={gridSize / 2 - dotSize / 2}
                 cy={gridSize / 2 - dotSize / 2}
                 r="0.75"
-                style={$themeStore === 'light' ? "fill: #222222" : "fill: white"}
+                style={$themeStore === "light"
+                    ? "fill: #222222"
+                    : "fill: white"}
             />
         </pattern>
     </defs>
@@ -233,15 +245,18 @@
         />
     {/if}
 
-  <!-- <g> tag defines which edge type to render depending on properties of edge object -->
-  <g>
-    {#if $edgeCandidateStore.active}
-        <BezierEdge canvasId={canvasId} source={$edgeCandidateStore.source}
-            target={$edgeCandidateStore.target} animate/>
-    {/if}
+    <!-- <g> tag defines which edge type to render depending on properties of edge object -->
+    <g>
+        {#if $edgeCandidateStore.active}
+            <BezierEdge
+                {canvasId}
+                source={$edgeCandidateStore.source}
+                target={$edgeCandidateStore.target}
+                animate
+            />
+        {/if}
 
-
-    <!-- {#each edges as edge}
+        <!-- {#each edges as edge}
         <SimpleBezierEdge edgeId={edge.id} {canvasId} />
     {/each}
 
@@ -249,12 +264,11 @@
         <TemporaryEdge {temporaryEdge} />
     {/each} -->
 
-    <!-- {#each anchors as anchor}
+        <!-- {#each anchors as anchor}
         <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each} -->
-  </g>
+    </g>
 </svg>
-
 
 <style>
     .Nodes {

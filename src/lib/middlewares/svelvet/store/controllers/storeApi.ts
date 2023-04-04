@@ -54,8 +54,8 @@ function createStoreEmpty(canvasId: string): StoreType {
         themeStore: writable('dark'),
 
         edgeCandidateStore: writable({
-            source: {x: 0, y: 0},
-            target: {x: 0, y: 0},
+            source: { x: 0, y: 0 },
+            target: { x: 0, y: 0 },
             active: false,
         }),
 
