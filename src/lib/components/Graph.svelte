@@ -16,29 +16,32 @@
     import { zoom, zoomTransform, zoomIdentity } from "d3-zoom";
     import { select, selectAll, pointer } from "d3-selection";
 
-    import type { NofloMinimap, PositionType } from "../../store/types/types";
-    import { findStore } from "../../store/controllers/storeApi";
-    import { determineD3Instance, zoomInit } from "../../d3/controllers/d3";
+    import type { NofloMinimap } from "$lib/types/Noflo";
+    import type { FbpPositionType } from "$lib/types/FbpGraph";
 
-    import BezierEdge from "../../nodes/views/BezierEdge.svelte";
-    import Node from "../../nodes/views/Node.svelte";
-    import MinimapBoundless from "../../minimap/MinimapBoundless.svelte";
+    import { storeGetInstance } from "$lib/state/store";
+
+    import { d3DetermineInstance, d3ZoomInit } from "$lib/utils/d3";
+
+    import BezierEdge from "./BezierEdge.svelte";
+
+    import Node from "$lib/components/Node.svelte";
+    import Minimap from "$lib/components/Minimap.svelte";
 
     /*--------------------------------- Props --------------------------------*/
 
     export let canvasId: string;
     export let initialZoom = 3;
-    export let initialLocation: PositionType;
+    export let initialLocation: FbpPositionType;
     export let minimap: NofloMinimap = "none";
 
     // here we lookup the store using the unique key
-    const store = findStore(canvasId);
+    const store = storeGetInstance(canvasId);
     const key = canvasId;
 
     const {
         edgesStore,
         nodesStore,
-        anchorsStore,
         edgeCandidateStore,
         nodeSelected,
         backgroundStore,
@@ -51,7 +54,6 @@
 
     $: nodes = Object.values($nodesStore);
     $: edges = Object.values($edgesStore);
-    $: anchors = Object.values($anchorsStore);
 
     // declaring the grid and dot size for d3's transformations and zoom
     const gridSize = 15;
@@ -62,7 +64,7 @@
     let d3Translate = { x: 0, y: 0, k: 1 };
 
     // leveraging d3 library to zoom/pan
-    let d3 = {
+    const d3 = {
         zoom,
         zoomTransform,
         zoomIdentity,
@@ -71,7 +73,7 @@
         pointer,
     };
 
-    let d3Zoom = determineD3Instance(d3, nodeSelected, handleZoom);
+    let d3Zoom = d3DetermineInstance(d3, nodeSelected, handleZoom);
 
     /*-------------------------------- Methods -------------------------------*/
 
@@ -151,7 +153,7 @@
         d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
         d3.select(`#background-${canvasId}`).call(d3Zoom);
         d3.selectAll("#dot").call(d3Zoom); // TODO: this should be a class, not an ID
-        d3Translate = zoomInit(
+        d3Translate = d3ZoomInit(
             d3,
             canvasId,
             d3Zoom,
@@ -164,14 +166,14 @@
 </script>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<div id="graphview-container">
+<div class="graphview-container">
     {#if minimap !== "none"}
         <div class="pointer-events-auto">
-            <MinimapBoundless
+            <Minimap
+                {store}
                 on:message={miniMapClick}
                 {key}
                 {d3Translate}
-                {store}
                 location={minimap}
             />
         </div>
@@ -181,7 +183,7 @@
         <!-- This container is transformed by d3zoom -->
         <div class={`Node Node-${canvasId}`}>
             {#each nodes as node}
-                <Node {node} {canvasId} nodeId={node.id} />
+                <Node {store} {node} nodeId={node.id} />
             {/each}
         </div>
     </div>
@@ -257,16 +259,8 @@
         {/if}
 
         <!-- {#each edges as edge}
-        <SimpleBezierEdge edgeId={edge.id} {canvasId} />
-    {/each}
-
-    {#each tempEdges as temporaryEdge}
-        <TemporaryEdge {temporaryEdge} />
-    {/each} -->
-
-        <!-- {#each anchors as anchor}
-        <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
-    {/each} -->
+            <SimpleBezierEdge edgeId={edge.id} {canvasId} />
+        {/each} -->
     </g>
 </svg>
 
@@ -282,7 +276,7 @@
         height: 100%;
     }
 
-    #graphview-container {
+    .graphview-container {
         pointer-events: none;
     }
 

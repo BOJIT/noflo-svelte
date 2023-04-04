@@ -40,18 +40,18 @@ function getNodeById(store: StoreType, id: string) {
  * @param component Type of component to add
  * @returns true on success, false on failure
  */
-function addNodeToStore(store: StoreType, canvasId: string, component: string) : boolean {
+function addNodeToStore(store: StoreType, canvasId: string, component: string): boolean {
     const loader = get(store.loaderStore);
     const c = loader(component);
-    if(!c)
+    if (!c)
         return false;
 
     // Generate unique ID and add to store
     const nodesStore = get(store.nodesStore);
 
-        /* Generate random ID then check that it is unique for the graph */
+    /* Generate random ID then check that it is unique for the graph */
     let id = Math.round(Math.random() * 100000).toString(36);
-    while(Object.keys(nodesStore).some((node) => node === id)) {
+    while (Object.keys(nodesStore).some((node) => node === id)) {
         id = Math.round(Math.random() * 100000).toString(36);
     }
 
@@ -66,10 +66,10 @@ function addNodeToStore(store: StoreType, canvasId: string, component: string) :
         c.outPorts,
         0,
         0,
-        cExpand > 0 ? 60 + cExpand*17.5 : 60,
+        cExpand > 0 ? 60 + cExpand * 17.5 : 60,
         60,
         canvasId,
-        () => {}
+        () => { }
     );
 
     store.nodesStore.update((ns) => {
@@ -85,4 +85,4 @@ function addNodeToStore(store: StoreType, canvasId: string, component: string) :
 export {
     getNodeById,
     addNodeToStore,
-}
+};

@@ -11,15 +11,15 @@
 <script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
-    import BaseEdge from "../../edges/views/Edges/BaseEdge.svelte";
-    import type { PositionType } from "../../store/types/types";
+    import BaseEdge from "../middlewares/svelvet/edges/views/Edges/BaseEdge.svelte";
+    import type { FbpPositionType } from "$lib/types/FbpGraph";
 
     /*--------------------------------- Props --------------------------------*/
 
     export let animate: boolean = false;
 
-    export let source: PositionType;
-    export let target: PositionType;
+    export let source: FbpPositionType;
+    export let target: FbpPositionType;
 
     export let canvasId: string;
 
@@ -42,6 +42,7 @@
             return curvature * 25 * Math.sqrt(-distance);
         }
     }
+
     // get the control point for the bezier curve (in the middle of the edge)
     function getControlWithCurvature({ pos, x1, y1, x2, y2, c }) {
         let ctX = 0,
@@ -62,6 +63,7 @@
         }
         return [ctX, ctY];
     }
+
     // returns string to pass into edge 'path' svg d attribute (where to be drawn)
     // referenced from ReactFlow.dev
     function getSimpleBezierPath({
@@ -91,6 +93,7 @@
         });
         return `M${sourceX},${sourceY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${targetX},${targetY}`;
     }
+
     // determining center of the bezier curve to know where to place the bezier edge text label
     function getSimpleBezierCenter({
         sourceX,

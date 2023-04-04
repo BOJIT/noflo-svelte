@@ -1,6 +1,6 @@
 import type { EdgeType } from '../../store/types/types';
 
-import { stores } from '../../store/models/store';
+import { stores } from '$lib/state/store';
 import { getAnchorFromEdge } from '../../edges/controllers/util';
 /**
  * Class Edge that implements EdgeType.
@@ -20,43 +20,43 @@ import { getAnchorFromEdge } from '../../edges/controllers/util';
  * @param arraw Boolean value to specify whether the Edge displays an arrow near its target Anchor
  */
 export class Edge implements EdgeType {
-  constructor(
-    public id: string,
-    public sourceX: number,
-    public sourceY: number,
-    public targetX: number,
-    public targetY: number,
-    public canvasId: string,
-    public label: string,
-    public type: 'straight' | 'smoothstep' | 'step' | 'bezier',
-    public labelBgColor: string,
-    public labelTextColor: string,
-    public edgeColor: string,
-    public animate: boolean,
-    public noHandle: boolean,
-    public arrow: boolean,
-    public clickCallback: Function,
-    public className: string
-  ) {}
+    constructor(
+        public id: string,
+        public sourceX: number,
+        public sourceY: number,
+        public targetX: number,
+        public targetY: number,
+        public canvasId: string,
+        public label: string,
+        public type: 'straight' | 'smoothstep' | 'step' | 'bezier',
+        public labelBgColor: string,
+        public labelTextColor: string,
+        public edgeColor: string,
+        public animate: boolean,
+        public noHandle: boolean,
+        public arrow: boolean,
+        public clickCallback: Function,
+        public className: string
+    ) { }
 
-  /**
-   * delete is going to delete the Edge and also delete associated Anchors
-   */
-  delete() {
-    const store = stores[this.canvasId];
-    const { nodesStore, anchorsStore, edgesStore } = store;
-    const sourceAnchor = getAnchorFromEdge(store, this.id, 'source'); // this is a bit wasteful
-    const targetAnchor = getAnchorFromEdge(store, this.id, 'target');
-    anchorsStore.update((anchors) => {
-      for (const anchorId in anchors) {
-        if (anchorId === sourceAnchor.id || anchorId == targetAnchor.id)
-          delete anchors[anchorId];
-      }
-      return { ...anchors };
-    });
-    edgesStore.update((edges) => {
-      delete edges[this.id];
-      return { ...edges };
-    });
-  }
+    /**
+     * delete is going to delete the Edge and also delete associated Anchors
+     */
+    delete() {
+        const store = stores[this.canvasId];
+        const { nodesStore, anchorsStore, edgesStore } = store;
+        const sourceAnchor = getAnchorFromEdge(store, this.id, 'source'); // this is a bit wasteful
+        const targetAnchor = getAnchorFromEdge(store, this.id, 'target');
+        anchorsStore.update((anchors) => {
+            for (const anchorId in anchors) {
+                if (anchorId === sourceAnchor.id || anchorId == targetAnchor.id)
+                    delete anchors[anchorId];
+            }
+            return { ...anchors };
+        });
+        edgesStore.update((edges) => {
+            delete edges[this.id];
+            return { ...edges };
+        });
+    }
 }

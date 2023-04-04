@@ -11,6 +11,8 @@
 <script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
+    import "@fontsource/jetbrains-mono";
+
     import {
         afterUpdate,
         onMount,
@@ -19,22 +21,19 @@
         createEventDispatcher,
     } from "svelte";
 
-    import "@fontsource/jetbrains-mono";
+    import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
+    import type { NofloComponentLoader } from "$lib/types/Component";
 
-    import type { GraphJson } from "./middlewares/fbp-graph/Types";
-    import type { NofloComponentLoader } from "./types/Component";
+    import type { NofloTheme, NofloMinimap } from "$lib/types/Noflo";
 
-    import type {
-        NofloTheme,
-        NofloMinimap,
-    } from "$lib/middlewares/svelvet/store/types/types";
-
-    import { createStoreEmpty } from "$lib/middlewares/svelvet/store/controllers/storeApi";
+    import { storeCreateInstance } from "$lib/state/store";
     import { addNodeToStore } from "./middlewares/svelvet/nodes/controllers/util";
-    import GraphView from "$lib/middlewares/svelvet/container/views/GraphView.svelte";
+
+    import Graph from "$lib/components/Graph.svelte";
 
     /*--------------------------------- Props --------------------------------*/
 
+    // Unique ID for a given graph: TODO ensure it is unique!
     const pkStringGenerator = () =>
         (Math.random() + 1).toString(36).substring(7);
 
@@ -60,7 +59,7 @@
 
     // Events and State
     const dispatch = createEventDispatcher();
-    const store = createStoreEmpty(canvasId);
+    const store = storeCreateInstance(canvasId);
 
     // Resize handler state
     let container: HTMLDivElement;
@@ -148,7 +147,7 @@
     class:translucent
 >
     <div class="svelvet" style={`width: ${width}px; height: ${height}px;`}>
-        <GraphView {canvasId} {initialLocation} {initialZoom} {minimap} />
+        <Graph {canvasId} {initialLocation} {initialZoom} {minimap} />
     </div>
 </div>
 

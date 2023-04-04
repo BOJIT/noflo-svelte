@@ -16,7 +16,7 @@ import writableDerived from "svelte-writable-derived";
 import { Help } from "@svicons/ionicons-outline";
 
 import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
-import type { FbpGraphNodeMetadata } from "$lib/types/Graph";
+import type { FbpGraphNodeMetadata } from "$lib/types/FbpGraph";
 import type {
     NodeType,
     StoreType,
@@ -36,18 +36,18 @@ function init(store: StoreType, canvasId: string) {
      * @param g GraphJSON
      * @returns Node Map
      */
-    function graphToNodes(g: GraphJson) : { [key: string]: NodeType } {
+    function graphToNodes(g: GraphJson): { [key: string]: NodeType } {
         const nodes: { [key: string]: NodeType } = {};
 
         const loader = get(store.loaderStore);
 
-        if(g.processes === undefined)
+        if (g.processes === undefined)
             return nodes;
 
         for (const [key, val] of Object.entries(g.processes)) {
             const c = loader(val.component);
 
-            if(c && val.metadata !== undefined) {
+            if (c && val.metadata !== undefined) {
                 let cExpand = (Math.max(c.inPorts.length, c.outPorts.length) - 3);
 
                 const meta: FbpGraphNodeMetadata = val.metadata as FbpGraphNodeMetadata;
@@ -61,10 +61,10 @@ function init(store: StoreType, canvasId: string) {
                     c.outPorts,
                     meta.x,
                     meta.y,
-                    cExpand > 0 ? 60 + cExpand*17.5 : 60,
+                    cExpand > 0 ? 60 + cExpand * 17.5 : 60,
                     60,
                     canvasId,
-                    () => {}
+                    () => { }
                 );
 
                 nodes[key] = n;
@@ -81,7 +81,7 @@ function init(store: StoreType, canvasId: string) {
      * @param old Previous GraphJSON entry
      * @returns Updated GraphJSON
      */
-    function nodesToGraph(n: { [key: string]: NodeType }, old: GraphJson) : GraphJson {
+    function nodesToGraph(n: { [key: string]: NodeType }, old: GraphJson): GraphJson {
         // Clear existing keys
         old.processes = {};
 

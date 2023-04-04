@@ -12,11 +12,9 @@
 
 import { get } from 'svelte/store';
 
-/*--------------------------------- State ------------------------------------*/
-
 /*------------------------------- Functions ----------------------------------*/
 
-function zoomInit(
+function d3ZoomInit(
     d3,
     canvasId,
     d3Zoom,
@@ -62,21 +60,21 @@ function zoomInit(
     return d3Translate;
 }
 
-function determineD3Instance(
+function d3DetermineInstance(
     d3,
     nodeSelected,
     handleZoom
 ) {
     return d3
-    .zoom()
-    .filter((e: any) => {
-        return !get(nodeSelected);
-        // return !(get(nodeSelected) && e.sourceEvent?.constructor.name === 'MouseEvent')
-    })
-    .scaleExtent([0.2, 10])
-    .on('zoom', handleZoom);
+        .zoom()
+        .filter((e: any) => {
+            return !get(nodeSelected);
+            // return !(get(nodeSelected) && e.sourceEvent?.constructor.name === 'MouseEvent')
+        })
+        .scaleExtent([0.2, 10])
+        .on('zoom', handleZoom);
 }
 
 /*-------------------------------- Exports -----------------------------------*/
 
-export { zoomInit, determineD3Instance}
+export { d3ZoomInit, d3DetermineInstance };

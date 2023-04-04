@@ -1,8 +1,8 @@
 /**
- * @file storeApi.ts
+ * @file store.ts
  * @author James Bennion-Pedley
- * @brief Brief summary here
- * @date 16/02/2023
+ * @brief Central store for each Noflo Graph instance
+ * @date 04/04/2023
  *
  * @copyright Copyright (c) 2023
  *
@@ -14,12 +14,18 @@ import { writable } from 'svelte/store';
 
 import Graph from '$lib/middlewares/fbp-graph';
 
-import { stores } from '../models/store';
-import type { StoreType } from '../types/types';
+import type { NofloStore } from '$lib/types/Noflo';
 
-import graphSync from '$lib/state/graphSync';
+import graphSync from '$lib/state/graphSync'; // TODO merge here???
 
 /*--------------------------------- State ------------------------------------*/
+
+/**
+  `store` is a dictionary of Svelvet stores.
+    * The reason why we have multiple Svelvet stores is to handle multiple canvases on the same page.
+    * A Svelvet store is the single source of truth for a canvas state.
+*/
+const stores: { [key: string]: NofloStore } = {};
 
 /*------------------------------- Functions ----------------------------------*/
 
@@ -29,25 +35,17 @@ import graphSync from '$lib/state/graphSync';
  * @param canvasId The canvasId of a Svelvet component
  * @returns The store of a Svelvet component that matches the canvasId
  */
-function findStore(canvasId: string): StoreType {
+function storeGetInstance(canvasId: string): NofloStore {
     return stores[canvasId];
 }
 
 /**
  * createStoreEmpty will initialize a new Svelvet store with a unique canvasId.
- * If you have multiple Svelvet components on the page, the stores object will look like the following example:
- * const stores = \{
- *                  canvasId-1: store of Svelvet component 1,
- *                  canvasId-2: store of Svelvet component 2,
- *                  canvasId-3: store of Svelvet component 3,
- *                \}
- * Notes: This should be called once every time you initialize a new Svelvet canvas, (ie, only in the Svelvet.svelte file).
- * This function will initialize an empty store for the Svelvet component and should be followed by invoking populateSvelvetStoreFromUserInput to populate all the initial state from the user input.
- *
+
  * @param canvasId The canvasId of the newly created Svelvet component
  * @returns An empty store for the newly created Svelvet component.
  */
-function createStoreEmpty(canvasId: string): StoreType {
+function storeCreateInstance(canvasId: string): NofloStore {
     stores[canvasId] = {
         graphStore: writable(new Graph.Graph().toJSON()),
         loaderStore: writable((key: string) => null),
@@ -61,8 +59,6 @@ function createStoreEmpty(canvasId: string): StoreType {
 
         nodesStore: writable({}),   // Unused
         edgesStore: writable({}),
-        anchorsStore: writable({}),
-        potentialAnchorsStore: writable({}),
         widthStore: writable(600),
         heightStore: writable(600),
         backgroundStore: writable(false),
@@ -82,4 +78,4 @@ function createStoreEmpty(canvasId: string): StoreType {
 
 /*-------------------------------- Exports -----------------------------------*/
 
-export { findStore, createStoreEmpty };
+export { stores, storeGetInstance, storeCreateInstance };

@@ -1,7 +1,7 @@
 <!--
- * @file NodeAnchor.svelte
+ * @file Anchor.svelte
  * @author James Bennion-Pedley
- * @brief Node connection anchors
+ * @brief Node connection anchors (the dots on each node)
  * @date 27/02/2023
  *
  * @copyright Copyright (c) 2023
@@ -11,19 +11,17 @@
 <script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
-    import { findStore } from "../../store/controllers/storeApi";
+    import type { NofloStore } from "$lib/types/Noflo";
 
     /*--------------------------------- Props --------------------------------*/
 
-    export let canvasId: string;
+    export let store: NofloStore;
 
     export let x: number;
     export let y: number;
 
     let active: boolean = false;
     let anchor: HTMLElement;
-
-    const store = findStore(canvasId);
 
     const { edgeCandidateStore } = store;
 
@@ -97,18 +95,6 @@
     r={3}
     stroke="#444444"
 />
-
-<!-- <SimpleBezierEdge edgeId={edge.id} {canvasId} /> -->
-
-<!-- {#if active}
-    <BaseEdge canvasId={canvasId} baseEdgeProps={{
-        path: '0',
-        animate: true,
-        arrow: true,
-        centerX: 0,
-        centerY: 0,
-    }} />
-{/if} -->
 
 <style>
     .anchor {
