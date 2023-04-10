@@ -44,23 +44,27 @@ export interface FbpNodeType {
 }
 
 export interface FbpEdgeType {
-    id: string;
-    sourceX: number;
-    sourceY: number;
-    targetX: number;
-    targetY: number;
+    sourceNode: string | undefined,
+    sourcePort: string | undefined,
+    targetNode: string,
+    targetPort: string,
+    // id: string;
+    // sourceX: number;
+    // sourceY: number;
+    // targetX: number;
+    // targetY: number;
     canvasId: string;
-    label: string;
+    label?: string;
     type: 'straight' | 'smoothstep' | 'step' | 'bezier';
-    labelBgColor: string;
-    labelTextColor: string;
-    edgeColor: string;
+    // labelBgColor: string;
+    // labelTextColor: string;
+    // edgeColor: string;
     animate: boolean;
-    noHandle: boolean;
-    arrow: boolean;
-    clickCallback: Function;
-    className: string;
-    delete: Function;
+    // noHandle: boolean;
+    // arrow: boolean;
+    // clickCallback: Function;
+    // className: string;
+    // delete: Function;
 }
 
 export type FbpGraphPortConfig = {

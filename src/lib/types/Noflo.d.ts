@@ -34,16 +34,14 @@ export interface NofloStore {
     widthStore: Writable<number>;
     heightStore: Writable<number>;
     backgroundStore: Writable<boolean>;
-    movementStore: Writable<boolean>;
-    d3Scale: Writable<number>; // for zoom and pan
 
     // Editor
     edgeCandidateStore: Writable<EdgeCandidate>;
 
+    // Runtime State
+    d3Scale: Writable<number>; // for zoom and pan
     nodeIdSelected: Writable<number>;
     nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged TODO fix!
-    options: Writable<{ [key: string]: any }>;
-    nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
 }
 
 /*-------------------------------- Exports -----------------------------------*/

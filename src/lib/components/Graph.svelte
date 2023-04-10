@@ -42,18 +42,15 @@
     const {
         edgesStore,
         nodesStore,
+
         edgeCandidateStore,
         nodeSelected,
         backgroundStore,
-        movementStore,
         widthStore,
         heightStore,
         d3Scale,
         themeStore,
     } = store;
-
-    $: nodes = Object.values($nodesStore);
-    $: edges = Object.values($edgesStore);
 
     // declaring the grid and dot size for d3's transformations and zoom
     const gridSize = 15;
@@ -83,6 +80,7 @@
             .transition()
             .duration(500)
             .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+
         // For nodes
         d3.select(`.Nodes-${key}`)
             .transition()
@@ -91,7 +89,6 @@
     }
 
     function handleZoom(e: any) {
-        if (!$movementStore) return;
         //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
         d3Scale.set(e.transform.k);
         // should not run d3.select below if backgroundStore is false
@@ -146,6 +143,9 @@
     }
 
     /*------------------------------- Lifecycle ------------------------------*/
+
+    $: nodes = Object.values($nodesStore);
+    $: edges = Object.values($edgesStore);
 
     onMount(() => {
         // actualizes the d3 instance

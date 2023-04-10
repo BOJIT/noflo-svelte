@@ -1,10 +1,37 @@
+<!--
+ * @file BaseEdge.svelte
+ * @author James Bennion-Pedley
+ * @brief Base edge type that connects two nodes
+ * @date 27/02/2023
+ *
+ * @copyright Copyright (c) 2023
+ *
+-->
+
 <script lang="ts">
+    /*-------------------------------- Imports -------------------------------*/
+
     import { storeGetInstance } from "$lib/state/store";
 
-    import EdgeText from "../Edges/EdgeText.svelte";
-    import type { EdgeProps } from "../Edges/types";
+    // TODO make this somewhat aligned with central definitions
+    import type { EdgeProps } from "../middlewares/svelvet/edges/views/Edges/types";
+
+    import EdgeText from "$lib/components/EdgeText.svelte";
+
+    /*--------------------------------- Props --------------------------------*/
+
     export let baseEdgeProps: EdgeProps;
     export let canvasId;
+
+    const store = storeGetInstance(canvasId);
+    const theme = store.themeStore;
+
+    const defaultArrow = `0 0, 9 4.5, 0 9`;
+
+    /*-------------------------------- Methods -------------------------------*/
+
+    /*------------------------------- Lifecycle ------------------------------*/
+
     // destructuring the props passed in from the parent component
     $: ({
         path,
@@ -26,11 +53,6 @@
         centerX: centerX,
         centerY: centerY,
     };
-
-    const store = storeGetInstance(canvasId);
-    const theme = store.themeStore;
-
-    const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
 
 <defs>
@@ -46,9 +68,10 @@
     </marker>
 </defs>
 
-<!-- This is an invisible edge that is used to implement event events, because the visible edge is thin and hard to click on -->
+<!-- This is an invisible edge that is used to implement event events,
+     because the visible edge is thin and hard to click on -->
 <path
-    id={`edgeSelector`}
+    class="edge-selector"
     d={path}
     fill="transparent"
     stroke={"red"}
@@ -92,13 +115,14 @@
         stroke-dasharray: 5;
         animation: dash 50000s linear;
     }
+
     @keyframes dash {
         from {
             stroke-dashoffset: 1000000;
         }
     }
 
-    #edgeSelector:hover {
+    .edge-selector:hover {
         stroke: "red";
         stroke-opacity: 0.5;
     }

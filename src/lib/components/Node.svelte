@@ -113,20 +113,17 @@
         if (node.clickCallback && isUserClick) node.clickCallback(node);
 
         // This implements the "snap to grid" feature
-        if (get(store.options).snap) {
-            // If user sets snap attribute as true inside Svelvet
-            const snapResize = get(store.options).snapTo;
-            const oldX = node.positionX;
-            const oldY = node.positionY;
-            const newX = Math.round(node.positionX / snapResize) * snapResize;
-            const newY = Math.round(node.positionY / snapResize) * snapResize;
+        const snapResize = 15;
+        const oldX = node.positionX;
+        const oldY = node.positionY;
+        const newX = Math.round(node.positionX / snapResize) * snapResize;
+        const newY = Math.round(node.positionY / snapResize) * snapResize;
 
-            nodesStore.update((nodes) => {
-                const node = nodes[nodeId];
-                node.setPositionFromMovement(newX - oldX, newY - oldY);
-                return { ...nodes };
-            });
-        }
+        nodesStore.update((nodes) => {
+            const node = nodes[nodeId];
+            node.setPositionFromMovement(newX - oldX, newY - oldY);
+            return { ...nodes };
+        });
     };
 </script>
 

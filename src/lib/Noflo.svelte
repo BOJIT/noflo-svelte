@@ -49,13 +49,10 @@
     export let translucent: boolean = false;
 
     export let background: boolean = true;
-    export let movement: boolean = true;
-    export let canvasId: string = pkStringGenerator();
-    export let snap: boolean = false;
-    export let snapTo: number = 15;
-    export let nodeCreate: boolean = false;
     export let initialZoom = 3;
     export let initialLocation = { x: 0, y: 0 };
+
+    export let canvasId: string = pkStringGenerator();
 
     // Events and State
     const dispatch = createEventDispatcher();
@@ -94,10 +91,6 @@
         store.widthStore.set(width);
         store.heightStore.set(height);
         store.backgroundStore.set(background);
-        store.movementStore.set(movement);
-        const optionsObj = { snap, snapTo }; // TODO: rename to snap
-        store.options.set(optionsObj); //
-        store.nodeCreate.set(nodeCreate);
 
         // Set core graph stores
         store.loaderStore.set(loader);
@@ -114,7 +107,6 @@
             width = e[0].contentRect.width;
             height = e[0].contentRect.height;
         });
-
         rs.observe(container);
 
         await tick();
@@ -132,10 +124,6 @@
         store.widthStore.set(width);
         store.heightStore.set(height);
         store.backgroundStore.set(background);
-        store.movementStore.set(movement);
-        const optionsObj = { snap, snapTo };
-        store.options.set(optionsObj); //
-        store.nodeCreate.set(nodeCreate);
         store.themeStore.set(theme);
     });
 </script>

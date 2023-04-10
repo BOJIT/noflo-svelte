@@ -17,10 +17,9 @@ import { Help } from "@svicons/ionicons-outline";
 
 import type { GraphJson } from "$lib/middlewares/fbp-graph/Types";
 import type { FbpGraphNodeMetadata } from "$lib/types/FbpGraph";
-import type {
-    NodeType,
-    StoreType,
-} from "$lib/middlewares/svelvet/store/types/types";
+
+import type { FbpEdgeType, FbpNodeType } from "$lib/types/FbpGraph";
+import type { NofloStore } from "$lib/types/Noflo";
 
 import { Node } from "$lib/middlewares/svelvet/nodes/models/Node";
 
@@ -29,15 +28,15 @@ import { Node } from "$lib/middlewares/svelvet/nodes/models/Node";
 
 /*------------------------------- Functions ----------------------------------*/
 
-function init(store: StoreType, canvasId: string) {
+function init(store: NofloStore, canvasId: string) {
 
     /**
      * GraphJSON -> Node Map
      * @param g GraphJSON
      * @returns Node Map
      */
-    function graphToNodes(g: GraphJson): { [key: string]: NodeType } {
-        const nodes: { [key: string]: NodeType } = {};
+    function graphToNodes(g: GraphJson): { [key: string]: FbpNodeType } {
+        const nodes: { [key: string]: FbpNodeType } = {};
 
         const loader = get(store.loaderStore);
 
@@ -81,7 +80,7 @@ function init(store: StoreType, canvasId: string) {
      * @param old Previous GraphJSON entry
      * @returns Updated GraphJSON
      */
-    function nodesToGraph(n: { [key: string]: NodeType }, old: GraphJson): GraphJson {
+    function nodesToGraph(n: { [key: string]: FbpNodeType }, old: GraphJson): GraphJson {
         // Clear existing keys
         old.processes = {};
 
@@ -101,7 +100,56 @@ function init(store: StoreType, canvasId: string) {
         return old;
     }
 
+    /**
+     * GraphJSON -> Edge Map
+     * @param g GraphJSON
+     * @returns Node Map
+     */
+    function graphToEdges(g: GraphJson): { [key: string]: FbpEdgeType } {
+        const edges: { [key: string]: FbpEdgeType } = {};
+
+        if (g.connections === undefined)
+            return edges;
+
+        // TODO: Bodge, need to fix
+        g.connections.forEach((c, i) => {
+            edges[i.toString()] = {
+                sourceNode: c.src?.process,
+                sourcePort: c.src?.port,
+                targetNode: c.tgt.process,
+                targetPort: c.tgt.port,
+
+                canvasId: canvasId,
+                type: 'bezier',
+                animate: false,
+            }
+        })
+
+        return edges;
+    };
+
+    /**
+     * Node Map -> GraphJSON
+     * @param n Node Map
+     * @param old Previous GraphJSON entry
+     * @returns Updated GraphJSON
+     */
+    function edgesToGraph(n: { [key: string]: FbpEdgeType }, old: GraphJson): GraphJson {
+        // Clear existing keys
+        old.connections = [];
+
+        for (const [key, val] of Object.entries(n)) {
+            old.connections.push({
+                src: { process: val.sourceNode, port: val.sourcePort },
+                tgt: { process: val.targetNode, port: val.targetPort },
+            })
+        }
+
+        return old;
+    }
+
     store.nodesStore = writableDerived(store.graphStore, graphToNodes, nodesToGraph);
+    store.edgesStore = writableDerived(store.graphStore, graphToEdges, edgesToGraph);
 }
 
 /*-------------------------------- Exports -----------------------------------*/

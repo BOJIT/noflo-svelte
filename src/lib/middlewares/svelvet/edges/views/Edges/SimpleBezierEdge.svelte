@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BaseEdge from "./BaseEdge.svelte";
+    import BaseEdge from "../../../../../components/BaseEdge.svelte";
     // import { Position } from '../types/utils';
     // // enumerable values (static) set for Position
     // export var Position;

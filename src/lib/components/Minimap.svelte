@@ -15,7 +15,7 @@
 
     import type { NofloMinimap } from "$lib/types/Noflo";
 
-    import GreyNode from "$lib/components/MinimapNode.svelte";
+    import MinimapNode from "$lib/components/MinimapNode.svelte";
 
     /*--------------------------------- Props --------------------------------*/
 
@@ -145,7 +145,7 @@
         style="height:{viewHeight}px; width:{viewWidth}px; top:{viewBottom}px; left:{viewRight}px;"
     />
     {#each Object.values($nodesStore) as node}
-        <GreyNode
+        <MinimapNode
             {node}
             {key}
             {heightRatio}

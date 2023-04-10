@@ -57,17 +57,15 @@ function storeCreateInstance(canvasId: string): NofloStore {
             active: false,
         }),
 
-        nodesStore: writable({}),   // Unused
+        nodesStore: writable({}),
         edgesStore: writable({}),
+
         widthStore: writable(600),
         heightStore: writable(600),
         backgroundStore: writable(false),
-        movementStore: writable(true),
         nodeSelected: writable(false),
         nodeIdSelected: writable(-1),
         d3Scale: writable(1),
-        options: writable({}),
-        nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
     };
 
     // Initialise synchronised state

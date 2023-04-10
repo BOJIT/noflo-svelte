@@ -11,7 +11,7 @@
 <script lang="ts">
     /*-------------------------------- Imports -------------------------------*/
 
-    import BaseEdge from "../middlewares/svelvet/edges/views/Edges/BaseEdge.svelte";
+    import BaseEdge from "./BaseEdge.svelte";
     import type { FbpPositionType } from "$lib/types/FbpGraph";
 
     /*--------------------------------- Props --------------------------------*/
