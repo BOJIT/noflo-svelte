@@ -46,7 +46,7 @@
 </script>
 
 <div
-    class="minmap-nodes minimap-nodes-{key}"
+    class="minimap-nodes minimap-nodes-{key}"
     style="top: {top}px; left: {left}px; height: {nHeight}px; width:{nWidth}px"
 />
 
