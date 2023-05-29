@@ -9,10 +9,12 @@
 -->
 
 <script lang="ts">
-    import type { FbpPositionType } from "$lib/types/FbpGraph";
     /*-------------------------------- Imports -------------------------------*/
 
+    import { get } from "svelte/store";
+
     import type { NofloStore } from "$lib/types/Noflo";
+    import type { FbpPositionType } from "$lib/types/FbpGraph";
 
     import { clickOutside } from "$lib/utils/clickoutside";
 
@@ -24,7 +26,7 @@
     export let type: "in" | "out";
 
     let active: boolean = false;
-    const { edgeCandidateStore } = store;
+    const { edgeCandidateStore, d3Scale } = store;
 
     const radius = 3;
 
@@ -37,10 +39,14 @@
         // console.log(e);
 
         edgeCandidateStore.update((c) => {
-            let key = type === "in" ? "source" : "target";
+            const key = type === "in" ? "source" : "target";
+            const scale = get(d3Scale);
+            const x_prev = c[key].x;
+            const y_prev = c[key].y;
+
             c[key] = {
-                x: e.clientX,
-                y: e.clientY,
+                x: x_prev + e.movementX / scale,
+                y: y_prev + e.movementY / scale,
             };
             return c;
         });
@@ -85,8 +91,11 @@
         } else {
             active = true;
             edgeCandidateStore.update((c) => {
-                let key = type === "out" ? "source" : "target";
-                c[key] = {
+                c.source = {
+                    x: parentPos.x + pos.x - 10 - radius,
+                    y: parentPos.y + pos.y + radius,
+                };
+                c.target = {
                     x: parentPos.x + pos.x - 10 - radius,
                     y: parentPos.y + pos.y + radius,
                 };

@@ -31,7 +31,7 @@
 
     // For allowing integrated scrolling
     let clickable: boolean = true;
-    let clickableTimeout: number;
+    // let clickableTimeout: number;
 
     /*-------------------------------- Methods -------------------------------*/
 
