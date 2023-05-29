@@ -16,8 +16,6 @@
 
     /*--------------------------------- Props --------------------------------*/
 
-    export let store: NofloStore;
-
     export let animate: boolean = false;
 
     export let source: FbpPositionType;
