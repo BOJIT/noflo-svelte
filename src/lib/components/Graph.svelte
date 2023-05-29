@@ -145,7 +145,7 @@
     /*------------------------------- Lifecycle ------------------------------*/
 
     $: nodes = Object.values($nodesStore);
-    $: edges = Object.values($edgesStore);
+    // $: edges = Object.values($edgesStore);
 
     onMount(() => {
         // actualizes the d3 instance

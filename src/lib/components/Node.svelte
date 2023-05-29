@@ -215,6 +215,7 @@
                 {store}
                 pos={getAnchorPosition(ip, "in")}
                 parentPos={{ x: node.positionX, y: node.positionY }}
+                type="in"
             />
             <text
                 class="port-annotation"
@@ -230,6 +231,7 @@
                 {store}
                 pos={getAnchorPosition(op, "out")}
                 parentPos={{ x: node.positionX, y: node.positionY }}
+                type="out"
             />
             <text
                 class="port-annotation"

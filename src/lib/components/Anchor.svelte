@@ -21,6 +21,7 @@
     export let store: NofloStore;
     export let pos: FbpPositionType;
     export let parentPos: FbpPositionType;
+    export let type: "in" | "out";
 
     let active: boolean = false;
     const { edgeCandidateStore } = store;
@@ -33,9 +34,14 @@
         if (!active) return;
 
         // TODO get relative space coordinates
+        // console.log(e);
 
         edgeCandidateStore.update((c) => {
-            c.target = { x: e.screenX, y: e.screenY };
+            let key = type === "in" ? "source" : "target";
+            c[key] = {
+                x: e.clientX,
+                y: e.clientY,
+            };
             return c;
         });
     }
@@ -59,7 +65,7 @@
 
         if (e.target.classList.contains("anchor")) {
             // Create new edge
-            console.log("NEW EDGE");
+            console.log("FIX edge trigger");
             setTimeout(() => {
                 edgeCandidateStore.update((c) => {
                     c.active = false;
@@ -79,7 +85,8 @@
         } else {
             active = true;
             edgeCandidateStore.update((c) => {
-                c.source = {
+                let key = type === "out" ? "source" : "target";
+                c[key] = {
                     x: parentPos.x + pos.x - 10 - radius,
                     y: parentPos.y + pos.y + radius,
                 };

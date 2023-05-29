@@ -23,16 +23,6 @@
 
     export let canvasId: string;
 
-    let params = {
-        sourceX: source.x,
-        sourceY: source.y,
-        sourcePosition: "left",
-        targetX: target.x,
-        targetY: target.y,
-        targetPosition: "right",
-        curvature: 0.25,
-    };
-
     /*-------------------------------- Methods -------------------------------*/
 
     function calculateControlOffset(distance, curvature) {
@@ -66,82 +56,78 @@
 
     // returns string to pass into edge 'path' svg d attribute (where to be drawn)
     // referenced from ReactFlow.dev
-    function getSimpleBezierPath({
-        sourceX,
-        sourceY,
+    function getSimpleBezierPath(
+        source,
+        target,
         sourcePosition = "left",
-        targetX,
-        targetY,
         targetPosition = "right",
-        curvature = 0.25,
-    }) {
+        curvature = 0.25
+    ) {
         const [sourceControlX, sourceControlY] = getControlWithCurvature({
             pos: sourcePosition,
-            x1: sourceX,
-            y1: sourceY,
-            x2: targetX,
-            y2: targetY,
+            x1: source.x,
+            y1: source.y,
+            x2: target.x,
+            y2: target.y,
             c: curvature,
         });
         const [targetControlX, targetControlY] = getControlWithCurvature({
             pos: targetPosition,
-            x1: targetX,
-            y1: targetY,
-            x2: sourceX,
-            y2: sourceY,
+            x1: source.x,
+            y1: source.y,
+            x2: target.x,
+            y2: target.y,
             c: curvature,
         });
-        return `M${sourceX},${sourceY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${targetX},${targetY}`;
+        return `M${source.x},${source.y} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${target.x},${target.y}`;
     }
 
     // determining center of the bezier curve to know where to place the bezier edge text label
-    function getSimpleBezierCenter({
-        sourceX,
-        sourceY,
-        sourcePosition,
-        targetX,
-        targetY,
-        targetPosition,
-        curvature = 0.25,
-    }) {
+    function getSimpleBezierCenter(
+        source,
+        target,
+        sourcePosition = "left",
+        targetPosition = "right",
+        curvature = 0.25
+    ) {
         const [sourceControlX, sourceControlY] = getControlWithCurvature({
             pos: sourcePosition,
-            x1: sourceX,
-            y1: sourceY,
-            x2: targetX,
-            y2: targetY,
+            x1: source.x,
+            y1: source.y,
+            x2: target.x,
+            y2: target.y,
             c: curvature,
         });
         const [targetControlX, targetControlY] = getControlWithCurvature({
             pos: targetPosition,
-            x1: targetX,
-            y1: targetY,
-            x2: sourceX,
-            y2: sourceY,
+            x1: source.x,
+            y1: source.y,
+            x2: target.x,
+            y2: target.y,
             c: curvature,
         });
         // cubic bezier t=0.5 mid point, not the actual mid point, but easy to calculate
         // https://stackoverflow.com/questions/67516101/how-to-find-distance-mid-point-of-bezier-curve
         const centerX =
-            sourceX * 0.125 +
+            source.x * 0.125 +
             sourceControlX * 0.375 +
             targetControlX * 0.375 +
-            targetX * 0.125;
+            target.x * 0.125;
         const centerY =
-            sourceY * 0.125 +
+            source.y * 0.125 +
             sourceControlY * 0.375 +
             targetControlY * 0.375 +
-            targetY * 0.125;
-        const xOffset = Math.abs(centerX - sourceX);
-        const yOffset = Math.abs(centerY - sourceY);
+            target.y * 0.125;
+        const xOffset = Math.abs(centerX - source.x);
+        const yOffset = Math.abs(centerY - source.y);
         return [centerX, centerY, xOffset, yOffset];
     }
 
     /*------------------------------- Lifecycle ------------------------------*/
 
     // pass in params to function that returns a string value for SVG path d attribute (where to be drawn)
-    $: path = getSimpleBezierPath(params);
-    $: [centerX, centerY] = getSimpleBezierCenter(params);
+    $: path = getSimpleBezierPath(source, target);
+    $: [centerX, centerY] = getSimpleBezierCenter(source, target);
 
     $: baseEdgeProps = {
         canvasId: canvasId,
