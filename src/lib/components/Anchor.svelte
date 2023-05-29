@@ -9,55 +9,25 @@
 -->
 
 <script lang="ts">
+    import type { FbpPositionType } from "$lib/types/FbpGraph";
     /*-------------------------------- Imports -------------------------------*/
 
     import type { NofloStore } from "$lib/types/Noflo";
 
+    import { clickOutside } from "$lib/utils/clickoutside";
+
     /*--------------------------------- Props --------------------------------*/
 
     export let store: NofloStore;
-
-    export let x: number;
-    export let y: number;
+    export let pos: FbpPositionType;
+    export let parentPos: FbpPositionType;
 
     let active: boolean = false;
-    let anchor: HTMLElement;
-
     const { edgeCandidateStore } = store;
 
+    const radius = 3;
+
     /*-------------------------------- Methods -------------------------------*/
-
-    function mousedown(e: MouseEvent | TouchEvent) {
-        if (active) return;
-
-        e.preventDefault();
-
-        // TODO get source position
-
-        active = true;
-        edgeCandidateStore.update((c) => {
-            c.source = { x: x, y: y };
-            c.active = true;
-            return c;
-        });
-    }
-
-    function mouseup(e: MouseEvent | TouchEvent) {
-        // If selecting an anchor, do nothing
-        if (e.target.classList.contains("anchor") && e.target != anchor) {
-            // Create new edge
-        }
-
-        e.preventDefault();
-
-        console.log("UP");
-
-        active = false;
-        edgeCandidateStore.update((c) => {
-            c.active = false;
-            return c;
-        });
-    }
 
     function mousemove(e: MouseEvent | TouchEvent) {
         if (!active) return;
@@ -68,31 +38,73 @@
             c.target = { x: e.screenX, y: e.screenY };
             return c;
         });
-
-        console.log(e);
     }
 
     /*------------------------------- Lifecycle ------------------------------*/
+
+    // If another candiate becomes inactive override latest click
+    edgeCandidateStore.subscribe((c) => {
+        if (c.active == false) active = false;
+    });
+
+    function clickoutside(e: MouseEvent | TouchEvent) {
+        if (!active) return;
+        if (e.target == undefined) return;
+
+        active = false;
+        edgeCandidateStore.update((c) => {
+            c.active = false;
+            return c;
+        });
+
+        if (e.target.classList.contains("anchor")) {
+            // Create new edge
+            console.log("NEW EDGE");
+            setTimeout(() => {
+                edgeCandidateStore.update((c) => {
+                    c.active = false;
+                    return c;
+                });
+            }, 1);
+        }
+    }
+
+    function click(e: MouseEvent | TouchEvent) {
+        if (active) {
+            active = false;
+            edgeCandidateStore.update((c) => {
+                c.active = false;
+                return c;
+            });
+        } else {
+            active = true;
+            edgeCandidateStore.update((c) => {
+                c.source = {
+                    x: parentPos.x + pos.x - 10 - radius,
+                    y: parentPos.y + pos.y + radius,
+                };
+                c.active = true;
+                return c;
+            });
+        }
+    }
 </script>
 
-<svelte:window
-    on:mouseup={mouseup}
-    on:mousemove={mousemove}
-    on:touchmove={mousemove}
-/>
+<svelte:window on:mousemove={mousemove} on:touchmove={mousemove} />
 
 <circle
-    bind:this={anchor}
-    on:mousedown={mousedown}
-    on:mouseup={mouseup}
     on:mousemove={mousemove}
     on:touchmove={mousemove}
+    on:click={click}
+    use:clickOutside
+    on:click_outside={clickoutside}
+    on:keypress
     class="anchor"
     class:active
     class:potential={$edgeCandidateStore.active}
-    cx={x}
-    cy={y}
-    r={3}
+    cx={pos.x}
+    cy={pos.y}
+    r={radius}
     stroke="#444444"
 />
 

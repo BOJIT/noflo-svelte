@@ -3,7 +3,7 @@
 
     import { get } from "svelte/store";
 
-    import type { FbpNodeType } from "$lib/types/FbpGraph";
+    import type { FbpNodeType, FbpPositionType } from "$lib/types/FbpGraph";
     import type { NofloStore } from "$lib/types/Noflo";
 
     import { colourShade } from "$lib/utils/colour";
@@ -29,42 +29,70 @@
     //   (2) if the mouse leaves the node
     let isUserClick = false;
 
+    // For allowing integrated scrolling
+    let clickable: boolean = true;
+    let clickableTimeout: number;
+
+    /*-------------------------------- Methods -------------------------------*/
+
+    export function getAnchorPosition(
+        port: string,
+        direction: "in" | "out"
+    ): FbpPositionType {
+        let pos: FbpPositionType = { x: 0, y: 0 };
+        if (direction == "in") {
+            let idx = node.inPorts.indexOf(port);
+
+            pos.x = 11.5;
+            pos.y =
+                node.height / 2 +
+                idx * portSpacing -
+                ((node.inPorts.length - 1) / 2) * portSpacing +
+                1.25;
+        } else {
+            let idx = node.outPorts.indexOf(port);
+
+            pos.x = node.width + 18.5;
+            pos.y =
+                node.height / 2 +
+                idx * portSpacing -
+                ((node.outPorts.length - 1) / 2) * portSpacing +
+                1.25;
+        }
+
+        return pos;
+    }
+
     /*------------------------------- Lifecycle ------------------------------*/
 
     // Interactions (messy)
     const mousedown = (e) => {
         e.preventDefault();
-
         // If selecting an anchor, do nothing
         if (e.target.classList.contains("anchor")) return;
 
-        // part of the "clickCallback" feature
-        isUserClick = true;
-        // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
-        $nodeSelected = true;
-        isSelected = true;
+        isSelected = true; /// ????
+
+        isUserClick = true; // part of the "clickCallback" feature
+        $nodeSelected = true; // disables d3 when mouse enters node
     };
     const rightclick = (e) => {
-        e.preventDefault();
-        node = $nodesStore[nodeId];
-        $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
-        isSelected = false;
+        // e.preventDefault();
+        // node = $nodesStore[nodeId];
+        // $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
+        // isSelected = false;
     };
     const mouseleave = (e) => {
-        // part of the "clickCallback" feature
-        isUserClick = false;
-        // re-enables d3 when mouse leaves node
-        $nodeSelected = false;
+        isUserClick = false; // part of the "clickCallback" feature
+        $nodeSelected = false; // re-enables d3 when mouse leaves node
     };
     const mouseenter = (e) => {
-        // disables d3 when mouse enters node
-        nodeSelected.set(true);
+        $nodeSelected = true; // disables d3 when mouse enters node
     };
     const mousemove = (e) => {
         e.preventDefault();
 
-        // part of the "clickCallback" feature
-        isUserClick = false;
+        isUserClick = false; // part of the "clickCallback" feature
         // part of the "drag node" feature
         if (isSelected) {
             nodesStore.update((nodes) => {
@@ -79,10 +107,8 @@
             });
         }
     };
-
     const touchmove = (e) => {
-        // part of the "clickCallback" feature
-        isUserClick = false;
+        isUserClick = false; // part of the "clickCallback" feature
         // part of the "drag node" feature
         if (isSelected) {
             nodesStore.update((nodes) => {
@@ -105,7 +131,6 @@
             });
         }
     };
-
     const mouseup = (e) => {
         e.preventDefault();
         isSelected = false;
@@ -125,6 +150,19 @@
             return { ...nodes };
         });
     };
+    const mousewheel = (e) => {
+        // console.log("DISABLE");
+        // clickable = false;
+        // window.clearTimeout(clickableTimeout);
+        // clickableTimeout = window.setTimeout(() => (clickable = true), 100);
+    };
+    const mousewheelcancel = (e) => {
+        console.log("ENABLE");
+        clickable = true;
+
+        // window.clearTimeout(clickableTimeout);
+        // clickableTimeout = window.setTimeout(() => (clickable = true), 200);
+    };
 </script>
 
 <!-- TODO are these causing problems for zooming? -->
@@ -142,12 +180,13 @@
     on:contextmenu={rightclick}
     on:touchstart={mousedown}
     on:mouseenter={mouseenter}
+    on:mousewheel={mousewheel}
     class="node"
     style="left: {node.positionX}px;
     top: {node.positionY}px;
     height: {node.height}px;
-    width: {node.width}px;"
-    id="svelvet-{node.id}"
+    width: {node.width}px;
+    pointer-events: {clickable ? 'auto' : 'none'}"
 >
     <div class="ring">
         <div
@@ -174,19 +213,14 @@
         {#each node.inPorts as ip, idx}
             <Anchor
                 {store}
-                x={11.5}
-                y={node.height / 2 +
-                    idx * portSpacing -
-                    ((node.inPorts.length - 1) / 2) * portSpacing}
+                pos={getAnchorPosition(ip, "in")}
+                parentPos={{ x: node.positionX, y: node.positionY }}
             />
             <text
                 class="port-annotation"
                 class:visible={$d3Scale > 2}
-                x="17.5"
-                y={node.height / 2 +
-                    idx * portSpacing -
-                    ((node.inPorts.length - 1) / 2) * portSpacing +
-                    1.25}
+                x={getAnchorPosition(ip, "in").x + 6}
+                y={getAnchorPosition(ip, "in").y + 1}
             >
                 {ip}
             </text>
@@ -194,20 +228,15 @@
         {#each node.outPorts as op, idx}
             <Anchor
                 {store}
-                x={node.width + 18.5}
-                y={node.height / 2 +
-                    idx * portSpacing -
-                    ((node.outPorts.length - 1) / 2) * portSpacing}
+                pos={getAnchorPosition(op, "out")}
+                parentPos={{ x: node.positionX, y: node.positionY }}
             />
             <text
                 class="port-annotation"
                 class:visible={$d3Scale > 2}
                 text-anchor="end"
-                x={node.width + 12.5}
-                y={node.height / 2 +
-                    idx * portSpacing -
-                    ((node.outPorts.length - 1) / 2) * portSpacing +
-                    1.25}
+                x={getAnchorPosition(op, "out").x - 6}
+                y={getAnchorPosition(op, "out").y + 1}
             >
                 {op}
             </text>
